@@ -1,0 +1,35 @@
+export interface Theme {
+   primaryText: string;
+   black: string;
+   secondaryText: string;
+   modalTitle: string;
+   strongBlue: string;
+   blue: string;
+   strongGray: string;
+   gray: string;
+   yellow: string;
+   strongYellow: string;
+   purple: string;
+   red: string;
+   green: string;
+   pink: string;
+   strongPink: string;
+   accentActive: string;
+   boxShadowInput: string;
+   textDefault: string;
+   borderInput: string;
+   boxShadowInputHover: string;
+   deepBlue: string;
+   activeBlue: string;
+   softBlue: string;
+   softBlueHover: string;
+   deepGray: string;
+   orange: string;
+   inactive: string;
+   baseGray: string;
+   baseGray02: string;
+   baseGray03: string;
+   scrollbar: string;
+   link: string;
+   pending: string;
+}

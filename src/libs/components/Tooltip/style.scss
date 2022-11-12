@@ -1,0 +1,28 @@
+.custom-tooltip.ant-tooltip {
+  padding-top: 2.3px;
+
+  .ant-tooltip-arrow {
+    width: 18px;
+    height: 18px;
+    &-content {
+      --antd-arrow-background-color: none;
+
+      &::before {
+        background-color: var(--strongBlue) !important;
+      }
+    }
+  }
+
+  .ant-tooltip-inner {
+    font-size: 13px;
+    background-color: var(--strongBlue);
+    word-wrap: break-word;
+    padding: 0.75rem 1rem;
+    max-width: 18rem;
+    min-height: 2.75rem;
+    border-radius: 0.625rem;
+    color: var(--secondaryText);
+    box-sizing: border-box;
+    padding: 12px 16px;
+  }
+}

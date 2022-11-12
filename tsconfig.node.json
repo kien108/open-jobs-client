@@ -1,0 +1,12 @@
+{
+   "compilerOptions": {
+      "rootDir": ".",
+      "baseUrl": ".",
+      "composite": true,
+      "module": "ESNext",
+      "moduleResolution": "Node",
+      "allowSyntheticDefaultImports": true
+   },
+   "include": ["vite.config.ts"],
+   "exclude": ["node_modules", "tmp", "**/*.spec.tsx"]
+}

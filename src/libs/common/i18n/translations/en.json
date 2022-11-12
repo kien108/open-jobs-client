@@ -1,0 +1,54 @@
+{
+   "form": {
+      "required": "This field should not be blank!",
+      "existing": "This value is already exists!",
+      "passwordLength": "Password must at least 8 characters",
+      "active": "Active",
+      "inActive": "Inactive",
+      "email": "This field must be type email"
+   },
+   "confirm": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "ok": "OK"
+   },
+   "notification": {
+      "nothingFound": "Nothing found...",
+      "noResults": "No results",
+      "createSuccess": "Create {{name}} successfully!",
+      "updateSuccess": "Update {{name}} successfully!",
+      "deleteSuccess": "Delete {{name}} successfully!",
+      "title": "Notification",
+      "new": "New",
+      "requestSubmission": "Request Submission",
+      "onlyShowUnread": "Only show unread",
+      "markAllAsRead": "Mark all as read",
+      "requestManagement": "Request Management",
+      "markAsRead": "Mark as read",
+      "removeTheNotification": "Remove the notification"
+   },
+   "table": {
+      "pages": "Pages",
+      "linesPerPage": "Lines per page",
+      "of": "of",
+      "noResults": "No results"
+   },
+   "ERRORS": {
+      "SERVER_ERROR": "Lỗi hệ thống!",
+      "INTERNAL_SERVER_ERROR": "500 - Internal server error!"
+   },
+   "header": {
+      "profile": "Profile",
+      "signOut": "Sign Out"
+   },
+   "sidebar": {
+      "overview": "Overview",
+      "adminManagement": "Admin Management",
+      "companyManagement": "Company Management",
+      "hrManagement": "HR Management",
+      "candidateManagement": "Candidate Management",
+      "roleManagement": "Role Management",
+      "settings": "Settings",
+      "jobs": "Jobs Management"
+   }
+}

@@ -1,0 +1,7 @@
+export enum ROLE_ENUM {
+   SUPER_ADMIN = "SUPER_ADMIN",
+   ADMIN = "ADMIN",
+   HR = "HR",
+   RECRUITER = "RECRUITER",
+   CANDIDATE = "CANDIDATE",
+}

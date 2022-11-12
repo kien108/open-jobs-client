@@ -1,0 +1,126 @@
+.fc {
+  thead,
+  .fc-daygrid-body tr {
+    &:hover {
+      background-color: #fafafa;
+    }
+  }
+  a {
+    color: var(--text-default);
+    &:hover {
+      color: var(--text-default);
+    }
+    .day-number {
+      opacity: 0.6;
+    }
+  }
+  .fc-toolbar-title {
+    font-size: 17px;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .fc-col-header-cell {
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    &:hover {
+      background-color: var(--baseGray);
+    }
+    a {
+      cursor: text;
+    }
+    .fc-day-sun {
+      border-right: none;
+    }
+  }
+  .fc-prev-button.fc-button,
+  .fc-next-button.fc-button {
+    span {
+      font-size: 1.7em;
+      font-weight: 600;
+    }
+  }
+  .fc-daygrid-day-number {
+    position: static;
+    font-size: 1.2em;
+    font-weight: 400;
+    margin: 15px;
+  }
+  .fc-button-primary,
+  .fc-button-primary:hover,
+  .fc-button.fc-button-primary:active,
+  .fc-button-primary:focus,
+  .fc-button.fc-button-primary:active:focus {
+    color: var(--text-default);
+    background-color: unset;
+    border: none;
+    box-shadow: none;
+  }
+  .fc-daygrid-day {
+    height: 100px;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--baseGray) !important;
+    }
+  }
+
+  .fc-daygrid-day.fc-day-today {
+    background-color: #e8fde7;
+    .fc-daygrid-day-number {
+      font-size: 1.5em;
+    }
+  }
+  .fc-day-today {
+    height: 110px;
+  }
+  .fc-daygrid-day.fc-day-sun,
+  .fc-daygrid-day.fc-day-sat {
+    color: #8b0000;
+  }
+  .hover-area {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .progress {
+    position: absolute;
+    bottom: 0;
+    height: 0.5rem;
+    border-radius: 5px;
+    left: 0px;
+    z-index: 5;
+    background-color: var(--strongBlue);
+    opacity: 1;
+  }
+  .progress-holiday {
+    background-color: var(--accentActive);
+  }
+  .progress-background {
+    z-index: 0;
+    background-color: var(--baseGray);
+    width: 100%;
+  }
+  .leave-type,
+  .holiday {
+    position: absolute;
+    bottom: 0.5rem;
+    border-radius: 5px;
+    left: 0px;
+    z-index: 5;
+    opacity: 1;
+    border-radius: 10px;
+    border: 1px solid var(--baseGray03);
+    margin: 5px;
+    padding: 0.25rem;
+    width: calc(100% - 10px);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(27, 31, 59, 0.65);
+  }
+  .holiday {
+    border: 1px solid var(--accentActive);
+    color: var(--accentActive);
+  }
+}

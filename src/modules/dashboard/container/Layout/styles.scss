@@ -1,0 +1,25 @@
+.site-layout-content {
+   overflow-y: overlay;
+
+   &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+   }
+
+   &::-webkit-scrollbar-track {
+      background: #fff;
+      border-radius: 100px;
+   }
+
+   &::-webkit-scrollbar-thumb {
+      background: var(--scrollbar);
+      border-radius: 100px;
+   }
+
+   &.more-width {
+      &::-webkit-scrollbar {
+         width: 6px;
+         height: 6px;
+      }
+   }
+}

@@ -1,0 +1,43 @@
+export interface DateObjectType {
+  id: string;
+  trackingDate: number;
+  userId: string;
+  scheduleProcess: boolean;
+  lastModifiedDate: number;
+  workingDay?: number;
+  userInfo: {
+    id: string;
+    cif: string;
+    fullName: string;
+    syncLDAPDirectReport: boolean;
+    isDeletable: boolean;
+    isSkipCheckInOutNormal: boolean;
+  };
+  holidayName?: string;
+  ot?: number;
+  wfh?: number;
+  leaveType?: string;
+  lateCheckIn: boolean;
+  earlyCheckOut: boolean;
+  tenantId: string;
+  orgId: string;
+  isWeekend: boolean;
+  isSubmitedRequestOnsite: boolean;
+  isSubmitedPaidLeaveRequest: boolean;
+  isLeaveMorning: boolean;
+  isLeaveAfternoon: boolean;
+  isLeaveFullDay: boolean;
+  paidLeaveDuration: number;
+  leaveStatus?: string;
+  isSubmitedUpdateTimeSheetRequest: boolean;
+  isSubmitedWfhRequest: boolean;
+  isSubmitedOtRequest: boolean;
+  leaveDuration: number;
+  isSkipCheckInOutNormal: boolean;
+  isHoliday?: boolean;
+  isSubmitedLeaveRequest: boolean;
+  inTime?: number;
+  outTime?: number;
+  totalWorkingTime?: number;
+  onsiteDay?: number;
+}

@@ -1,0 +1,23 @@
+.hover-popup .ant-popover-content {
+  .ant-popover-inner {
+    color: black;
+    font-weight: 600;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    background-color: #fafafa !important;
+    .ant-popover-inner-content {
+      padding: 10px 20px 2px 35px;
+    }
+    article {
+      margin: 10px 0;
+      padding: 0;
+    }
+    span {
+      font-weight: 400;
+    }
+  }
+}
+
+.hover-popup .ant-popover-arrow-content {
+  --antd-arrow-background-color: #fafafa;
+}

@@ -1,0 +1,24 @@
+{
+   "form": {
+      "error": "The username or password is incorrect."
+   },
+   "dateRange": "Date Range",
+   "hidePassword": "Hide Password",
+   "showPassword": "Show Password",
+   "copy": "Copy",
+   "copied": "Copied!",
+   "login": {
+      "email": "Email",
+      "firstName": "First Name",
+      "enterFirstName": "Enter first name",
+      "lastName": "Last Name",
+      "enterLastName": "Enter last name",
+      "enterEmail": "trungkien@gmail.com",
+      "password": "Password",
+      "enterPassword": "kien108@X",
+      "remember": "Remember me",
+      "contact": "Can't access your account? Please contact with <1>administrators</1>",
+      "btn": "Login",
+      "register": "Register"
+   }
+}

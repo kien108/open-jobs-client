@@ -1,0 +1,20 @@
+{
+   "form": {
+      "error": "Tên đăng nhập hoặc mật khẩu không đúng."
+   },
+
+   "login": {
+      "firstName": "Tên",
+      "enterFirstName": "Nhập tên",
+      "lastName": "Họ",
+      "enterLastName": "Nhập họ",
+      "email": "Email",
+      "enterEmail": "trungkien@gmail.com",
+      "password": "Mật khẩu",
+      "enterPassword": "Nhập mật khẩu",
+      "remember": "Ghi nhớ đăng nhập",
+      "contact": "Không thể truy cập tài khoản? Vui lòng liên hệ với <1>quản trị viên</1>",
+      "btn": "Đăng nhập",
+      "register": "Đăng ký"
+   }
+}

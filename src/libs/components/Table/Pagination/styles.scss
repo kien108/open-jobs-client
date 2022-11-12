@@ -1,0 +1,34 @@
+.styled-popover {
+  .ant-popover-content {
+    .ant-popover-arrow {
+      display: none;
+    }
+  }
+
+  .ant-popover-inner {
+    border-radius: 10px;
+
+    .ant-popover-inner-content {
+      padding: 10px 0;
+    }
+  }
+
+  .options-show {
+    min-width: 100px;
+    padding: 0;
+    list-style: none;
+
+    .option {
+      padding: 8px 10px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .option:hover {
+      background: var(--gray);
+      cursor: pointer;
+    }
+  }
+}

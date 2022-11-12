@@ -1,0 +1,17 @@
+.custom-notification {
+  border-radius: 10px;
+
+  .ant-notification-notice-message {
+    margin-bottom: unset;
+
+    h5 {
+      line-height: unset;
+    }
+  }
+
+  .ant-notification-notice-icon,
+  .ant-notification-notice-close {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

@@ -1,0 +1,32 @@
+import { PrivateRoute, i18n } from "./libs/common";
+
+import { Layout, Common as CommonPage } from "./libs/components";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import { ModulesAuth } from "./modules/auth/src";
+import { I18nextProvider } from "react-i18next";
+import "antd/dist/antd.css";
+import { ModuleOverview } from "./modules/overview/src";
+import ModuleDashboard from "./modules/dashboard/modules-dashboard";
+
+export function App() {
+   return (
+      <BrowserRouter>
+         <I18nextProvider i18n={i18n}>
+            <Routes>
+               <Route element={<PrivateRoute />}></Route>
+               <Route path="/*" element={<Layout />}>
+                  <Route index element={<Navigate to="overview" />} />
+                  <Route path="overview/*" element={<ModuleOverview />} />
+               </Route>
+               <Route path="dashboard/*" element={<ModuleDashboard />}></Route>
+
+               <Route path="auth/*" element={<ModulesAuth />} />
+               {/* <Route path="common" element={<CommonPage />} /> */}
+            </Routes>
+         </I18nextProvider>
+      </BrowserRouter>
+   );
+}
+
+export default App;
