@@ -3,7 +3,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
-import { Button, Checkbox, Input, GoogleIcon } from "../../../../../../libs/components";
+import {
+   Button,
+   Checkbox,
+   Input,
+   GoogleIcon,
+   openNotification,
+} from "../../../../../../libs/components";
 import { useLoginMutation } from "../../services";
 import { AuthResponse } from "../../types/Responses";
 import logo from "../../../../../../assets/img/logo.png";
@@ -96,6 +102,16 @@ const Login = () => {
       }
       if (localStorage.getItem("refresh_token")) {
          localStorage.removeItem("refresh_token");
+      }
+      localStorage.removeItem("userId");
+   }, []);
+
+   useEffect(() => {
+      if (localStorage.getItem("loginErr")) {
+         openNotification({
+            type: "error",
+            message: "INTERNAL SERVER ERROR",
+         });
       }
    }, []);
    return (

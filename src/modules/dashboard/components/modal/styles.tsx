@@ -96,3 +96,42 @@ export const StyledListUnits = styled.div`
       border-radius: 100px;
    }
 `;
+
+export const BtnFunction = styled.div`
+   cursor: pointer;
+   width: 44px;
+   height: 44px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: black;
+   transform: translateX(15px);
+   margin-left: auto;
+   margin-top: 20px;
+   border-radius: 10px;
+   transition: all 0.3s;
+
+   &.btn-back {
+      margin-left: 140px;
+   }
+
+   &.btn-remove {
+      margin-top: 0px;
+      transform: translateX(0);
+   }
+
+   .icon-password {
+      path:first-child {
+         fill: #fff;
+      }
+   }
+
+   &:hover {
+      background: ${(props) => props.theme.softBlue};
+      svg {
+         path {
+            fill: ${(props) => props.theme.blueHover};
+         }
+      }
+   }
+`;

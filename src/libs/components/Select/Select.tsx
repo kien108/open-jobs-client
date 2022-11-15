@@ -14,6 +14,7 @@ import "./styles.scss";
 import DownArrowSvgComponent from "./SvgSelect/DownArrowSvgComponent";
 import { NOTHING_FOUND, OptionType } from "./types";
 import { CheckIcon } from "../Icons";
+import { get } from "lodash";
 
 export interface CustomSelectProps extends SelectProps {
    options?: OptionType[];
@@ -49,7 +50,8 @@ const Select = ({
       formState: { errors },
    } = useFormContext();
 
-   const errorMessage: any = message || (errors && name ? errors[name]?.message : "");
+   const errorMessage: any =
+      message || (errors && name ? get(errors, `${name}.message`, undefined) : "");
 
    const { t } = useTranslation();
 

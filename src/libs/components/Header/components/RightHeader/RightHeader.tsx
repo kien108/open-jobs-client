@@ -28,6 +28,7 @@ interface Props {
 const RightHeader = ({ languages, accounts }: Props) => {
    const { t, i18n } = useTranslation();
    const dispatch = useCommonDispatch();
+   const { user } = useCommonSelector((state: RootState) => state.user);
    const accessToken = getToken();
 
    const [visiblePopover, setVisiblePopover] = useState(false);
@@ -105,11 +106,7 @@ const RightHeader = ({ languages, accounts }: Props) => {
                   }
                >
                   <button className="button-header">
-                     <Image
-                        type="circle"
-                        src="https://cdn.pixabay.com/photo/2015/05/17/10/51/facebook-770688_960_720.png"
-                        width="32px"
-                     />
+                     <Image type="circle" src={user?.avatarUrl} width="32px" />
                   </button>
                </Popover>
             ) : (

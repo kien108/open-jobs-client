@@ -22,7 +22,38 @@ export const JobAPI = createApi({
             params,
          }),
       }),
+
+      getMajors: builder.query({
+         query: (params) => ({
+            url: "/majors",
+            params,
+         }),
+      }),
+      getSpecializations: builder.query({
+         query: (id) => ({
+            url: `/specialization/bymajor/${id}`,
+         }),
+      }),
+      getSkills: builder.query({
+         query: (id) => ({
+            url: `/skill/by-specialization/${id}`,
+         }),
+      }),
+      applyJob: builder.mutation({
+         query: ({ cvId, jobId }) => ({
+            url: `/cv/${cvId}/apply/${jobId}`,
+            method: "POST",
+         }),
+      }),
    }),
 });
 
-export const { useGetJobsQuery, useGetJobByIdQuery, useGetProvincesQuery } = JobAPI;
+export const {
+   useGetJobsQuery,
+   useGetJobByIdQuery,
+   useGetProvincesQuery,
+   useGetMajorsQuery,
+   useGetSpecializationsQuery,
+   useGetSkillsQuery,
+   useApplyJobMutation,
+} = JobAPI;

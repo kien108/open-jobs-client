@@ -20,12 +20,12 @@ const accounts: AccountType[] = [
    {
       id: 1,
       title: "header.profile",
-      path: "/profile",
+      path: "/overview/profile",
    },
    {
       id: 2,
       title: "header.signOut",
-      path: "/login",
+      path: "/auth",
    },
 ];
 

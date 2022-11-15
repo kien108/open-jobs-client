@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 
-import { useModal } from "../../../../libs/common";
+import moment from "moment";
+import { RootState, useCommonSelector, useModal } from "../../../../libs/common";
 import {
    Button,
    DeleteIcon,
    EditIcon,
    EyeIcon,
+   EyePwIcon,
    Input,
    Modal,
    openNotification,
@@ -19,7 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
 import { BtnFunction, ContainerTable, StyledFunctions, StyledModal } from "./styles";
 // import { useDeActivateMutation, useGetCompaniesQuery } from "../services";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 // import { ICompany } from "../types";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -29,6 +31,24 @@ import { debounce } from "lodash";
 import { GroupButton } from "../../components/modal/styles";
 import { MdOutlinePassword } from "react-icons/md";
 import { CreateJob } from "../../components/modal";
+import {
+   useGetJobsQuery,
+   useGetMajorsQuery,
+   useGetSkillsQuery,
+   useGetSpecializationsQuery,
+} from "../../services";
+import { useDeleteJobMutation, useGetJobCompanyQuery } from "../../services/JobAPI";
+
+type FormType = {
+   listSkill: any;
+   objective: string;
+   education: string;
+   experience: string;
+   certificate: string;
+   majorId: string;
+   specializationId: string;
+   title: string;
+};
 
 const Jobs = () => {
    const { t } = useTranslation();
@@ -36,21 +56,21 @@ const Jobs = () => {
    const [dataSource, setDataSource] = useState<any>([]);
    const [selectedId, setSelectedId] = useState<string | undefined>("");
 
+   const navigate = useNavigate();
+
+   const { user } = useCommonSelector((state: RootState) => state.user);
    const { isOpen, handleOpen, handleClose } = useModal();
 
    const [searchParams, setSearchParams] = useSearchParams();
 
    const {
-      isOpen: isOpenDelete,
-      handleClose: handleCloseDelete,
-      handleOpen: handleOpenDeleteModal,
-   } = useModal();
-
-   const {
-      isOpen: isOpenEditPassword,
-      handleClose: handleCloseEditPassword,
-      handleOpen: handleOpenEditPassword,
-   } = useModal();
+      data: dataCompany,
+      isLoading,
+      isFetching,
+   } = useGetJobCompanyQuery(user?.companyId, {
+      refetchOnMountOrArgChange: true,
+      skip: !user?.companyId,
+   });
 
    const form = useForm({
       defaultValues: {
@@ -63,87 +83,57 @@ const Jobs = () => {
       ),
    });
 
-   // const {
-   //    data: dataCompanies,
-   //    isLoading: loadingCompanies,
-   //    isFetching: fetchingCompanies,
-   // } = useGetCompaniesQuery(
-   //    {
-   //       ...tableInstance.params,
-   //       ...useFilter(),
-   //    },
-   //    {
-   //       refetchOnMountOrArgChange: true,
-   //    }
-   // );
+   const {
+      isOpen: isOpenDelete,
+      handleClose: handleCloseDelete,
+      handleOpen: handleOpenDeleteModal,
+   } = useModal();
 
-   // const [deleteCompany, { isLoading: loadingDeleteCompany }] = useDeActivateMutation();
-
-   const handleEditPassword = (id: string) => {
-      setSelectedId(id);
-      handleOpenEditPassword();
-   };
+   const [deleteJob, { isLoading: loadingDeleteJob }] = useDeleteJobMutation();
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
-         dataIndex: "name",
-         key: "name",
+         title: t("Title"),
+         dataIndex: "title",
+         key: "title",
          sorter: true,
       },
       {
-         title: t("Address"),
-         dataIndex: "address",
-         key: "address",
-         sorter: true,
-         render: (item) => (item ? item : "N/A"),
-      },
-      {
-         title: t("Account Balance"),
-         dataIndex: "accountBalance",
-         key: "accountBalance",
+         title: t("WorkPlace"),
+         dataIndex: "workPlace",
+         key: "workPlace",
          sorter: true,
       },
       {
-         title: t("Contract End Date"),
-         dataIndex: "contractEndDate",
-         key: "contractEndDate",
+         title: t("Salary"),
+         dataIndex: "salary",
+         key: "salary",
          sorter: true,
       },
       {
-         title: t("Description"),
-         dataIndex: "description",
-         key: "description",
+         title: t("Quantity"),
+         dataIndex: "quantity",
+         key: "quantity",
          sorter: true,
       },
       {
-         title: t("Phone number"),
-         dataIndex: "phone",
-         key: "phone",
+         title: t("Created At"),
+         dataIndex: "createdAt",
+         key: "createdAt",
          sorter: true,
-         render: (item) => (item ? item : "N/A"),
-      },
-      {
-         title: t("Employees"),
-         dataIndex: "totalEmployee",
-         key: "totalEmployee",
-         sorter: true,
-         render: (item) => (item ? item : "N/A"),
+         render: (item) => <span>{moment(item).format("MM/DD/YYYY")}</span>,
       },
 
       {
-         title: t("adminManagement.actions"),
+         title: t("Action"),
          dataIndex: "id",
          render: (_: string, record: any) => (
             <StyledFunctions>
-               <BtnFunction onClick={() => handleOpenUpdate(record.id)}>
-                  <EditIcon />
+               <BtnFunction onClick={() => navigate(`${record?.id}/cv-matched`)}>
+                  <EyeIcon />
                </BtnFunction>
                <BtnFunction onClick={() => handleOpenDelete(record.id)}>
                   <DeleteIcon />
-               </BtnFunction>
-               <BtnFunction onClick={() => handleEditPassword(record.id)}>
-                  <MdOutlinePassword size={25} className="icon-password" />
                </BtnFunction>
             </StyledFunctions>
          ),
@@ -173,36 +163,33 @@ const Jobs = () => {
 
    const handleOnChange = debounce(setValueToSearchParams, 500);
 
-   // const handleConfirmDelete = () => {
-   //    selectedId &&
-   //       deleteCompany(selectedId)
-   //          .unwrap()
-   //          .then(() => {
-   //             openNotification({
-   //                type: "success",
-   //                message: t("Deactivate this account successfully!!!"),
-   //             });
-   //             searchParams.delete("id");
-   //             setSearchParams(searchParams);
-   //             handleCloseDelete();
-   //          })
-   //          .catch((error) => {
-   //             openNotification({
-   //                type: "error",
-   //                message: t("common:ERRORS.SERVER_ERROR"),
-   //             });
-   //          });
-   // };
+   const handleConfirmDelete = () => {
+      deleteJob(selectedId)
+         .unwrap()
+         .then(() => {
+            openNotification({
+               type: "success",
+               message: t("Delete job successfully!!!"),
+            });
+            handleCloseDelete();
+         })
+         .catch((error) => {
+            openNotification({
+               type: "error",
+               message: t("common:ERRORS.SERVER_ERROR"),
+            });
+         });
+   };
 
-   // useEffect(() => {
-   //    dataCompanies &&
-   //       setDataSource(
-   //          dataCompanies.companies.map((item) => ({
-   //             key: item.id,
-   //             ...item,
-   //          }))
-   //       );
-   // }, [dataCompanies]);
+   useEffect(() => {
+      console.log(dataCompany);
+      const dataSource = dataCompany?.map((item: any) => ({
+         key: item.id,
+         ...item,
+      }));
+
+      setDataSource(dataSource || []);
+   }, [dataCompany]);
 
    return (
       <>
@@ -223,7 +210,7 @@ const Jobs = () => {
                columns={columns}
                dataSource={dataSource}
                tableInstance={tableInstance}
-               loading={false}
+               loading={isLoading || isFetching}
                totalElements={0}
                totalPages={0}
             />
@@ -244,12 +231,10 @@ const Jobs = () => {
             type="confirm"
             open={isOpenDelete}
             onCancel={() => {
-               searchParams.delete("id");
-               setSearchParams(searchParams);
                handleCloseDelete();
             }}
             confirmIcon="?"
-            title={t("Do to want to delete this company?")}
+            title={t("Do to want to delete this job?")}
          >
             <GroupButton>
                <Button
@@ -258,13 +243,17 @@ const Jobs = () => {
                   key="back"
                   border="outline"
                   onClick={() => {
-                     setSelectedId(undefined);
                      handleCloseDelete();
                   }}
                >
                   {t("common:confirm.cancel")}
                </Button>
-               <Button height={44} key="submit">
+               <Button
+                  height={44}
+                  key="submit"
+                  onClick={handleConfirmDelete}
+                  loading={loadingDeleteJob}
+               >
                   {t(t("common:confirm.ok"))}
                </Button>
             </GroupButton>

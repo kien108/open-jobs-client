@@ -8,6 +8,13 @@ import i18n from "./i18n/config";
 import { RootState, useCommonSelector } from "./../../libs/common";
 import { Layout } from "./container/Layout";
 import { Jobs } from "./pages/Jobs";
+import FillCompany from "../overview/src/lib/pages/FillCompany/FillCompany";
+import { CVMatched } from "./pages/Jobs/CV";
+import { TabsRequest } from "./components/TabsRequest";
+import { CVManagement } from "./pages/CVManagement";
+import { CVApplied } from "./pages/CVApplied";
+import { CV } from "../overview/src/lib/components/CV";
+import { CVDetail } from "./components";
 // import { Filter } from "./components";
 
 export function ModuleDashboard() {
@@ -24,6 +31,12 @@ export function ModuleDashboard() {
                <Route path="/*" element={<Layout />}>
                   <Route index element={<Navigate to="jobs" />} />
                   <Route path="jobs/*" element={<Jobs />} />
+                  <Route path="jobs/:id" element={<CVManagement />}>
+                     <Route path="cv-matched" element={<CVMatched />} />
+                     <Route path="cv-applied" element={<CVApplied />} />
+                     <Route path="cv-applied/:id" element={<CVDetail />} />
+                  </Route>
+                  <Route path="profile" element={<FillCompany />} />
                </Route>
             </Routes>
          </I18nextProvider>

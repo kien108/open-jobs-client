@@ -9,6 +9,9 @@ import { RootState, useCommonSelector } from "../../../../libs/common";
 import { Filter } from "./components";
 import Jobs from "./pages/Jobs/Jobs";
 import FillCompany from "./pages/FillCompany/FillCompany";
+import { Profile } from "./pages/Profile";
+import { ContactInformation } from "./components/ContactInformation";
+import { CV } from "./components/CV";
 
 export function ModuleOverview() {
    const { lang } = useCommonSelector((state: RootState) => state.lang);
@@ -25,7 +28,10 @@ export function ModuleOverview() {
                   <Route index element={<Navigate to="jobs" />} />
                   <Route path="jobs" element={<Jobs />} />
                   <Route path="companies" element={<span>companies</span>} />
-                  <Route path="profile" element={<FillCompany />} />
+                  <Route path="validate" element={<FillCompany />} />
+                  <Route path="profile" element={<Profile />}></Route>
+                  <Route path="profile/contact" element={<ContactInformation />} />
+                  <Route path="profile/cv" element={<CV />} />
                </Route>
             </Routes>
          </I18nextProvider>

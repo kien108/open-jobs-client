@@ -6,6 +6,13 @@ export interface IUserGeneral {
    id: string;
    firstName: string;
    lastName: string;
+   avatarUrl: string;
+   email?: string;
+   gender?: string;
+   dob?: string;
+   company?: string;
+   phone?: string;
+   companyId?: string;
 }
 
 export interface PermissionState {
@@ -19,6 +26,8 @@ const initialState: PermissionState = {
       role: "",
       firstName: "",
       lastName: "",
+      avatarUrl: "",
+      companyId: "",
    },
    isRemember: false,
 };

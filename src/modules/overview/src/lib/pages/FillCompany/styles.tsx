@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-   max-width: 1070px;
    margin: 0 auto;
-   padding: 40px 0;
+   padding: 24px;
+   box-shadow: 0 0 #000, 0 0 #000, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 0 10px -6px rgb(0 0 0 / 0.1);
+   background: ${(props) => props.theme.secondaryText};
+   border-radius: 10px;
 
    .header {
       margin-bottom: 30px;
@@ -48,7 +50,7 @@ export const Container = styled.div`
    }
 
    .ant-select-selector {
-      height: 52px;
+      height: 52px !important;
       min-height: unset !important;
    }
 

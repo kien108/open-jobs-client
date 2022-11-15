@@ -32,6 +32,7 @@ const EmailVariables: FC<IEmailVariables> = (props) => {
       control,
       register,
       setValue,
+      getValues,
       formState: { errors },
    } = useFormContext();
 
@@ -44,6 +45,9 @@ const EmailVariables: FC<IEmailVariables> = (props) => {
 
    const [curIndex, setCurIndex] = useState("");
 
+   useEffect(() => {
+      setContent(data as any);
+   }, [data]);
    useEffect(() => {
       const quill = editorRef.current.getEditor();
 

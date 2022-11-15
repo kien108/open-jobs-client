@@ -3,6 +3,7 @@ import {
    getToken,
    RootState,
    saveUserId,
+   setToken,
    useCommonDispatch,
    useCommonSelector,
    useGetAdminByIdQuery,
@@ -38,9 +39,18 @@ const Layout = () => {
 
          const accessToken = new URLSearchParams(search).get("access-token");
 
-         console.log(role);
-         accessToken && localStorage.setItem("access_token", accessToken);
-         id && dispatch(saveUserId({ id }));
+         accessToken && setToken(accessToken);
+
+         if (id) {
+            dispatch(saveUserId({ id }));
+            localStorage.setItem("userId", id);
+            localStorage.removeItem("loginErr");
+         }
+
+         if (!role || !id || !accessToken) {
+            localStorage.setItem("loginErr", JSON.stringify(true));
+            navigate("/auth");
+         }
 
          switch (role) {
             case "USER":

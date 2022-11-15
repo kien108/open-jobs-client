@@ -8,10 +8,13 @@ import moment from "moment";
 interface IProps {
    item: any;
    handleClick: (id: string) => void;
+   className: any;
 }
-const Job: FC<IProps> = ({ item, handleClick }) => {
+const Job: FC<IProps> = ({ item, handleClick, className }) => {
+   console.log(item);
+
    return (
-      <Container onClick={() => handleClick(item?.id)}>
+      <Container onClick={() => handleClick(item?.id)} className={className}>
          <div className="header">
             <div className="left">
                <span className="job-title">{item?.title}</span>
@@ -24,14 +27,11 @@ const Job: FC<IProps> = ({ item, handleClick }) => {
          </div>
 
          <div className="skills">
-            {item?.listSkillExperience?.map((item: any) => (
-               <Tag2 className={`skill ${item?.skill?.isVerified ? "" : "invalid"}`}>
-                  {item?.skill?.name}
+            {item?.jobSkills?.map((skill: any) => (
+               <Tag2 className={`skill ${skill?.skill?.isVerified ? "" : "invalid"}`}>
+                  {skill?.skill?.name}
                </Tag2>
             ))}
-            {/* <Tag2 className="skill invalid">JavaScript</Tag2>
-            <Tag2 className="skill">HTML5</Tag2>
-            <Tag2 className="skill">PHP</Tag2> */}
          </div>
 
          <div className="footer">

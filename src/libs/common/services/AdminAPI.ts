@@ -7,7 +7,7 @@ export const AdminAPI = createApi({
    endpoints: (builder) => ({
       getAdminById: builder.query<any, string>({
          query: (id) => ({
-            url: `/adminuser/${id}`,
+            url: `/userprofile/${id}`,
          }),
       }),
    }),

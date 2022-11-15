@@ -1,11 +1,5 @@
 import Sidebar from "../Sidebar/Sidebar";
-import {
-   getToken,
-   RootState,
-   useCommonDispatch,
-   useCommonSelector,
-   useGetAdminByIdQuery,
-} from "../../../../libs/common";
+import { getToken, RootState, useCommonDispatch, useCommonSelector } from "../../../../libs/common";
 import { Layout as AntLayout } from "antd";
 import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
@@ -13,6 +7,7 @@ import "./styles.scss";
 import { decodeToken } from "react-jwt";
 import { saveUser } from "../../../../libs/common";
 import Header from "../Header/Header";
+import { useGetProfileQuery } from "../../services";
 
 const { Content, Sider } = AntLayout;
 
@@ -24,12 +19,12 @@ const Layout = () => {
    const dispatch = useCommonDispatch();
    const { id } = useCommonSelector((state: RootState) => state.user.user);
 
-   const { data, isLoading } = useGetAdminByIdQuery(id, { skip: !id });
+   const { data, isLoading } = useGetProfileQuery(id, { skip: !id });
 
    useEffect(() => {
       if (!data) return;
 
-      dispatch(saveUser(data));
+      dispatch(saveUser({ ...data, companyId: data?.company?.id }));
    }, [data]);
 
    useEffect(() => {

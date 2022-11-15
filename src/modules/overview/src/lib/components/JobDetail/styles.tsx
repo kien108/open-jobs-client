@@ -129,6 +129,8 @@ export const Container = styled.div`
             height: 65px;
             object-fit: cover;
             border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
 
             img {
                display: block;

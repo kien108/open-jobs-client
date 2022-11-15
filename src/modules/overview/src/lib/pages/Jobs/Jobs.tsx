@@ -37,7 +37,11 @@ const Jobs = () => {
                         <Row gutter={[15, 15]}>
                            {jobs?.listJob?.map((item: any) => (
                               <Col span={24} key={item?.id}>
-                                 <Job item={item} handleClick={(id) => setSelectedId(id)} />
+                                 <Job
+                                    item={item}
+                                    handleClick={(id) => setSelectedId(id)}
+                                    className={`${selectedId === item?.id ? "active" : ""}`}
+                                 />
                               </Col>
                            ))}
                         </Row>
