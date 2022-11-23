@@ -35,6 +35,7 @@ export function ModuleDashboard() {
                      <Route path="cv-matched" element={<CVMatched />} />
                      <Route path="cv-applied" element={<CVApplied />} />
                      <Route path="cv-applied/:id" element={<CVDetail />} />
+                     <Route path="cv-matched/:id" element={<CVDetail />} />
                   </Route>
                   <Route path="profile" element={<FillCompany />} />
                </Route>

@@ -18,12 +18,15 @@ import { useApplyJobMutation, useGetJobByIdQuery, useGetProfileQuery } from "../
 import moment from "moment";
 import { RootState, useCommonSelector } from "../../../../../../libs/common";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
    id?: any;
+   isCompany: boolean;
 }
 
-const JobDetail: FC<IProps> = ({ id }) => {
+const JobDetail: FC<IProps> = ({ id, isCompany }) => {
+   const navigate = useNavigate();
    const { t } = useTranslation();
    const { user } = useCommonSelector((state: RootState) => state.user);
 
@@ -118,54 +121,60 @@ const JobDetail: FC<IProps> = ({ id }) => {
             </div>
             <Divider />
             <p className="description">{Parser(`${jobDetail?.description}`)}</p>
-            <div className="footer">
-               <div className="header">
-                  <div className="logo">
-                     <img src={jobDetail?.company?.logoUrl || logoCompany} alt="" />
+
+            {!isCompany && (
+               <div className="footer">
+                  <div className="header">
+                     <div className="logo">
+                        <img src={jobDetail?.company?.logoUrl || logoCompany} alt="" />
+                     </div>
+                     <div className="right">
+                        <span className="name">{jobDetail?.company?.name}</span>
+                        <span className="slogan">{jobDetail?.company?.name}</span>
+                     </div>
                   </div>
-                  <div className="right">
-                     <span className="name">{jobDetail?.company?.name}</span>
-                     <span className="slogan">{jobDetail?.company?.name}</span>
+                  <div className="content">
+                     <Row gutter={[10, 10]}>
+                        <Col span={8}>
+                           <div className="item">
+                              <AiOutlineSetting size={17} />
+                              <span>Product</span>
+                           </div>
+                           <div className="item">
+                              <BsCalendarDay size={17} />
+                              <span>Thứ 2 - Thứ 6</span>
+                           </div>
+                           <div className="item">
+                              <AiOutlineClockCircle size={17} />
+                              <span>Không OT</span>
+                           </div>
+                        </Col>
+                        <Col span={10}>
+                           <div className="item">
+                              <BsPeople size={17} />
+                              <span>Không OT</span>
+                           </div>
+                           <div className="item">
+                              <GrLocation size={17} />
+                              <span>{jobDetail?.company?.address}</span>
+                           </div>
+                        </Col>
+                        <Col span={5}>
+                           <Button
+                              onClick={() =>
+                                 navigate(`/overview/companies/${jobDetail?.company?.id}`)
+                              }
+                              height={42}
+                              border="outline"
+                              style={{ width: "fit-content", padding: "0 10px" }}
+                           >
+                              View Company
+                           </Button>
+                        </Col>
+                     </Row>
                   </div>
                </div>
-               <div className="content">
-                  <Row gutter={[10, 10]}>
-                     <Col span={8}>
-                        <div className="item">
-                           <AiOutlineSetting size={17} />
-                           <span>Product</span>
-                        </div>
-                        <div className="item">
-                           <BsCalendarDay size={17} />
-                           <span>Thứ 2 - Thứ 6</span>
-                        </div>
-                        <div className="item">
-                           <AiOutlineClockCircle size={17} />
-                           <span>Không OT</span>
-                        </div>
-                     </Col>
-                     <Col span={10}>
-                        <div className="item">
-                           <BsPeople size={17} />
-                           <span>Không OT</span>
-                        </div>
-                        <div className="item">
-                           <GrLocation size={17} />
-                           <span>{jobDetail?.company?.address}</span>
-                        </div>
-                     </Col>
-                     <Col span={5}>
-                        <Button
-                           height={42}
-                           border="outline"
-                           style={{ width: "fit-content", padding: "0 10px" }}
-                        >
-                           View Company
-                        </Button>
-                     </Col>
-                  </Row>
-               </div>
-            </div>
+            )}
          </Container>
       </Spin>
    );

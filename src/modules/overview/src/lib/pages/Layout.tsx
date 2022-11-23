@@ -10,7 +10,7 @@ const Layout = () => {
       <>
          <AntLayout>
             <AntLayout style={{ height: "100vh" }}>
-               <Content className="site-layout-content" style={{ background: "white" }}>
+               <Content className="site-layout-content" style={{ background: "#fff" }}>
                   <Outlet />
                </Content>
             </AntLayout>

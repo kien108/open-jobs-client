@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Container } from "./styles";
+import React, { useEffect, useRef, useState } from "react";
+import { Container, ImgWrapper } from "./styles";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Input, openNotification, Select } from "../../../../../../libs/components";
+import {
+   Button,
+   EditIcon,
+   Input,
+   openNotification,
+   Select,
+} from "../../../../../../libs/components";
 
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import { Col, Divider, Row, Spin } from "antd";
+import { Col, Divider, Row, Spin, Upload } from "antd";
+import ImgCrop from "antd-img-crop";
 
 import Company from "../../assets/company.png";
 import { RootState, useCommonSelector, useDebounce } from "../../../../../../libs/common";
@@ -16,6 +23,8 @@ import {
    useGetProvincesQuery,
    useUpdateProfileMutation,
 } from "../../services";
+import { EmailVariables } from "../../../../../dashboard/components/EmailVariables";
+import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 
 const FillCompany = () => {
    const { t } = useTranslation();
@@ -28,6 +37,9 @@ const FillCompany = () => {
    const searchProvinceDebounce = useDebounce(searchProvince, 300);
 
    const searchDistrictDebounce = useDebounce(searchDistrict, 300);
+
+   const contentRef = useRef(undefined);
+   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
    const {
       data: user,
@@ -82,7 +94,6 @@ const FillCompany = () => {
       { refetchOnMountOrArgChange: true }
    );
 
-   console.log(user);
    const onSubmit = (data: any) => {
       upload({
          authProvider: "DATABASE",
@@ -91,6 +102,9 @@ const FillCompany = () => {
             ...user.company,
             ...data,
             address: `${data?.extraAddress},${data?.district},${data?.province}`,
+            // logoUrl: fileList[0].url || fileList[0].thumbUrl,
+            logoUrl:
+               "https://media.glassdoor.com/sqll/2886637/ban-vien-squarelogo-1630673888383.png",
          },
          firstName: data?.firstName,
          lastName: data?.lastName,
@@ -270,7 +284,25 @@ const FillCompany = () => {
       district && form.setValue("district", district);
       province && form.setValue("province", province);
       extraAddress && form.setValue("extraAddress", extraAddress);
+
+      setFileList([
+         {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: company?.logoUrl,
+         },
+      ]);
    }, [user]);
+
+   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+      setFileList(newFileList);
+   };
+
+   useEffect(() => {
+      console.log(fileList);
+   }, [fileList]);
+
    return (
       <Spin spinning={loadingProfile}>
          <Container>
@@ -280,6 +312,22 @@ const FillCompany = () => {
                      <span>Complete profile company</span>
                      <span>You'll need to complement profile to begin post a job</span>
                   </div>
+                  <ImgWrapper className="wrapper">
+                     <ImgWrapper className="wrapper-img">
+                        <Upload
+                           beforeUpload={() => false}
+                           listType="picture-card"
+                           fileList={fileList}
+                           maxCount={1}
+                           style={{
+                              position: fileList.length < 1 ? "relative" : "absolute",
+                           }}
+                           onChange={onChange}
+                        >
+                           <EditIcon />
+                        </Upload>
+                     </ImgWrapper>
+                  </ImgWrapper>
                   <FormProvider {...form}>
                      <Row gutter={[15, 15]}>
                         <Col span={24}>
@@ -355,6 +403,15 @@ const FillCompany = () => {
                               label="Extra address"
                            />
                         </Col>
+                        <Col span={24}>
+                           <EmailVariables
+                              data={user?.company?.description}
+                              editorRef={contentRef}
+                              name="description"
+                              label="Description"
+                           />
+                        </Col>
+
                         <Button
                            className="btn-save"
                            loading={loadingUpload}

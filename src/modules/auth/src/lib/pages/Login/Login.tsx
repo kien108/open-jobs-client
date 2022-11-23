@@ -79,7 +79,12 @@ const Login = () => {
             localStorage.setItem("userId", data.id);
 
             localStorage.setItem("refresh_token", data["refresh-token"]);
-            navigate(from, { replace: true });
+
+            if (data?.role === "HR") {
+               navigate("/dashboard");
+            } else {
+               navigate(from, { replace: true });
+            }
          })
          .catch((e) => {
             setError(true);

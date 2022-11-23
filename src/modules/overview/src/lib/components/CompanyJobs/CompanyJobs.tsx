@@ -1,45 +1,44 @@
-import { Pagination } from "../../../../../../libs/components/Table/Pagination";
-import { Table } from "../../../../../../libs/components";
 import { Col, Divider, Row, Spin } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Filter } from "../../components";
 import { Job } from "../../components/Job";
 import { JobDetail } from "../../components/JobDetail";
 import { useFilterSearchJob } from "../../hooks";
-import { useGetJobsQuery } from "../../services";
+import { useGetJobCompanyQuery, useGetJobsQuery } from "../../services";
 import { Container, Content, Header } from "./styles";
 
-const Jobs = () => {
-   const tableInstance = Table.useTable();
+import { Pagination } from "../../../../../../libs/components/Table/Pagination";
+import { Table } from "../../../../../../libs/components";
 
+interface IProps {
+   id: string;
+}
+const CompanyJobs: FC<IProps> = ({ id }) => {
+   const tableInstance = Table.useTable();
    const {
       data: jobs,
       isLoading: loadingJobs,
       isFetching: fetchingJobs,
-   } = useGetJobsQuery({ ...tableInstance.params, size: 5, ...useFilterSearchJob() });
+   } = useGetJobCompanyQuery(
+      { id, ...tableInstance.params },
+      { skip: !id, refetchOnMountOrArgChange: true }
+   );
 
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
    useEffect(() => {
-      jobs && jobs?.listJob?.[0] && setSelectedId(jobs?.listJob?.[0]?.id);
+      jobs && jobs?.[0] && setSelectedId(jobs?.[0]?.id);
    }, [jobs]);
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>
-            <Header>
-               <Filter />
-               <div className="title-container">
-                  <span className="title">Create your CV</span>
-                  <span className="content">- It only takes a few seconds</span>
-               </div>
-            </Header>
             <Divider />
-            {jobs?.listJob?.length > 0 ? (
+            {jobs?.length > 0 ? (
                <Content>
                   <Row gutter={[24, 24]}>
                      <Col span={10}>
                         <Row gutter={[15, 15]}>
-                           {jobs?.listJob?.map((item: any) => (
+                           {jobs?.map((item: any) => (
                               <Col span={24} key={item?.id}>
                                  <Job
                                     item={item}
@@ -56,16 +55,16 @@ const Jobs = () => {
                         />
                      </Col>
                      <Col span={13}>
-                        <JobDetail id={selectedId} isCompany={false} />
+                        <JobDetail id={selectedId} isCompany={true} />
                      </Col>
                   </Row>
                </Content>
             ) : (
-               <span className="no-results">No Results</span>
+               <span className="no-results">This company don't have any jobs</span>
             )}
          </Container>
       </Spin>
    );
 };
 
-export default Jobs;
+export default CompanyJobs;

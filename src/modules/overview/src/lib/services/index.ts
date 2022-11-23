@@ -19,3 +19,10 @@ export {
    useGetCVQuery,
    useGetDistrictsQuery,
 } from "./UserAPI";
+
+export {
+   CompanyAPI,
+   useGetJobCompanyQuery,
+   useGetCompaniesQuery,
+   useGetCompanyByIdQuery,
+} from "./CompanyAPI";

@@ -6,6 +6,7 @@ import {
    CloseIcon,
    DeleteIcon,
    EditIcon,
+   EyeIcon,
    Input,
    Modal,
    openNotification,
@@ -28,10 +29,12 @@ import { debounce } from "lodash";
 import { GroupButton, BtnFunction, ContainerTable, StyledFunctions, StyledHeader } from "./styles";
 import { Col, Row } from "antd";
 
-import { useGetCvMatchedQuery } from "../../../services";
+import { useGetCvMatchedQuery, useRejectCVMutation } from "../../../services";
 const CVMatched = () => {
    const { t } = useTranslation();
    const [selectedSkill, setSelectedSkill] = useState<any>(undefined);
+   const [selectedCV, setSelectedCV] = useState<any>(undefined);
+
    const [searchParams, setSearchParams] = useSearchParams();
    const [dataSource, setDataSource] = useState<any>([]);
    const navigate = useNavigate();
@@ -76,8 +79,7 @@ const CVMatched = () => {
       }
    );
 
-   // const [deleteSpecialization, { isLoading: loadingDeleteSpecialization }] =
-   //    useDeleteSkillMutation();
+   const [rejectCV, { isLoading: loadingReject }] = useRejectCVMutation();
 
    const columns: ColumnsType<any> = [
       {
@@ -113,12 +115,16 @@ const CVMatched = () => {
       {
          title: t("Actions"),
          dataIndex: "id",
-         render: (_: string, item: any) => (
+         render: (_: string, record: any) => (
             <StyledFunctions>
-               <BtnFunction onClick={() => handleOpenUpdate(item)}>
-                  <EditIcon />
+               <BtnFunction
+                  onClick={() => {
+                     navigate(`${record?.id}`);
+                  }}
+               >
+                  <EyeIcon />
                </BtnFunction>
-               <BtnFunction onClick={() => handleOpenDelete(item)}>
+               <BtnFunction onClick={() => handleOpenDelete(record)}>
                   <DeleteIcon />
                </BtnFunction>
             </StyledFunctions>
@@ -131,9 +137,8 @@ const CVMatched = () => {
       handleOpen();
    };
 
-   const handleOpenDelete = (skill: any) => {
-      setSelectedSkill(skill);
-
+   const handleOpenDelete = (cv: any) => {
+      setSelectedCV(cv);
       handleOpenDeleteModal();
    };
    const setValueToSearchParams = (name: string, value: string) => {
@@ -167,6 +172,26 @@ const CVMatched = () => {
    //          });
    // };
 
+   const handleConfirmDelete = () => {
+      selectedCV &&
+         rejectCV({ jobId: id, cvId: selectedCV.id })
+            .unwrap()
+            .then(() => {
+               openNotification({
+                  type: "success",
+                  message: t("Delete CV successful!!!"),
+               });
+               setSelectedCV(undefined);
+               handleCloseDelete();
+            })
+            .catch((error) => {
+               openNotification({
+                  type: "error",
+                  message: t("common:ERRORS.SERVER_ERROR"),
+               });
+            });
+   };
+
    useEffect(() => {
       const dataSource = dataCVs?.map((item: any) => ({
          ...item,
@@ -195,7 +220,7 @@ const CVMatched = () => {
                columns={columns}
                dataSource={dataSource}
                tableInstance={tableInstance}
-               loading={false}
+               loading={loadingCVs || fetchingCVs}
                totalElements={0}
                totalPages={0}
             />
@@ -205,12 +230,10 @@ const CVMatched = () => {
             type="confirm"
             open={isOpenDelete}
             onCancel={() => {
-               searchParams.delete("id");
-               setSearchParams(searchParams);
                handleCloseDelete();
             }}
             confirmIcon="?"
-            title={t("Do to want to delete this skill?")}
+            title={t("Do to want to delete this CV?")}
          >
             <GroupButton>
                <Button
@@ -219,13 +242,18 @@ const CVMatched = () => {
                   key="back"
                   border="outline"
                   onClick={() => {
-                     setSelectedSkill(undefined);
+                     setSelectedCV(undefined);
                      handleCloseDelete();
                   }}
                >
                   {t("common:confirm.cancel")}
                </Button>
-               <Button height={44} key="submit" loading={false}>
+               <Button
+                  height={44}
+                  key="submit"
+                  loading={loadingReject}
+                  onClick={handleConfirmDelete}
+               >
                   {t(t("common:confirm.ok"))}
                </Button>
             </GroupButton>

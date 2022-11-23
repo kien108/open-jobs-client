@@ -12,6 +12,8 @@ import FillCompany from "./pages/FillCompany/FillCompany";
 import { Profile } from "./pages/Profile";
 import { ContactInformation } from "./components/ContactInformation";
 import { CV } from "./components/CV";
+import { CompanyDetail } from "./pages/CompanyDetail";
+import { Companies } from "./pages/Companies";
 
 export function ModuleOverview() {
    const { lang } = useCommonSelector((state: RootState) => state.lang);
@@ -27,7 +29,8 @@ export function ModuleOverview() {
                <Route path="/">
                   <Route index element={<Navigate to="jobs" />} />
                   <Route path="jobs" element={<Jobs />} />
-                  <Route path="companies" element={<span>companies</span>} />
+                  <Route path="companies" element={<Companies />} />
+                  <Route path="companies/:id" element={<CompanyDetail />} />
                   <Route path="validate" element={<FillCompany />} />
                   <Route path="profile" element={<Profile />}></Route>
                   <Route path="profile/contact" element={<ContactInformation />} />

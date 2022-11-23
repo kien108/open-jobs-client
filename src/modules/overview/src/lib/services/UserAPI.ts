@@ -18,6 +18,7 @@ export const UserAPI = createApi({
             body,
             method: "PATCH",
          }),
+
          invalidatesTags: ["USER"],
       }),
       getCV: builder.query({

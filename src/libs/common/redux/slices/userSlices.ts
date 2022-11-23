@@ -10,7 +10,7 @@ export interface IUserGeneral {
    email?: string;
    gender?: string;
    dob?: string;
-   company?: string;
+   company?: any;
    phone?: string;
    companyId?: string;
 }

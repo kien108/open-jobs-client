@@ -11,8 +11,6 @@ interface IProps {
    className: any;
 }
 const Job: FC<IProps> = ({ item, handleClick, className }) => {
-   console.log(item);
-
    return (
       <Container onClick={() => handleClick(item?.id)} className={className}>
          <div className="header">
