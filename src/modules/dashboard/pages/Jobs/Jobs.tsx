@@ -196,7 +196,7 @@ const Jobs = () => {
          <Header handleOpenCreate={handleOpen} title="Jobs Management" />
          <ContainerTable>
             <FormProvider {...form}>
-               <Input
+               {/* <Input
                   icons={<SearchIcon />}
                   name="keyword"
                   onChange={(e) => {
@@ -204,7 +204,7 @@ const Jobs = () => {
                      handleOnChange("keyword", e.target.value);
                   }}
                   placeholder="Search by job title"
-               />
+               /> */}
             </FormProvider>
             <Table
                columns={columns}

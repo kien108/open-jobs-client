@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Container } from "./styles";
-import { Button, openNotification, Tag, Tag2 } from "../../../../../../libs/components";
+import { Button, openNotification, Tag, Tag2 } from "../../../../libs/components";
 import Parser from "html-react-parser";
 
 import { BsCalendarDay, BsPeople } from "react-icons/bs";
@@ -11,21 +11,21 @@ import { MdLocationOn, MdOutlineWorkOutline } from "react-icons/md";
 import { BiTimeFive } from "react-icons/bi";
 
 import { GrLocation } from "react-icons/gr";
-import logoCompany from "../../assets/company.png";
 
 import { Col, Divider, Row, Spin, Tooltip } from "antd";
-import { useApplyJobMutation, useGetJobByIdQuery, useGetProfileQuery } from "../../services";
+import { useGetJobByIdQuery, useGetProfileQuery } from "../../services";
 import moment from "moment";
-import { getToken, RootState, useCommonSelector } from "../../../../../../libs/common";
+import { RootState, useCommonSelector } from "../../../../libs/common";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
    id?: any;
    isCompany: boolean;
+   isCompare?: boolean;
 }
 
-const JobDetail: FC<IProps> = ({ id, isCompany }) => {
+const JobDetail: FC<IProps> = ({ id, isCompany, isCompare = false }) => {
    const navigate = useNavigate();
    const { t } = useTranslation();
    const { user } = useCommonSelector((state: RootState) => state.user);
@@ -45,41 +45,6 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
       skip: !user?.id,
    });
 
-   const [applyJob, { isLoading: loadingApplyJob }] = useApplyJobMutation();
-
-   const handelApplyJob = () => {
-      const token = getToken();
-
-      if (!token) {
-         navigate("/auth");
-      } else if (dataUser?.cv?.listSkill.length === 0) {
-         openNotification({
-            type: "warning",
-            message: "Please create an CV before apply job!",
-         });
-         navigate("/overview/profile/cv");
-      } else {
-         const body = {
-            cvId: dataUser?.cv?.id,
-            jobId: jobDetail?.id,
-         };
-
-         applyJob(body)
-            .unwrap()
-            .then(() => {
-               openNotification({
-                  type: "success",
-                  message: "Apply job successfully!!!",
-               });
-            })
-            .catch((error) => {
-               openNotification({
-                  type: "error",
-                  message: t("You've applied this job!"),
-               });
-            });
-      }
-   };
    return (
       <Spin spinning={loadingJob || fetchingJob}>
          <Container>
@@ -89,12 +54,6 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
                   <span className="company">{jobDetail?.company?.name}</span>
                   <span className="location">{jobDetail?.company?.address}</span>
                   <span className="notify">You must create an account before apply job</span>
-               </div>
-               <div className="apply">
-                  <Button className="btn-apply" onClick={handelApplyJob} loading={loadingApplyJob}>
-                     Apply Job
-                  </Button>
-                  {/* <AiOutlineHeart size={38} color="black" className="save-job" /> */}
                </div>
             </div>
             <Divider />
@@ -130,13 +89,13 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
                </div>
             </div>
             <Divider />
-            <p className="description">{Parser(`${jobDetail?.description}`)}</p>
+            {!isCompare && <p className="description">{Parser(`${jobDetail?.description}`)}</p>}
 
             {!isCompany && (
                <div className="footer">
                   <div className="header">
                      <div className="logo">
-                        <img src={jobDetail?.company?.logoUrl || logoCompany} alt="" />
+                        <img src={jobDetail?.company?.logoUrl} alt="" />
                      </div>
                      <div className="right">
                         <span className="name">{jobDetail?.company?.name}</span>

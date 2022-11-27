@@ -73,23 +73,23 @@ export const StyledSidebar = styled.div`
          svg {
             width: 24px;
             height: 24px;
-            color: ${(props) => props.theme.primaryText} !important;
+            color: ${(props) => props.theme.secondaryText} !important;
 
             path {
-               stroke: ${(props) => props.theme.strongGray};
+               stroke: ${(props) => props.theme.secondaryText};
             }
          }
 
          &.ant-menu-item-selected {
-            background-color: ${(props) => props.theme.yellow};
+            background-color: ${(props) => props.theme.strongBlue};
 
             .link-sidebar {
-               color: ${(props) => props.theme.black};
+               color: ${(props) => props.theme.secondaryText};
             }
 
             svg {
                path {
-                  stroke: ${(props) => props.theme.primaryText};
+                  stroke: ${(props) => props.theme.secondaryText};
                }
             }
          }

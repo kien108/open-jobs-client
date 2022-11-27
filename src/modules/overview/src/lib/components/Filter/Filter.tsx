@@ -1,7 +1,7 @@
 import { Button, Input, SearchIcon, Select } from "../../../../../../libs/components";
 import { Col, Row } from "antd";
 import { debounce } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
@@ -11,7 +11,10 @@ import { v4 as uuidv4 } from "uuid";
 import { useGetProvincesQuery } from "../../services";
 import { useDebounce } from "../../../../../../libs/common";
 
-const Filter = () => {
+interface IProps {
+   handleSearchJobs: (params: any) => void;
+}
+const Filter: FC<IProps> = ({ handleSearchJobs }) => {
    const { t } = useTranslation();
 
    const [searchParams, setSearchParams] = useSearchParams();
@@ -93,6 +96,14 @@ const Filter = () => {
                         form.setValue("keyword", e.target.value);
                         handleOnChange("keyword", e.target.value);
                      }}
+                     onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                           handleSearchJobs({
+                              keyword: form.watch("keyword") ?? "",
+                              location: form.watch("location") ?? "",
+                           });
+                        }
+                     }}
                   />
                </Col>
                <Col span={10}>
@@ -103,12 +114,27 @@ const Filter = () => {
                      showSearch
                      options={provinces || []}
                      onSearch={(value) => setSearchLocation(value)}
-                     onChange={(value) => handleOnChange("location", value)}
+                     onChange={(value) => {
+                        handleOnChange("location", value);
+                        handleSearchJobs({
+                           keyword: form.watch("keyword") ?? "",
+                           location: form.watch("location") ?? "",
+                        });
+                     }}
                      loading={false}
                   />
                </Col>
                <Col span={2}>
-                  <Button className="btn-find" height={46}>
+                  <Button
+                     className="btn-find"
+                     height={46}
+                     onClick={() => {
+                        handleSearchJobs({
+                           keyword: form.watch("keyword") ?? "",
+                           location: form.watch("location") ?? "",
+                        });
+                     }}
+                  >
                      Find jobs
                   </Button>
                </Col>

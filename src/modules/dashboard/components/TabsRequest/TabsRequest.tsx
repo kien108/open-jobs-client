@@ -13,8 +13,8 @@ const TabsRequest = () => {
 
    useEffect(() => {
       const paths = pathname.split("/");
-      setOpenLink(paths[2]);
-      setOpenKey(paths.slice(0, 4).join("/"));
+      setOpenLink("jobs");
+      setOpenKey(paths[paths.length - 1]);
    }, [pathname]);
 
    return (

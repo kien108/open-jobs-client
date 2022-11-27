@@ -53,7 +53,7 @@ const SideBar = () => {
       const paths = pathname.split("/");
 
       if (pathname.includes("dashboard")) {
-         setSelectedKey(paths[1]);
+         setSelectedKey(paths[2]);
          setOpenKey(["dashboard"]);
          document.querySelectorAll(".custom-menu")[0] as HTMLElement;
       } else {

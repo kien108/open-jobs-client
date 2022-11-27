@@ -102,9 +102,7 @@ const FillCompany = () => {
             ...user.company,
             ...data,
             address: `${data?.extraAddress},${data?.district},${data?.province}`,
-            // logoUrl: fileList[0].url || fileList[0].thumbUrl,
-            logoUrl:
-               "https://media.glassdoor.com/sqll/2886637/ban-vien-squarelogo-1630673888383.png",
+            logoUrl: fileList[0].url || fileList[0].thumbUrl,
          },
          firstName: data?.firstName,
          lastName: data?.lastName,

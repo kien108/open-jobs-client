@@ -6,7 +6,7 @@ export const navLinks = [
    },
    {
       path: "/overview/companies",
-      display: "Companies reviews",
+      display: "Find Companies",
       key: "/overview/companies",
    },
 ];

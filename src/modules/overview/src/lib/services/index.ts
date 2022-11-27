@@ -2,7 +2,7 @@ import { UserAPI } from "./UserAPI";
 export { AuthAPI, useLoginMutation } from "./AuthAPI";
 export {
    JobAPI,
-   useGetJobsQuery,
+   useLazyGetJobsQuery,
    useGetJobByIdQuery,
    useGetProvincesQuery,
    useGetMajorsQuery,

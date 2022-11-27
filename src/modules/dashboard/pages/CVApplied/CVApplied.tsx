@@ -24,12 +24,17 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { createSearchParams, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { debounce } from "lodash";
 import { GroupButton, BtnFunction, ContainerTable, StyledFunctions, StyledHeader } from "./styles";
 import { Col, Row } from "antd";
 
-import { useGetCvAppliedQuery, useGetCvMatchedQuery, useRejectCVMutation } from "../../services";
+import {
+   useAcceptCVMutation,
+   useGetCvAppliedQuery,
+   useGetCvMatchedQuery,
+   useRejectCVMutation,
+} from "../../services";
 const CVApply = () => {
    const { t } = useTranslation();
    const [selectedCV, setSelectedCV] = useState<any>(undefined);
@@ -79,24 +84,32 @@ const CVApply = () => {
 
    const [rejectCV, { isLoading: loadingReject }] = useRejectCVMutation();
 
+   const Status = {
+      ACCEPTED: "accept",
+      REJECTED: "reject",
+      NEW: "new",
+   };
    const columns: ColumnsType<any> = [
       {
          title: t("Title"),
          dataIndex: "title",
          key: "title",
          sorter: true,
+         render: (item) => <span className="col">{item || "-"}</span>,
       },
       {
          title: t("Major"),
          dataIndex: "major",
          key: "major",
          sorter: true,
+         render: (item) => <span className="col">{item || "-"}</span>,
       },
       {
          title: t("Specialization"),
          dataIndex: "specialization",
          key: "specialization",
          sorter: true,
+         render: (item) => <span className="col">{item || "-"}</span>,
       },
       {
          title: t("Skills"),
@@ -104,10 +117,20 @@ const CVApply = () => {
          key: "skills",
          sorter: true,
          render: (_: string, record: any) => (
-            <span>{record?.listSkill?.map((item: any) => item?.name).join(" - ")}</span>
+            <span className="col">
+               {record?.listSkill?.map((item: any) => item?.name).join(" - ")}
+            </span>
          ),
       },
-
+      {
+         title: t("Status"),
+         dataIndex: "status",
+         key: "skills",
+         sorter: true,
+         render: (value: string) => (
+            <span className={`status ${value ?? "NEW"}`}>{value ?? "NEW"}</span>
+         ),
+      },
       {
          title: t("Actions"),
          dataIndex: "id",
@@ -115,7 +138,12 @@ const CVApply = () => {
             <StyledFunctions>
                <BtnFunction
                   onClick={() => {
-                     navigate(`${record?.userId}`);
+                     navigate({
+                        pathname: `${record?.userId}`,
+                        search: createSearchParams({
+                           status: record?.status,
+                        }).toString(),
+                     });
                   }}
                >
                   <EyeIcon />

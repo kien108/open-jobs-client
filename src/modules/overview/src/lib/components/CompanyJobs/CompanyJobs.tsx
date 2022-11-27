@@ -4,7 +4,7 @@ import { Filter } from "../../components";
 import { Job } from "../../components/Job";
 import { JobDetail } from "../../components/JobDetail";
 import { useFilterSearchJob } from "../../hooks";
-import { useGetJobCompanyQuery, useGetJobsQuery } from "../../services";
+import { useGetJobCompanyQuery } from "../../services";
 import { Container, Content, Header } from "./styles";
 
 import { Pagination } from "../../../../../../libs/components/Table/Pagination";

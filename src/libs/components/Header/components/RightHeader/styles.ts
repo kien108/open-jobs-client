@@ -47,4 +47,9 @@ export const StyledRightHeader = styled.div`
          opacity: 0.8;
       }
    }
+
+   .button-header {
+      width: 34px !important;
+      height: 34px !important;
+   }
 `;

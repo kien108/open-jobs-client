@@ -6,29 +6,44 @@ import { Filter } from "../../components";
 import { Job } from "../../components/Job";
 import { JobDetail } from "../../components/JobDetail";
 import { useFilterSearchJob } from "../../hooks";
-import { useGetJobsQuery } from "../../services";
+import { useLazyGetJobsQuery } from "../../services";
 import { Container, Content, Header } from "./styles";
+import { useNavigate } from "react-router-dom";
 
 const Jobs = () => {
    const tableInstance = Table.useTable();
-
-   const {
-      data: jobs,
-      isLoading: loadingJobs,
-      isFetching: fetchingJobs,
-   } = useGetJobsQuery({ ...tableInstance.params, size: 5, ...useFilterSearchJob() });
+   const navigate = useNavigate();
+   const [searchJobs, { data: jobs, isLoading: loadingJobs, isFetching: fetchingJobs }] =
+      useLazyGetJobsQuery();
 
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
    useEffect(() => {
       jobs && jobs?.listJob?.[0] && setSelectedId(jobs?.listJob?.[0]?.id);
    }, [jobs]);
+
+   const handleSearchJobs = (params: any) => {
+      searchJobs({ ...tableInstance.params, ...params });
+   };
+
+   useEffect(() => {
+      searchJobs({ ...tableInstance.params, keyword: "", location: "" });
+   }, []);
+
+   useEffect(() => {
+      tableInstance.setParams((prev: any) => {
+         return {
+            ...prev,
+            size: 5,
+         };
+      });
+   }, []);
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>
             <Header>
-               <Filter />
-               <div className="title-container">
+               <Filter handleSearchJobs={handleSearchJobs} />
+               <div className="title-container" onClick={() => navigate("/overview/profile")}>
                   <span className="title">Create your CV</span>
                   <span className="content">- It only takes a few seconds</span>
                </div>

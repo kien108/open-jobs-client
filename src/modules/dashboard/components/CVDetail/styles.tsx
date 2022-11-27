@@ -13,6 +13,18 @@ export const Container = styled.div`
    margin-top: 40px;
    background-color: white;
 
+   .job-detail {
+      position: relative;
+      &::before {
+         display: block;
+         position: absolute;
+         content: "";
+         right: 0px;
+         border-right: 2px solid ${(props) => props.theme.strongBlue};
+         height: 100%;
+      }
+   }
+
    .cv-item {
       display: flex;
       flex-direction: column;
@@ -191,5 +203,5 @@ export const GroupButton = styled.div`
    align-items: center;
    justify-content: center;
    gap: 20px;
-   margin-top: 12px;
+   margin-top: 30px;
 `;

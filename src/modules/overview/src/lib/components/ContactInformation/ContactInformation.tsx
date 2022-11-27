@@ -81,6 +81,7 @@ const ContactInformation = () => {
                type: "success",
                message: t("Update this profile successfully!!!"),
             });
+            navigate(-1);
          })
          .catch((error) => {
             openNotification({

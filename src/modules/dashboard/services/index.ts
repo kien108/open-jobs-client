@@ -21,4 +21,6 @@ export {
    useGetCvMatchedQuery,
    useGetCvAppliedQuery,
    useRejectCVMutation,
+   useAcceptCVMutation,
+   useRejectJobCvMutation,
 } from "./JobAPI";

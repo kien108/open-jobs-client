@@ -70,7 +70,7 @@ const RightHeader = ({ languages, accounts }: Props) => {
             </Popover>
          </div>
 
-         {accessToken && (
+         {/* {accessToken && (
             <div className="notification">
                <Popover
                   overlayClassName="styled-header-popover"
@@ -83,7 +83,7 @@ const RightHeader = ({ languages, accounts }: Props) => {
                   </button>
                </Popover>
             </div>
-         )}
+         )} */}
 
          <div className="dropdown">
             {accessToken ? (

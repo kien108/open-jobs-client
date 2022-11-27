@@ -49,7 +49,7 @@ export const JobAPI = createApi({
 });
 
 export const {
-   useGetJobsQuery,
+   useLazyGetJobsQuery,
    useGetJobByIdQuery,
    useGetProvincesQuery,
    useGetMajorsQuery,

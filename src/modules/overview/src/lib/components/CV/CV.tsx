@@ -303,12 +303,14 @@ const CV = () => {
                   type: "success",
                   message: t("Update CV successfully!!!"),
                });
+               navigate(-1);
             })
             .catch((error) => {
                openNotification({
                   type: "error",
-                  message: t("common:ERRORS.SERVER_ERROR"),
+                  message: t("INTERNAL SERVER ERROR!!!"),
                });
+               navigate(-1);
             });
       }
    };

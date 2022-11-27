@@ -18,6 +18,31 @@ export const ContainerTable = styled.div`
    box-shadow: 0 0 #000, 0 0 #000, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 0 10px -6px rgb(0 0 0 / 0.1);
    background: ${(props) => props.theme.secondaryText};
    border-radius: 10px;
+
+   .status {
+      display: block;
+      padding: 4px 8px;
+      border-radius: 10px;
+      color: white;
+      text-align: center;
+      &.ACCEPTED {
+         background-color: green;
+      }
+
+      &.NEW {
+         background-color: #d1d103;
+      }
+
+      &.REJECTED {
+         background-color: red;
+      }
+   }
+
+   .col,
+   .ant-table-column-title {
+      font-weight: 600;
+      font-size: 17px;
+   }
 `;
 
 export const BtnFunction = styled.div`

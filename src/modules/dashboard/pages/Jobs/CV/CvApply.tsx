@@ -24,7 +24,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { createSearchParams, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { debounce } from "lodash";
 import { GroupButton, BtnFunction, ContainerTable, StyledFunctions, StyledHeader } from "./styles";
 import { Col, Row } from "antd";
@@ -87,30 +87,51 @@ const CVMatched = () => {
          dataIndex: "firstName",
          key: "firstName",
          sorter: true,
+         render: (item) => <span className="col">{item || "-"}</span>,
       },
       {
          title: t("Last Name"),
          dataIndex: "lastName",
          key: "lastName",
          sorter: true,
+         render: (item) => <span className="col">{item}</span>,
       },
       {
          title: t("Email"),
          dataIndex: "email",
          key: "email",
          sorter: true,
+         render: (item) => <span className="col">{item}</span>,
       },
       {
          title: t("Phone"),
          dataIndex: "phone",
          key: "phone",
          sorter: true,
+         render: (item) => <span className="col">{item}</span>,
       },
       {
          title: t("Gender"),
          dataIndex: "gender",
          key: "gender",
          sorter: true,
+         render: (item) => <span className="col">{item}</span>,
+      },
+      {
+         title: t("Point"),
+         dataIndex: "point",
+         key: "point",
+         sorter: true,
+         render: (item) => <span className="match-cv">{item}</span>,
+      },
+      {
+         title: t("Status"),
+         dataIndex: "cvStatus",
+         key: "cvStatus",
+         sorter: true,
+         render: (value: string) => (
+            <span className={`status ${value ?? "NEW"}`}>{value ?? "NEW"}</span>
+         ),
       },
       {
          title: t("Actions"),
@@ -119,13 +140,15 @@ const CVMatched = () => {
             <StyledFunctions>
                <BtnFunction
                   onClick={() => {
-                     navigate(`${record?.id}`);
+                     navigate({
+                        pathname: `${record?.userId}`,
+                        search: createSearchParams({
+                           status: record?.cvStatus,
+                        }).toString(),
+                     });
                   }}
                >
                   <EyeIcon />
-               </BtnFunction>
-               <BtnFunction onClick={() => handleOpenDelete(record)}>
-                  <DeleteIcon />
                </BtnFunction>
             </StyledFunctions>
          ),
@@ -174,7 +197,7 @@ const CVMatched = () => {
 
    const handleConfirmDelete = () => {
       selectedCV &&
-         rejectCV({ jobId: id, cvId: selectedCV.id })
+         rejectCV({ jobId: id, cvId: selectedCV?.cvId })
             .unwrap()
             .then(() => {
                openNotification({

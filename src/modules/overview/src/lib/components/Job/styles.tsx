@@ -53,6 +53,11 @@ export const Container = styled.div`
          padding: 2px 8px;
          font-size: 13px;
          margin-right: 10px;
+
+         &.invalid {
+            color: white;
+            background-color: #6c6b6b;
+         }
       }
    }
 

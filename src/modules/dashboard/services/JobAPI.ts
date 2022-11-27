@@ -66,6 +66,7 @@ export const JobAPI = createApi({
             url: `/cv/match-with-job/${id}`,
             params,
          }),
+         providesTags: ["CV_APPLIED"],
       }),
       getCvApplied: builder.query({
          query: ({ id, ...params }) => ({
@@ -78,6 +79,20 @@ export const JobAPI = createApi({
          query: ({ cvId, jobId }) => ({
             url: `/cv/${cvId}/remove-application/${jobId}`,
             method: "DELETE",
+         }),
+         invalidatesTags: ["CV_APPLIED"],
+      }),
+      acceptCV: builder.mutation({
+         query: ({ cvId, jobId }) => ({
+            url: `/jobcv/accept/${jobId}/${cvId}`,
+            method: "POST",
+         }),
+         invalidatesTags: ["CV_APPLIED"],
+      }),
+      rejectJobCv: builder.mutation({
+         query: ({ cvId, jobId }) => ({
+            url: `/jobcv/reject/${jobId}/${cvId}`,
+            method: "POST",
          }),
          invalidatesTags: ["CV_APPLIED"],
       }),
@@ -97,4 +112,6 @@ export const {
    useGetCvMatchedQuery,
    useGetCvAppliedQuery,
    useRejectCVMutation,
+   useAcceptCVMutation,
+   useRejectJobCvMutation,
 } = JobAPI;

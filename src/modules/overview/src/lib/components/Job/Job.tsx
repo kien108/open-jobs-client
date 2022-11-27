@@ -4,6 +4,7 @@ import { Tag2 } from "../../../../../../libs/components";
 
 import { BsThreeDotsVertical } from "react-icons/bs";
 import moment from "moment";
+import { Tooltip } from "antd";
 
 interface IProps {
    item: any;
@@ -25,11 +26,15 @@ const Job: FC<IProps> = ({ item, handleClick, className }) => {
          </div>
 
          <div className="skills">
-            {item?.jobSkills?.map((skill: any) => (
-               <Tag2 className={`skill ${skill?.skill?.isVerified ? "" : "invalid"}`}>
-                  {skill?.skill?.name}
-               </Tag2>
-            ))}
+            {item?.jobSkills?.map((skill: any) =>
+               skill?.skill?.isVerified ? (
+                  <Tag2 className={`skill`}>{skill?.skill?.name}</Tag2>
+               ) : (
+                  <Tooltip title="Invalidate Skill" placement="bottom">
+                     <Tag2 className="skill invalid">{skill?.skill?.name}</Tag2>
+                  </Tooltip>
+               )
+            )}
          </div>
 
          <div className="footer">

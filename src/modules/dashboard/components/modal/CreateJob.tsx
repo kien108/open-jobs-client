@@ -82,7 +82,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const [listSkill, setSkills] = useState<any>([]);
    const [message, setMessage] = useState<string | undefined>(undefined);
    const contentRef = useRef<any>(null);
-
+   const [searchSkill, setSearchSkill] = useState<string>("");
    const { isOpen: openConfirmMajor, handleClose: closeMajor, handleOpen: openMajor } = useModal();
 
    const form = useForm<FormType>({
@@ -157,7 +157,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    });
 
    const [createJob, { isLoading: loadingCreateJob }] = useCreateJobMutation();
-   const { fields, append, remove } = useFieldArray({
+   const { fields, append, remove, update } = useFieldArray({
       control: form.control,
       name: "skills",
    });
@@ -236,6 +236,25 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   form.setValue(`skills.[${record.key}].isVerified`, option?.label);
                }}
                onClear={() => form.trigger(`skills.[${record.key}].experience`)}
+               onSearch={(value) => setSearchSkill(value)}
+               showSearch
+               notFoundContent={
+                  <span
+                     onClick={() => {
+                        form.setValue(`skills.[${record.key}].name`, searchSkill, {
+                           shouldValidate: true,
+                        });
+
+                        update(record?.key, {
+                           name: searchSkill,
+                           isVerified: false,
+                        });
+
+                        form.trigger(`skills.[${record.key}].experience`);
+                        form.trigger(`skills.[${record.key}].name`);
+                     }}
+                  >{`${searchSkill} (new skill)`}</span>
+               }
                loading={false}
             />
          ),
