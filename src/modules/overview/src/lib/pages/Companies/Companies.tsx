@@ -9,8 +9,10 @@ import logoCompany from "../../assets/company.png";
 import { AiOutlineClockCircle, AiOutlinePhone, AiOutlineSetting } from "react-icons/ai";
 import { BsCalendarDay, BsPeople } from "react-icons/bs";
 import { GrLocation } from "react-icons/gr";
+import { useTranslation } from "react-i18next";
 
 const Companies = () => {
+   const { t } = useTranslation();
    const [searchParams] = useSearchParams();
    const [companies, setCompanies] = useState([]);
    const navigate = useNavigate();
@@ -30,8 +32,9 @@ const Companies = () => {
       <Spin spinning={loadingCompanies || fetchingCompanies}>
          <Container>
             <div className="header">
-               <span className="title">Find great places to work</span>
-               <span className="sub-title">Get access to millions of company reviews</span>
+               <span className="title">{t("findGreatPlace")}</span>
+
+               <span className="sub-title">{t("accessReview")}</span>
                <FilterCompany />
             </div>
 

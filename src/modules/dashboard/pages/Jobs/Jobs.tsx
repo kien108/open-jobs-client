@@ -176,8 +176,9 @@ const Jobs = () => {
          .catch((error) => {
             openNotification({
                type: "error",
-               message: t("common:ERRORS.SERVER_ERROR"),
+               message: t("Can't delete this job because it has any applied cv!!!"),
             });
+            handleCloseDelete();
          });
    };
 

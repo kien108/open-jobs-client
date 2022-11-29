@@ -39,7 +39,9 @@
    },
    "header": {
       "profile": "Hồ sơ",
-      "signOut": "Đăng xuất"
+      "signOut": "Đăng xuất",
+      "findJobs": "Tìm kiếm công việc",
+      "findCompanies": "Tìm kiếm công ty"
    },
    "sidebar": {
       "overview": "Tổng quan",

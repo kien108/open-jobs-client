@@ -39,7 +39,9 @@
    },
    "header": {
       "profile": "Profile",
-      "signOut": "Sign Out"
+      "signOut": "Sign Out",
+      "findJobs": "Find Jobs",
+      "findCompanies": "Find Companies"
    },
    "sidebar": {
       "overview": "Overview",

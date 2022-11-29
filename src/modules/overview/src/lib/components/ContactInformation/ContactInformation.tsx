@@ -97,19 +97,19 @@ const ContactInformation = () => {
             <BtnFunction onClick={() => navigate(-1)}>
                <BsArrowLeft size={23} />
             </BtnFunction>
-            <span className="title">Contact information</span>
+            <span className="title">{t("contact")}</span>
 
             <FormProvider {...form}>
-               <Input name="firstName" label="First Name" required />
-               <Input name="lastName" label="Last Name" required />
-               <Input name="phone" label="Phone" />
-               <Input name="email" label="Email" disabled />
+               <Input name="firstName" label={t("firstName")} required />
+               <Input name="lastName" label={t("lastName")} required />
+               <Input name="phone" label={t("phone")} />
+               <Input name="email" label={t("email")} disabled />
                <Row gutter={[15, 15]}>
                   <Col span={12}>
-                     <Select name="gender" options={genders} title="Gender" />
+                     <Select name="gender" options={genders} title={t("gender")} />
                   </Col>
                   <Col span={12}>
-                     <DatePicker format={"MM/DD/YYYY"} name="dob" label="DoB" />
+                     <DatePicker format={"MM/DD/YYYY"} name="dob" label={t("dob")} />
                   </Col>
                </Row>
                <Button
@@ -121,7 +121,7 @@ const ContactInformation = () => {
                      form.handleSubmit(onSubmit)();
                   }}
                >
-                  Save
+                  {t("common:confirm.save")}
                </Button>
             </FormProvider>
          </Container>

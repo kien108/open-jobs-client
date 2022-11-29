@@ -9,9 +9,11 @@ import { useFilterSearchJob } from "../../hooks";
 import { useLazyGetJobsQuery } from "../../services";
 import { Container, Content, Header } from "./styles";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Jobs = () => {
    const tableInstance = Table.useTable();
+   const { t } = useTranslation();
    const navigate = useNavigate();
    const [searchJobs, { data: jobs, isLoading: loadingJobs, isFetching: fetchingJobs }] =
       useLazyGetJobsQuery();
@@ -43,9 +45,11 @@ const Jobs = () => {
          <Container>
             <Header>
                <Filter handleSearchJobs={handleSearchJobs} />
-               <div className="title-container" onClick={() => navigate("/overview/profile")}>
-                  <span className="title">Create your CV</span>
-                  <span className="content">- It only takes a few seconds</span>
+               <div className="title-container">
+                  <span className="title" onClick={() => navigate("/overview/profile")}>
+                     {t("createCV")}
+                  </span>
+                  <span className="content">- {t("takeTime")}</span>
                </div>
             </Header>
             <Divider />
@@ -76,7 +80,7 @@ const Jobs = () => {
                   </Row>
                </Content>
             ) : (
-               <span className="no-results">No Results</span>
+               <span className="no-results">{t("noResults")}</span>
             )}
          </Container>
       </Spin>

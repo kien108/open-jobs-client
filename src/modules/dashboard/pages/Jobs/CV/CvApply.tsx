@@ -26,7 +26,14 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createSearchParams, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { debounce } from "lodash";
-import { GroupButton, BtnFunction, ContainerTable, StyledFunctions, StyledHeader } from "./styles";
+import {
+   GroupButton,
+   BtnFunction,
+   ContainerTable,
+   StyledFunctions,
+   StyledHeader,
+   Container,
+} from "./styles";
 import { Col, Row } from "antd";
 
 import { useGetCvMatchedQuery, useRejectCVMutation } from "../../../services";
@@ -225,7 +232,7 @@ const CVMatched = () => {
    }, [dataCVs]);
 
    return (
-      <>
+      <Container>
          <StyledHeader>
             <Title>Matched CV Management</Title>
             <Button
@@ -238,6 +245,31 @@ const CVMatched = () => {
             </Button>
          </StyledHeader>
 
+         <div className="items">
+            <div className="item total">
+               <span>Matched CV</span>
+               <span className="value">{dataSource.length}</span>
+            </div>
+            <div className="item new">
+               <span>New CV</span>
+               <span className="value">
+                  {dataSource?.filter((item: any) => item?.status === "NEW").length}
+               </span>
+            </div>
+
+            <div className="item accepted">
+               <span>Accepted CV</span>
+               <span className="value">
+                  {dataSource?.filter((item: any) => item?.status === "ACCEPTED").length}
+               </span>
+            </div>
+            <div className="item rejected">
+               <span>Rejected CV</span>
+               <span className="value">
+                  {dataSource?.filter((item: any) => item?.status === "REJECTED").length}
+               </span>
+            </div>
+         </div>
          <ContainerTable>
             <Table
                columns={columns}
@@ -281,7 +313,7 @@ const CVMatched = () => {
                </Button>
             </GroupButton>
          </Modal>
-      </>
+      </Container>
    );
 };
 

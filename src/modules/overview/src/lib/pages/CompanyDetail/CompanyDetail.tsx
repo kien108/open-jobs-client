@@ -11,9 +11,11 @@ import { Container } from "./styles";
 import Parser from "html-react-parser";
 import Jobs from "../Jobs/Jobs";
 import { CompanyJobs } from "../../components/CompanyJobs";
+import { useTranslation } from "react-i18next";
 
 const CompanyDetail = () => {
    const { id } = useParams();
+   const { t } = useTranslation();
 
    const {
       data: dataCompany,
@@ -23,7 +25,7 @@ const CompanyDetail = () => {
 
    const items = [
       {
-         label: "About company",
+         label: t("aboutCompany"),
          key: "item-1",
          children: (
             <div>
@@ -33,7 +35,7 @@ const CompanyDetail = () => {
             </div>
          ),
       },
-      { label: "Jobs", key: "item-2", children: <CompanyJobs id={dataCompany?.id} /> },
+      { label: t("jobs"), key: "item-2", children: <CompanyJobs id={dataCompany?.id} /> },
    ];
 
    return (

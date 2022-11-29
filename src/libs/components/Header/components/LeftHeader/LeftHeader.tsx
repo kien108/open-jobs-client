@@ -37,7 +37,7 @@ const LeftHeader = () => {
                      key={item.key}
                      tab={
                         <Link className="custom-link-header" to={item.path}>
-                           {t(item.display)}
+                           {t(`header.${item.display}`)}
                         </Link>
                      }
                   />

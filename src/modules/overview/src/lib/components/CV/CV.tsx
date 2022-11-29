@@ -382,7 +382,7 @@ const CV = () => {
                               maxInitials={2}
                               name={`${user?.firstName} ${user?.lastName}`}
                            />
-                           <Input name="title" label="Title" required className="title-cv" />
+                           <Input name="title" label={t("title")} required className="title-cv" />
 
                            <div className="right">
                               <div className="item">
@@ -405,7 +405,7 @@ const CV = () => {
                                  data={user?.cv?.objective}
                                  editorRef={objectRef}
                                  name="objective"
-                                 label="Objective"
+                                 label={t("objective")}
                               />
                            </div>
                            <div className="objective">
@@ -413,7 +413,7 @@ const CV = () => {
                                  data={user?.cv?.education}
                                  editorRef={educationRef}
                                  name="education"
-                                 label="Education"
+                                 label={t("education")}
                               />
                            </div>
                         </div>
@@ -427,7 +427,7 @@ const CV = () => {
                               <Col span={12}>
                                  <Select
                                     name="majorId"
-                                    title="Major"
+                                    title={t("major")}
                                     placeholder="Select major"
                                     required
                                     onSelect={() => {
@@ -443,7 +443,7 @@ const CV = () => {
                                        required
                                        disabled={!form.watch("majorId")}
                                        name="specializationId"
-                                       title="Specialization"
+                                       title={t("specialization")}
                                        placeholder="Please choose major first!"
                                        options={specializations || []}
                                        loading={false}
@@ -486,7 +486,7 @@ const CV = () => {
                               data={user?.cv?.experience}
                               editorRef={experienceRef}
                               name="experience"
-                              label="Experience"
+                              label={t("experience")}
                            />
                         </div>
                         <div className="objective">
@@ -494,7 +494,7 @@ const CV = () => {
                               data={user?.cv?.certificate}
                               editorRef={certificateRef}
                               name="certificate"
-                              label="Certificate"
+                              label={t("certificate")}
                            />
                         </div>
                      </div>
@@ -510,7 +510,7 @@ const CV = () => {
                   form.handleSubmit(onSubmit)();
                }}
             >
-               Save
+               {t("common:confirm.save")}
             </Button>
             <Modal
                type="confirm"
@@ -542,7 +542,7 @@ const CV = () => {
                         closeMajor();
                      }}
                   >
-                     {t(t("common:confirm.ok"))}
+                     {t("common:confirm.ok")}
                   </Button>
                </GroupButton>
             </Modal>

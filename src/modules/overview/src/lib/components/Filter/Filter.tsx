@@ -88,8 +88,8 @@ const Filter: FC<IProps> = ({ handleSearchJobs }) => {
                   <Input
                      className="search"
                      height="46px"
-                     subLabel={t("What")}
-                     placeholder="job title, keywords or company"
+                     subLabel={t("what")}
+                     placeholder={t("whatPlaceHolder")}
                      icons={<SearchIcon width={20} />}
                      name="keyword"
                      onChange={(e: any) => {
@@ -109,7 +109,7 @@ const Filter: FC<IProps> = ({ handleSearchJobs }) => {
                <Col span={10}>
                   <Select
                      name="location"
-                     label="Where"
+                     label={t("where")}
                      required
                      showSearch
                      options={provinces || []}
@@ -135,7 +135,7 @@ const Filter: FC<IProps> = ({ handleSearchJobs }) => {
                         });
                      }}
                   >
-                     Find jobs
+                     {t("findJobs")}
                   </Button>
                </Col>
             </Row>

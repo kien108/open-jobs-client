@@ -1,12 +1,14 @@
 export const navLinks = [
    {
       path: "/overview/jobs",
-      display: "Find jobs",
+      display: "findJobs",
+      // display: "Find jobs",
       key: "/overview/jobs",
    },
    {
       path: "/overview/companies",
-      display: "Find Companies",
+      display: "findCompanies",
+      // display: "Find Companies",
       key: "/overview/companies",
    },
 ];

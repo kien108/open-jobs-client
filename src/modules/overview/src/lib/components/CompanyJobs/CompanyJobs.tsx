@@ -9,12 +9,16 @@ import { Container, Content, Header } from "./styles";
 
 import { Pagination } from "../../../../../../libs/components/Table/Pagination";
 import { Table } from "../../../../../../libs/components";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
    id: string;
 }
 const CompanyJobs: FC<IProps> = ({ id }) => {
    const tableInstance = Table.useTable();
+   const { t } = useTranslation();
+
    const {
       data: jobs,
       isLoading: loadingJobs,
@@ -60,7 +64,7 @@ const CompanyJobs: FC<IProps> = ({ id }) => {
                   </Row>
                </Content>
             ) : (
-               <span className="no-results">This company don't have any jobs</span>
+               <span className="no-results">{t("noJobs")}</span>
             )}
          </Container>
       </Spin>

@@ -8,6 +8,54 @@ export const GroupButton = styled.div`
    margin-top: 12px;
 `;
 
+export const Container = styled.div`
+   .items {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      margin-top: 30px;
+
+      .item {
+         flex-basis: 33.33%;
+         height: 150px;
+         padding: 10px 20px;
+         border-radius: 20px;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         box-shadow: 0 0 #000, 0 0 #000, 0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 0 10px -6px rgb(0 0 0 / 0.1);
+
+         span {
+            display: block;
+            font-size: 30px;
+            font-weight: 700;
+            text-align: center;
+            color: black;
+
+            &.value {
+               font-size: 40px;
+            }
+         }
+
+         &.accepted {
+            background-color: green;
+         }
+
+         &.new {
+            background-color: #d1d103;
+         }
+
+         &.rejected {
+            background-color: red;
+         }
+
+         &.total {
+            background-color: white;
+         }
+      }
+   }
+`;
 export const ContainerTable = styled.div`
    display: flex;
    flex-direction: column;

@@ -88,11 +88,11 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
                   <span className="job-title">{jobDetail?.title}</span>
                   <span className="company">{jobDetail?.company?.name}</span>
                   <span className="location">{jobDetail?.company?.address}</span>
-                  <span className="notify">You must create an account before apply job</span>
+                  <span className="notify">{t("createCVFirst")}</span>
                </div>
                <div className="apply">
                   <Button className="btn-apply" onClick={handelApplyJob} loading={loadingApplyJob}>
-                     Apply Job
+                     {t("apply")}
                   </Button>
                   {/* <AiOutlineHeart size={38} color="black" className="save-job" /> */}
                </div>
@@ -178,7 +178,7 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
                               border="outline"
                               style={{ width: "fit-content", padding: "0 10px" }}
                            >
-                              View Company
+                              {t("viewCompany")}
                            </Button>
                         </Col>
                      </Row>

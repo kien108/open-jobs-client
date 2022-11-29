@@ -74,7 +74,7 @@ const FilterCompany = () => {
                   <Input
                      className="search"
                      height="46px"
-                     label="Company name"
+                     label={t("companyName")}
                      placeholder="company name"
                      icons={<SearchIcon width={20} />}
                      name="keyword"
@@ -87,7 +87,7 @@ const FilterCompany = () => {
                <Col span={6}>
                   <Select
                      name="location"
-                     title="Location"
+                     title={t("location")}
                      required
                      showSearch
                      options={provinces || []}
@@ -98,7 +98,7 @@ const FilterCompany = () => {
                </Col>
                <Col span={2} style={{ alignSelf: "flex-end" }}>
                   <Button className="btn-find" height={46}>
-                     Find Companies
+                     {t("findCompanies")}
                   </Button>
                </Col>
             </Row>
