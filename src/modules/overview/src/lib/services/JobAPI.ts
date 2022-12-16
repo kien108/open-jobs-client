@@ -4,6 +4,7 @@ import { baseQuery } from "./baseQuery";
 export const JobAPI = createApi({
    reducerPath: "JobAPI",
    baseQuery,
+   tagTypes: ["DETAIL"],
    endpoints: (builder) => ({
       getJobs: builder.query({
          query: (params) => ({
@@ -15,6 +16,7 @@ export const JobAPI = createApi({
          query: (id) => ({
             url: `/job/details/${id}`,
          }),
+         providesTags: ["DETAIL"],
       }),
       getProvinces: builder.query({
          query: (params) => ({
@@ -44,6 +46,7 @@ export const JobAPI = createApi({
             url: `/cv/${cvId}/apply/${jobId}`,
             method: "POST",
          }),
+         invalidatesTags: ["DETAIL"],
       }),
    }),
 });

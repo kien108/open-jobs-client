@@ -24,6 +24,12 @@ const accounts: AccountType[] = [
    },
    {
       id: 2,
+      title: "header.jobApplied",
+      path: "/overview/jobs-applied",
+   },
+
+   {
+      id: 3,
       title: "header.signOut",
       path: "/auth",
    },

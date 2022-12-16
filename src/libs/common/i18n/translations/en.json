@@ -41,7 +41,8 @@
       "profile": "Profile",
       "signOut": "Sign Out",
       "findJobs": "Find Jobs",
-      "findCompanies": "Find Companies"
+      "findCompanies": "Find Companies",
+      "jobApplied": "Job Applied"
    },
    "sidebar": {
       "overview": "Overview",

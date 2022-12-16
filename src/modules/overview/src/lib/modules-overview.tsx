@@ -14,6 +14,7 @@ import { ContactInformation } from "./components/ContactInformation";
 import { CV } from "./components/CV";
 import { CompanyDetail } from "./pages/CompanyDetail";
 import { Companies } from "./pages/Companies";
+import { JobsApplied } from "./pages";
 
 export function ModuleOverview() {
    const { lang } = useCommonSelector((state: RootState) => state.lang);
@@ -35,6 +36,7 @@ export function ModuleOverview() {
                   <Route path="profile" element={<Profile />}></Route>
                   <Route path="profile/contact" element={<ContactInformation />} />
                   <Route path="profile/cv" element={<CV />} />
+                  <Route path="jobs-applied" element={<JobsApplied />} />
                </Route>
             </Routes>
          </I18nextProvider>

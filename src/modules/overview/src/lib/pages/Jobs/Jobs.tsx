@@ -8,8 +8,9 @@ import { JobDetail } from "../../components/JobDetail";
 import { useFilterSearchJob } from "../../hooks";
 import { useLazyGetJobsQuery } from "../../services";
 import { Container, Content, Header } from "./styles";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getToken } from "./../../../../../../libs/common/utils/remember";
 
 const Jobs = () => {
    const tableInstance = Table.useTable();
@@ -17,11 +18,14 @@ const Jobs = () => {
    const navigate = useNavigate();
    const [searchJobs, { data: jobs, isLoading: loadingJobs, isFetching: fetchingJobs }] =
       useLazyGetJobsQuery();
+   const [searchParams] = useSearchParams();
 
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
    useEffect(() => {
-      jobs && jobs?.listJob?.[0] && setSelectedId(jobs?.listJob?.[0]?.id);
+      searchParams.get("job-id")
+         ? setSelectedId(searchParams.get("job-id")!)
+         : setSelectedId(jobs?.listJob?.[0]?.id);
    }, [jobs]);
 
    const handleSearchJobs = (params: any) => {
@@ -32,6 +36,14 @@ const Jobs = () => {
       searchJobs({ ...tableInstance.params, keyword: "", location: "" });
    }, []);
 
+   function paramsToObject(entries: any) {
+      const result: any = {};
+      for (const [key, value] of entries) {
+         result[key] = value;
+      }
+      return result;
+   }
+
    useEffect(() => {
       tableInstance.setParams((prev: any) => {
          return {
@@ -40,13 +52,28 @@ const Jobs = () => {
          };
       });
    }, []);
+
+   useEffect(() => {
+      const entries = searchParams.entries();
+      const params = paramsToObject(entries);
+      searchJobs({ ...tableInstance.params, ...params });
+   }, [searchParams.get("page")]);
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>
             <Header>
                <Filter handleSearchJobs={handleSearchJobs} />
                <div className="title-container">
-                  <span className="title" onClick={() => navigate("/overview/profile")}>
+                  <span
+                     className="title"
+                     onClick={() => {
+                        if (getToken()) {
+                           navigate("/overview/profile");
+                        } else {
+                           navigate("/auth");
+                        }
+                     }}
+                  >
                      {t("createCV")}
                   </span>
                   <span className="content">- {t("takeTime")}</span>

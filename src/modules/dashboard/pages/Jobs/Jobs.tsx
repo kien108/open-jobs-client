@@ -30,7 +30,7 @@ import * as yup from "yup";
 import { debounce } from "lodash";
 import { GroupButton } from "../../components/modal/styles";
 import { MdOutlinePassword } from "react-icons/md";
-import { CreateJob } from "../../components/modal";
+import { CreateJob, JobPost } from "../../components/modal";
 import {
    useGetJobsQuery,
    useGetMajorsQuery,
@@ -84,6 +84,12 @@ const Jobs = () => {
    });
 
    const {
+      isOpen: isOpenDetail,
+      handleClose: handleCloseDetail,
+      handleOpen: handleOpenDetailModal,
+   } = useModal();
+
+   const {
       isOpen: isOpenDelete,
       handleClose: handleCloseDelete,
       handleOpen: handleOpenDeleteModal,
@@ -129,7 +135,13 @@ const Jobs = () => {
          dataIndex: "id",
          render: (_: string, record: any) => (
             <StyledFunctions>
-               <BtnFunction onClick={() => navigate(`${record?.id}/cv-matched`)}>
+               <BtnFunction
+                  onClick={() => {
+                     searchParams.set("id", record?.id);
+                     setSearchParams(searchParams);
+                     handleOpenDetailModal();
+                  }}
+               >
                   <EyeIcon />
                </BtnFunction>
                <BtnFunction onClick={() => handleOpenDelete(record.id)}>
@@ -183,7 +195,6 @@ const Jobs = () => {
    };
 
    useEffect(() => {
-      console.log(dataCompany);
       const dataSource = dataCompany?.map((item: any) => ({
          key: item.id,
          ...item,
@@ -228,6 +239,23 @@ const Jobs = () => {
          >
             <CreateJob handleClose={handleClose} />
          </StyledModal>
+         <Modal
+            title="Job Detail"
+            visible={isOpenDetail}
+            onCancel={() => {
+               handleCloseDetail();
+               searchParams.delete("id");
+               setSearchParams(searchParams);
+            }}
+         >
+            <JobPost
+               handleClose={() => {
+                  handleCloseDetail();
+                  searchParams.delete("id");
+                  setSearchParams(searchParams);
+               }}
+            />
+         </Modal>
          <Modal
             type="confirm"
             open={isOpenDelete}

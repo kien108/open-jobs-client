@@ -18,6 +18,7 @@ export {
    useUpdateCVMutation,
    useGetCVQuery,
    useGetDistrictsQuery,
+   useGetCVAppliedByUserIdQuery,
 } from "./UserAPI";
 
 export {

@@ -47,6 +47,12 @@ export const Container = styled.div`
             line-height: 24px;
             width: 100%;
             height: 44px;
+
+            &.applied {
+               background-color: #ccc;
+               color: #585656;
+               font-weight: 600;
+            }
          }
 
          .save-job {

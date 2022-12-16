@@ -48,5 +48,9 @@
    "major": "Ngành",
    "specialization": "chuyên ngành",
    "experience": "kinh nghiệm",
-   "certificate": "bằng cấp"
+   "certificate": "bằng cấp",
+   "jobsApplied": "Việc đã ứng tuyển",
+   "jobPosition": "Vị trí ứng tuyển",
+   "appliedAt": "Ngày ứng tuyển",
+   "applied": "Đã ứng tuyển"
 }

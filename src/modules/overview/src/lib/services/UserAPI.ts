@@ -41,6 +41,12 @@ export const UserAPI = createApi({
             params,
          }),
       }),
+      getCVAppliedByUserId: builder.query({
+         query: ({ id, ...params }) => ({
+            url: `/job/applied-by-user/${id}`,
+            params,
+         }),
+      }),
    }),
 });
 
@@ -50,4 +56,5 @@ export const {
    useUpdateCVMutation,
    useGetCVQuery,
    useGetDistrictsQuery,
+   useGetCVAppliedByUserIdQuery,
 } = UserAPI;

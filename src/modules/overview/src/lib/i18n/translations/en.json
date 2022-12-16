@@ -52,5 +52,9 @@
    "major": "major",
    "specialization": "specialization",
    "experience": "experience",
-   "certificate": "certificate"
+   "certificate": "certificate",
+   "jobsApplied": "Jobs Applied",
+   "jobPosition": "Applied Position",
+   "appliedAt": "Applied At",
+   "applied": "You've applied"
 }

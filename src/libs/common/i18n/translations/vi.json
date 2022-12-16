@@ -41,7 +41,8 @@
       "profile": "Hồ sơ",
       "signOut": "Đăng xuất",
       "findJobs": "Tìm kiếm công việc",
-      "findCompanies": "Tìm kiếm công ty"
+      "findCompanies": "Tìm kiếm công ty",
+      "jobApplied": "Việc đã ứng tuyển"
    },
    "sidebar": {
       "overview": "Tổng quan",

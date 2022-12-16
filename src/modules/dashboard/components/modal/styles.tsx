@@ -36,12 +36,44 @@ export const StyledCreateAndEditHr = styled.div`
       color: black;
       font-weight: 700;
    }
+
+   .title-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+   }
+
+   .label {
+      font-weight: 700;
+      font-size: 17px;
+      min-width: 80px;
+   }
+
+   .value {
+      font-size: 17px;
+   }
+
+   .go-to-cvs {
+      display: block;
+      font-weight: 500;
+      font-weight: 18px;
+      cursor: pointer;
+      text-decoration: underline;
+      font-style: italic;
+      text-align: center;
+      color: ${(props) => props.theme.strongBlue};
+      transition: 0.2s all linear;
+
+      &:hover {
+         opacity: 0.7;
+      }
+   }
 `;
 
 export const StyledEditPassword = styled.div`
    display: flex;
    flex-direction: column;
-   gap: 20px;
+   gap: 25px;
    margin-top: 20px;
 `;
 

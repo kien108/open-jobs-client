@@ -91,8 +91,13 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
                   <span className="notify">{t("createCVFirst")}</span>
                </div>
                <div className="apply">
-                  <Button className="btn-apply" onClick={handelApplyJob} loading={loadingApplyJob}>
-                     {t("apply")}
+                  <Button
+                     disabled={jobDetail?.isApplied}
+                     className={`btn-apply ${jobDetail?.isApplied ? "applied" : ""}`}
+                     onClick={handelApplyJob}
+                     loading={loadingApplyJob}
+                  >
+                     {jobDetail?.isApplied ? t("applied") : t("apply")}
                   </Button>
                   {/* <AiOutlineHeart size={38} color="black" className="save-job" /> */}
                </div>
