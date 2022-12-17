@@ -23,9 +23,11 @@ import { useNavigate } from "react-router-dom";
 interface IProps {
    id?: any;
    isCompany: boolean;
+   isApplied?: boolean;
+   handleClose?: () => void;
 }
 
-const JobDetail: FC<IProps> = ({ id, isCompany }) => {
+const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
    const navigate = useNavigate();
    const { t } = useTranslation();
    const { user } = useCommonSelector((state: RootState) => state.user);
@@ -90,17 +92,19 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
                   <span className="location">{jobDetail?.company?.address}</span>
                   <span className="notify">{t("createCVFirst")}</span>
                </div>
-               <div className="apply">
-                  <Button
-                     disabled={jobDetail?.isApplied}
-                     className={`btn-apply ${jobDetail?.isApplied ? "applied" : ""}`}
-                     onClick={handelApplyJob}
-                     loading={loadingApplyJob}
-                  >
-                     {jobDetail?.isApplied ? t("applied") : t("apply")}
-                  </Button>
-                  {/* <AiOutlineHeart size={38} color="black" className="save-job" /> */}
-               </div>
+               {!isApplied && (
+                  <div className="apply">
+                     <Button
+                        disabled={jobDetail?.isApplied}
+                        className={`btn-apply ${jobDetail?.isApplied ? "applied" : ""}`}
+                        onClick={handelApplyJob}
+                        loading={loadingApplyJob}
+                     >
+                        {jobDetail?.isApplied ? t("applied") : t("apply")}
+                     </Button>
+                     {/* <AiOutlineHeart size={38} color="black" className="save-job" /> */}
+                  </div>
+               )}
             </div>
             <Divider />
             <div className="content">
@@ -189,6 +193,18 @@ const JobDetail: FC<IProps> = ({ id, isCompany }) => {
                      </Row>
                   </div>
                </div>
+            )}
+            {isApplied && (
+               <Button
+                  style={{
+                     margin: "20px auto",
+                  }}
+                  onClick={() => {
+                     handleClose && handleClose();
+                  }}
+               >
+                  {t("common:confirm.cancel")}
+               </Button>
             )}
          </Container>
       </Spin>

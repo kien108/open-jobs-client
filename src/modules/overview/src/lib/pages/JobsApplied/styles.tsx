@@ -22,16 +22,50 @@ export const ContainerTable = styled.div`
       text-transform: uppercase;
    }
 
-   .title {
+   /* .title {
       cursor: pointer;
 
       &:hover {
          text-decoration: underline;
       }
-   }
+   } */
 `;
 
 export const Container = styled.div`
    max-width: 1200px;
    margin: 30px auto;
+`;
+
+export const BtnFunction: StyledComponent<any, any> = styled.div`
+   cursor: pointer;
+   width: 44px;
+   height: 44px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   border-radius: 10px;
+   transition: all 0.3s;
+
+   svg {
+      path {
+         fill: ${(props) => props.theme.blue};
+         transition: all 0.3s;
+      }
+   }
+
+   .icon-password {
+      path:first-child {
+         fill: #fff;
+      }
+   }
+
+   &:hover {
+      background: ${(props) => props.theme.softBlue};
+      svg {
+         path {
+            fill: ${(props) => props.theme.blueHover};
+         }
+      }
+   }
 `;
