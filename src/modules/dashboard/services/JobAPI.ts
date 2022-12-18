@@ -41,8 +41,9 @@ export const JobAPI = createApi({
          }),
       }),
       getJobCompany: builder.query({
-         query: (id) => ({
+         query: ({ id, ...params }) => ({
             url: `/job/by-company/${id}`,
+            params,
          }),
          providesTags: ["COMPANY_JOBS"],
       }),

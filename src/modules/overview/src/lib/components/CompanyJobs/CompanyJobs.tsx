@@ -31,18 +31,18 @@ const CompanyJobs: FC<IProps> = ({ id }) => {
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
    useEffect(() => {
-      jobs && jobs?.[0] && setSelectedId(jobs?.[0]?.id);
+      jobs && jobs?.listJob[0] && setSelectedId(jobs?.listJob[0]?.id);
    }, [jobs]);
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>
             <Divider />
-            {jobs?.length > 0 ? (
+            {jobs?.listJob?.length > 0 ? (
                <Content>
                   <Row gutter={[24, 24]}>
                      <Col span={10}>
                         <Row gutter={[15, 15]}>
-                           {jobs?.map((item: any) => (
+                           {jobs?.listJob?.map((item: any) => (
                               <Col span={24} key={item?.id}>
                                  <Job
                                     item={item}

@@ -67,10 +67,13 @@ const Jobs = () => {
       data: dataCompany,
       isLoading,
       isFetching,
-   } = useGetJobCompanyQuery(user?.companyId, {
-      refetchOnMountOrArgChange: true,
-      skip: !user?.companyId,
-   });
+   } = useGetJobCompanyQuery(
+      { id: user?.companyId, ...tableInstance.params },
+      {
+         refetchOnMountOrArgChange: true,
+         skip: !user?.companyId,
+      }
+   );
 
    const form = useForm({
       defaultValues: {
@@ -185,7 +188,7 @@ const Jobs = () => {
             });
             handleCloseDelete();
          })
-         .catch((error) => {
+         .catch((error: any) => {
             openNotification({
                type: "error",
                message: t("Can't delete this job because it has any applied cv!!!"),
@@ -195,7 +198,7 @@ const Jobs = () => {
    };
 
    useEffect(() => {
-      const dataSource = dataCompany?.map((item: any) => ({
+      const dataSource = dataCompany?.listJob?.map((item: any) => ({
          key: item.id,
          ...item,
       }));
@@ -223,8 +226,8 @@ const Jobs = () => {
                dataSource={dataSource}
                tableInstance={tableInstance}
                loading={isLoading || isFetching}
-               totalElements={0}
-               totalPages={0}
+               totalElements={dataCompany?.totalElements}
+               totalPages={dataCompany?.totalPages}
             />
          </ContainerTable>
          <StyledModal
