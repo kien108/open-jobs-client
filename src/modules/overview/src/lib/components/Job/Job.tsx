@@ -12,6 +12,8 @@ interface IProps {
    className: any;
 }
 const Job: FC<IProps> = ({ item, handleClick, className }) => {
+   // console.log(moment("2022-12-14T09:20:57.167+00:00", "YYYY/MM/DD, hh:mm:ss a").fromNow());
+   console.log(item);
    return (
       <Container onClick={() => handleClick(item?.id)} className={className}>
          <div className="header">
@@ -38,7 +40,7 @@ const Job: FC<IProps> = ({ item, handleClick, className }) => {
          </div>
 
          <div className="footer">
-            <span className="time">{moment(item?.createdAt, "YYYY-MM-DD").fromNow()}</span>
+            <span className="time">{moment(item?.createdAt).format("DD/MM/YYYY")}</span>
             {/* <span className="dot"></span>
             <div className="from">
                <span>From</span>

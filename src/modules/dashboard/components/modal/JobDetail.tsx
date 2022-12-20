@@ -181,15 +181,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                </Col>
             </Row>
 
-            <span
-               className="go-to-cvs"
-               onClick={() => {
-                  navigate(`${searchParams.get("id")}/cv-matched`);
-               }}
-            >
-               View list CV
-            </span>
-
             <GroupButton>
                <Button
                   onClick={() => {

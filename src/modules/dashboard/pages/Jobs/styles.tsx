@@ -80,3 +80,11 @@ export const ContainerTable = styled.div`
    background: ${(props) => props.theme.secondaryText};
    border-radius: 10px;
 `;
+
+export const StyledDetail = styled(Modal)`
+   .job-detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+   }
+`;

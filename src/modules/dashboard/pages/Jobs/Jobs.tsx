@@ -19,7 +19,7 @@ import {
 
 import { ColumnsType } from "antd/es/table";
 import { useTranslation } from "react-i18next";
-import { BtnFunction, ContainerTable, StyledFunctions, StyledModal } from "./styles";
+import { BtnFunction, ContainerTable, StyledDetail, StyledFunctions, StyledModal } from "./styles";
 // import { useDeActivateMutation, useGetCompaniesQuery } from "../services";
 import { useNavigate, useSearchParams } from "react-router-dom";
 // import { ICompany } from "../types";
@@ -242,8 +242,19 @@ const Jobs = () => {
          >
             <CreateJob handleClose={handleClose} />
          </StyledModal>
-         <Modal
-            title="Job Detail"
+         <StyledDetail
+            title={
+               <div className="job-detail-header">
+                  <span>Job Detail</span>
+                  <Button
+                     onClick={() => {
+                        navigate(`${searchParams.get("id")}/cv-matched`);
+                     }}
+                  >
+                     View list CV
+                  </Button>
+               </div>
+            }
             visible={isOpenDetail}
             onCancel={() => {
                handleCloseDetail();
@@ -258,7 +269,7 @@ const Jobs = () => {
                   setSearchParams(searchParams);
                }}
             />
-         </Modal>
+         </StyledDetail>
          <Modal
             type="confirm"
             open={isOpenDelete}
