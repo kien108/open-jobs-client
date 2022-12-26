@@ -207,19 +207,27 @@ const CVApply = () => {
    };
 
    const handleExport = () => {
-      const appliedCVs = dataSource.map((item: any) => ({
-         firstName: item?.firstName,
-         lastName: item?.lastName,
-         email: item?.email,
-         phone: item?.phone,
-         gender: item?.gender,
-         status: item?.status,
-         url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.cvId}?status=${item?.cvStatus}`,
-      }));
+      const appliedCVs = dataSource
+         .filter((item: any) => item?.cvStatus === "ACCEPTED")
+         .map((item: any) => ({
+            firstName: item?.firstName,
+            lastName: item?.lastName,
+            email: item?.email,
+            phone: item?.phone,
+            gender: item?.gender,
+            url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.cvId}?status=${item?.cvStatus}`,
+         }));
       const body = {
          jobId: id,
          appliedCVs,
       };
+      if (appliedCVs.length === 0) {
+         openNotification({
+            type: "error",
+            message: "Don't have any accepted cvs to export!",
+         });
+         return;
+      }
 
       exportCVs(body)
          .unwrap()

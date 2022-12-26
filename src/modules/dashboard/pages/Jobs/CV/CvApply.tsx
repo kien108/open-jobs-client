@@ -226,15 +226,25 @@ const CVMatched = () => {
    // };
 
    const handleExport = () => {
-      const matchedCVs = dataSource.map((item: any) => ({
-         firstName: item?.firstName,
-         lastName: item?.lastName,
-         email: item?.email,
-         phone: item?.phone,
-         gender: item?.gender,
-         status: item?.status,
-         url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.cvId}?status=${item?.cvStatus}`,
-      }));
+      const matchedCVs = dataSource
+         .filter((item: any) => item?.cvStatus === "ACCEPTED")
+         .map((item: any) => ({
+            firstName: item?.firstName,
+            lastName: item?.lastName,
+            email: item?.email,
+            phone: item?.phone,
+            gender: item?.gender,
+            url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.cvId}?status=${item?.cvStatus}`,
+         }));
+
+      if (matchedCVs.length === 0) {
+         openNotification({
+            type: "error",
+            message: "Don't have any accepted cvs to export!",
+         });
+         return;
+      }
+
       const body = {
          jobId: id,
          matchedCVs,
