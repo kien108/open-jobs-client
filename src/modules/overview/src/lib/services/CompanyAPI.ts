@@ -29,4 +29,5 @@ export const CompanyAPI = createApi({
    }),
 });
 
-export const { useGetJobCompanyQuery, useGetCompaniesQuery, useGetCompanyByIdQuery } = CompanyAPI;
+export const { useGetJobCompanyQuery, useLazyGetCompaniesQuery, useGetCompanyByIdQuery } =
+   CompanyAPI;

@@ -9,7 +9,9 @@ const rootReducer = combineReducers({
 export const store = configureStore({
    reducer: rootReducer,
    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(UserAPI.middleware).concat(JobAPI.middleware),
+      getDefaultMiddleware({ serializableCheck: false })
+         .concat(UserAPI.middleware)
+         .concat(JobAPI.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

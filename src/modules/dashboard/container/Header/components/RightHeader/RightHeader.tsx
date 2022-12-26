@@ -99,7 +99,11 @@ const RightHeader = ({ languages, accounts }: Props) => {
                }
             >
                <button className="button-header">
-                  <Image type="circle" src={user?.company?.logoUrl} width="32px" />
+                  <Image
+                     type="circle"
+                     src={user?.company?.logoUrl || user?.avatarUrl}
+                     width="32px"
+                  />
                </button>
             </Popover>
          </div>

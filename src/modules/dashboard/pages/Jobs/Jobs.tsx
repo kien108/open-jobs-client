@@ -37,7 +37,7 @@ import {
    useGetSkillsQuery,
    useGetSpecializationsQuery,
 } from "../../services";
-import { useDeleteJobMutation, useGetJobCompanyQuery } from "../../services/JobAPI";
+import { useDeleteJobMutation, useGetJobCompanyQuery } from "../../services/JobAPIDashBoard";
 
 type FormType = {
    listSkill: any;

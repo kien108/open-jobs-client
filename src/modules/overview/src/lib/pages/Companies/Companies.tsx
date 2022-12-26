@@ -3,39 +3,51 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FilterCompany } from "../../components/FilterCompany";
 import { useFilterSearchJob } from "../../hooks";
-import { useGetCompaniesQuery } from "../../services";
+import { useLazyGetCompaniesQuery } from "../../services";
 import { Container } from "./styles";
 import logoCompany from "../../assets/company.png";
 import { AiOutlineClockCircle, AiOutlinePhone, AiOutlineSetting } from "react-icons/ai";
 import { BsCalendarDay, BsPeople } from "react-icons/bs";
 import { GrLocation } from "react-icons/gr";
 import { useTranslation } from "react-i18next";
+import { Table } from "../../../../../../libs/components";
 
 const Companies = () => {
    const { t } = useTranslation();
    const [searchParams] = useSearchParams();
+   const tableInstance = Table.useTable();
+
    const [companies, setCompanies] = useState([]);
    const navigate = useNavigate();
-   const {
-      data: dataCompanies,
-      isLoading: loadingCompanies,
-      isFetching: fetchingCompanies,
-   } = useGetCompaniesQuery(
-      { ...useFilterSearchJob(), page: 0, size: 99 },
-      { refetchOnMountOrArgChange: true }
-   );
+   const [
+      getCompany,
+      { isLoading: loadingCompany, isFetching: fetchingCompany, data: dataCompanies },
+   ] = useLazyGetCompaniesQuery();
 
    useEffect(() => {
-      setCompanies(dataCompanies?.companies || []);
-   }, [dataCompanies]);
+      getCompany({ ...tableInstance.params })
+         .unwrap()
+         .then((dataCompanies) => {
+            setCompanies(dataCompanies?.companies || []);
+         });
+   }, []);
+
+   const handleSearchCompany = (params: any) => {
+      getCompany({ ...tableInstance.params, ...params })
+         .unwrap()
+         .then((dataCompanies) => {
+            setCompanies(dataCompanies?.companies || []);
+         });
+   };
+
    return (
-      <Spin spinning={loadingCompanies || fetchingCompanies}>
+      <Spin spinning={loadingCompany || fetchingCompany}>
          <Container>
             <div className="header">
                <span className="title">{t("findGreatPlace")}</span>
 
-               <span className="sub-title">{t("accessReview")}</span>
-               <FilterCompany />
+               {/* <span className="sub-title">{t("accessReview")}</span> */}
+               <FilterCompany handleSearchCompany={handleSearchCompany} />
             </div>
 
             <div className="companies-content">

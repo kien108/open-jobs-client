@@ -423,9 +423,16 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         {form.watch("majorId") && form.watch("specializationId") && (
                            <>
                               <Col span={24}>
-                                 <BtnFunction onClick={() => append({ name: "", experience: "" })}>
-                                    <BsPlusLg />
-                                 </BtnFunction>
+                                 <GroupButton>
+                                    <div className="cv-item" style={{ marginTop: "20px" }}>
+                                       <span className="title">SKILLS</span>
+                                    </div>
+                                    <BtnFunction
+                                       onClick={() => append({ name: "", experience: "" })}
+                                    >
+                                       <BsPlusLg />
+                                    </BtnFunction>
+                                 </GroupButton>
 
                                  <Table
                                     dataSource={fields.map((item, index) => ({

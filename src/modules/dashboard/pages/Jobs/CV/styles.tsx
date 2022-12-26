@@ -126,6 +126,10 @@ export const StyledHeader = styled.div`
 `;
 
 export const Container = styled.div`
+   .btn-export {
+      width: fit-content;
+      margin-left: auto;
+   }
    .items {
       display: flex;
       align-items: center;

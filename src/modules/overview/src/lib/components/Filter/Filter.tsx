@@ -92,10 +92,10 @@ const Filter: FC<IProps> = ({ handleSearchJobs }) => {
                      placeholder={t("whatPlaceHolder")}
                      icons={<SearchIcon width={20} />}
                      name="keyword"
-                     onChange={(e: any) => {
-                        form.setValue("keyword", e.target.value);
-                        handleOnChange("keyword", e.target.value);
-                     }}
+                     // onChange={(e: any) => {
+                     //    form.setValue("keyword", e.target.value);
+                     //    handleOnChange("keyword", e.target.value);
+                     // }}
                      onKeyDown={(event) => {
                         if (event.key === "Enter") {
                            handleSearchJobs({
@@ -114,13 +114,13 @@ const Filter: FC<IProps> = ({ handleSearchJobs }) => {
                      showSearch
                      options={provinces || []}
                      onSearch={(value) => setSearchLocation(value)}
-                     onChange={(value) => {
-                        handleOnChange("location", value);
-                        handleSearchJobs({
-                           keyword: form.watch("keyword") ?? "",
-                           location: form.watch("location") ?? "",
-                        });
-                     }}
+                     // onChange={(value) => {
+                     //    handleOnChange("location", value);
+                     //    handleSearchJobs({
+                     //       keyword: form.watch("keyword") ?? "",
+                     //       location: form.watch("location") ?? "",
+                     //    });
+                     // }}
                      loading={false}
                   />
                </Col>

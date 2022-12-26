@@ -8,6 +8,7 @@ export const StyledBtnsHeader = styled.div`
    justify-content: space-between;
    margin-top: 30px;
 `;
+
 export const Container = styled.div`
    max-width: 1200px;
    margin: 0 auto;
@@ -18,7 +19,35 @@ export const Container = styled.div`
    border: 1px solid #d4d2d0;
    border-radius: 8px;
    box-shadow: none !important;
-   margin-top: 20px;
+   margin-top: 40px;
+   background-color: white;
+
+   .job-detail {
+      position: relative;
+      &::before {
+         display: block;
+         position: absolute;
+         content: "";
+         right: 0px;
+         border-right: 2px solid ${(props) => props.theme.strongBlue};
+         height: 100%;
+      }
+   }
+
+   .cv-item {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      .title {
+         font-size: 16px;
+         text-transform: uppercase;
+         font-weight: 600;
+         margin-bottom: 4px;
+         color: #1b1f3b;
+         text-align: left;
+      }
+   }
 
    .general-information {
       display: flex;
@@ -76,15 +105,6 @@ export const Container = styled.div`
       }
    }
 
-   .title {
-      font-size: 16px;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: #1b1f3b;
-      text-align: left;
-   }
-
    .skills {
       .skills-title {
          font-size: 16px;
@@ -138,15 +158,9 @@ export const BtnFunction = styled.div`
    align-items: center;
    justify-content: center;
    color: black;
-   transform: translateX(15px);
-   margin-left: auto;
    margin-top: 20px;
    border-radius: 10px;
    transition: all 0.3s;
-
-   &.btn-back {
-      margin-left: 140px;
-   }
 
    &.btn-remove {
       margin-top: 0px;
@@ -198,5 +212,9 @@ export const GroupButton = styled.div`
    align-items: center;
    justify-content: center;
    gap: 20px;
-   margin-top: 12px;
+   margin-top: 30px;
+
+   svg path {
+      color: white;
+   }
 `;

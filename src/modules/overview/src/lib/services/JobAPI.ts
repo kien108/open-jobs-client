@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
 
 export const JobAPI = createApi({
-   reducerPath: "JobAPI",
+   reducerPath: "JobAPIOverview",
    baseQuery,
    tagTypes: ["DETAIL"],
    endpoints: (builder) => ({
@@ -24,7 +24,12 @@ export const JobAPI = createApi({
             params,
          }),
       }),
-
+      getListDistricts: builder.query({
+         query: (params) => ({
+            url: "/location/search-district",
+            params,
+         }),
+      }),
       getMajors: builder.query({
          query: (params) => ({
             url: "/majors",
@@ -55,6 +60,7 @@ export const {
    useLazyGetJobsQuery,
    useGetJobByIdQuery,
    useGetProvincesQuery,
+   useGetListDistrictsQuery,
    useGetMajorsQuery,
    useGetSpecializationsQuery,
    useGetSkillsQuery,

@@ -8,7 +8,7 @@ import i18n from "./i18n/config";
 import { RootState, useCommonSelector } from "./../../libs/common";
 import { Layout } from "./container/Layout";
 import { Jobs } from "./pages/Jobs";
-import FillCompany from "../overview/src/lib/pages/FillCompany/FillCompany";
+import FillCompany from "../dashboard/pages/FillCompany/FillCompany";
 import { CVMatched } from "./pages/Jobs/CV";
 import { TabsRequest } from "./components/TabsRequest";
 import { CVManagement } from "./pages/CVManagement";

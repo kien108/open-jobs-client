@@ -59,7 +59,9 @@ const CompanyJobs: FC<IProps> = ({ id }) => {
                         />
                      </Col>
                      <Col span={13}>
-                        <JobDetail id={selectedId} isCompany={true} />
+                        <div className="job-detail">
+                           <JobDetail id={selectedId} isCompany={true} />
+                        </div>
                      </Col>
                   </Row>
                </Content>

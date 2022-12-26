@@ -137,7 +137,7 @@ const Login = () => {
                   </Button>
                </StyledButton>
 
-               <Divider orientation="center">Or</Divider>
+               {/* <Divider orientation="center">Or</Divider>
 
                <Input
                   label={t("login.email")}
@@ -174,7 +174,7 @@ const Login = () => {
                   <Button loading={isLoading} onClick={() => form.handleSubmit(onSubmit)()}>
                      {t("login.btn")}
                   </Button>
-               </StyledButton>
+               </StyledButton> */}
             </StyledForm>
          </FormProvider>
       </ContainerLogin>

@@ -4,7 +4,7 @@ import { baseQuery } from "./baseQuery";
 export const UserAPI = createApi({
    reducerPath: "UserAPI",
    baseQuery,
-   tagTypes: ["USER"],
+   tagTypes: ["USER", "CV_APPLIED"],
    endpoints: (builder) => ({
       getProfile: builder.query({
          query: (id) => ({
@@ -35,17 +35,20 @@ export const UserAPI = createApi({
          }),
          invalidatesTags: ["USER"],
       }),
-      getDistricts: builder.query({
-         query: (params) => ({
-            url: "/location/search-district",
-            params,
-         }),
-      }),
+
       getCVAppliedByUserId: builder.query({
          query: ({ id, ...params }) => ({
             url: `/job/applied-by-user/${id}`,
             params,
          }),
+         providesTags: ["CV_APPLIED"],
+      }),
+      cancelApplyCV: builder.mutation({
+         query: ({ cvId, jobId }) => ({
+            url: `/cv/${cvId}/remove-application/${jobId}`,
+            method: "DELETE",
+         }),
+         invalidatesTags: ["CV_APPLIED"],
       }),
    }),
 });
@@ -55,6 +58,6 @@ export const {
    useUpdateProfileMutation,
    useUpdateCVMutation,
    useGetCVQuery,
-   useGetDistrictsQuery,
    useGetCVAppliedByUserIdQuery,
+   useCancelApplyCVMutation,
 } = UserAPI;

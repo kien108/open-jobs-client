@@ -8,13 +8,14 @@ import i18n from "./i18n/config";
 import { RootState, useCommonSelector } from "../../../../libs/common";
 import { Filter } from "./components";
 import Jobs from "./pages/Jobs/Jobs";
-import FillCompany from "./pages/FillCompany/FillCompany";
+// import FillCompany from "./pages/FillCompany/FillCompany";
 import { Profile } from "./pages/Profile";
 import { ContactInformation } from "./components/ContactInformation";
 import { CV } from "./components/CV";
 import { CompanyDetail } from "./pages/CompanyDetail";
 import { Companies } from "./pages/Companies";
 import { JobsApplied } from "./pages";
+import { CVDetail } from "./components/CVDetail";
 
 export function ModuleOverview() {
    const { lang } = useCommonSelector((state: RootState) => state.lang);
@@ -32,10 +33,11 @@ export function ModuleOverview() {
                   <Route path="jobs" element={<Jobs />} />
                   <Route path="companies" element={<Companies />} />
                   <Route path="companies/:id" element={<CompanyDetail />} />
-                  <Route path="validate" element={<FillCompany />} />
+                  {/* <Route path="validate" element={<FillCompany />} /> */}
                   <Route path="profile" element={<Profile />}></Route>
                   <Route path="profile/contact" element={<ContactInformation />} />
-                  <Route path="profile/cv" element={<CV />} />
+                  <Route path="profile/cv" element={<CVDetail />} />
+                  <Route path="profile/cv/edit" element={<CV />} />
                   <Route path="jobs-applied" element={<JobsApplied />} />
                </Route>
             </Routes>

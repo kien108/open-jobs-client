@@ -13,7 +13,7 @@ interface PaginationProps extends AntPaginationProps {
    tableInstance: TableInstanceProps;
 }
 
-const optionsShowPage: number[] = [5, 10, 20, 50, 100];
+const optionsShowPage: number[] = [10, 20, 50, 100];
 
 export default function Pagination({ tableInstance, ...props }: PaginationProps) {
    const { t } = useTranslation();

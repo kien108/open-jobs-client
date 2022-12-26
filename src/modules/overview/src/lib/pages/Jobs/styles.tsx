@@ -45,4 +45,10 @@ export const Container = styled.div`
       font-size: 20px;
       font-weight: 700;
    }
+
+   .job-detail {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 3px;
+   }
 `;

@@ -2,13 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Container, ImgWrapper } from "./styles";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-   Button,
-   EditIcon,
-   Input,
-   openNotification,
-   Select,
-} from "../../../../../../libs/components";
+import { Button, EditIcon, Input, openNotification, Select } from "../../../../libs/components";
 
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
@@ -16,14 +10,14 @@ import { Col, Divider, Row, Spin, Upload } from "antd";
 import ImgCrop from "antd-img-crop";
 
 import Company from "../../assets/company.png";
-import { RootState, useCommonSelector, useDebounce } from "../../../../../../libs/common";
+import { RootState, useCommonSelector, useDebounce } from "../../../../libs/common";
 import {
-   useGetDistrictsQuery,
+   useGetListDistrictsQuery,
    useGetProfileQuery,
    useGetProvincesQuery,
    useUpdateProfileMutation,
 } from "../../services";
-import { EmailVariables } from "../../../../../dashboard/components/EmailVariables";
+import { EmailVariables } from "../../components/EmailVariables";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 
 const FillCompany = () => {
@@ -48,15 +42,6 @@ const FillCompany = () => {
    } = useGetProfileQuery(id, { skip: !id, refetchOnMountOrArgChange: true });
 
    const [upload, { isLoading: loadingUpload }] = useUpdateProfileMutation();
-
-   const {
-      data: dataProvinces,
-      isLoading: loadingProvince,
-      isFetching: fetchingProvinces,
-   } = useGetProvincesQuery(
-      { keyword: searchProvinceDebounce },
-      { refetchOnMountOrArgChange: true }
-   );
 
    const form = useForm({
       mode: "all",
@@ -86,11 +71,20 @@ const FillCompany = () => {
    });
 
    const {
+      data: dataProvinces,
+      isLoading: loadingProvince,
+      isFetching: fetchingProvinces,
+   } = useGetProvincesQuery(
+      { keyword: searchProvinceDebounce },
+      { refetchOnMountOrArgChange: true }
+   );
+
+   const {
       data: dataDistricts,
       isLoading: loadingDistricts,
       isFetching: fetchingDistricts,
-   } = useGetDistrictsQuery(
-      { keyword: "", province: "Ho Chi Minh" },
+   } = useGetListDistrictsQuery(
+      { keyword: searchDistrictDebounce, province: form.watch("province") },
       { refetchOnMountOrArgChange: true }
    );
 
@@ -136,130 +130,7 @@ const FillCompany = () => {
    }, [dataProvinces]);
 
    useEffect(() => {
-      const dataDistricts = [
-         {
-            id: 1,
-            name: "Bình Chánh",
-            prefix: "Huyện",
-         },
-         {
-            id: 2,
-            name: "Bình Tân",
-            prefix: "Quận",
-         },
-         {
-            id: 3,
-            name: "Bình Thạnh",
-            prefix: "Quận",
-         },
-         {
-            id: 4,
-            name: "Cần Giờ",
-            prefix: "Huyện",
-         },
-         {
-            id: 5,
-            name: "Củ Chi",
-            prefix: "Huyện",
-         },
-         {
-            id: 6,
-            name: "Gò Vấp",
-            prefix: "Quận",
-         },
-         {
-            id: 7,
-            name: "Hóc Môn",
-            prefix: "Huyện",
-         },
-         {
-            id: 8,
-            name: "Nhà Bè",
-            prefix: "Huyện",
-         },
-         {
-            id: 9,
-            name: "Phú Nhuận",
-            prefix: "Quận",
-         },
-         {
-            id: 10,
-            name: "Quận 1",
-            prefix: "",
-         },
-         {
-            id: 11,
-            name: "Quận 10",
-            prefix: "",
-         },
-         {
-            id: 12,
-            name: "Quận 11",
-            prefix: "",
-         },
-         {
-            id: 13,
-            name: "Quận 12",
-            prefix: "",
-         },
-         {
-            id: 14,
-            name: "Quận 2",
-            prefix: "",
-         },
-         {
-            id: 15,
-            name: "Quận 3",
-            prefix: "",
-         },
-         {
-            id: 16,
-            name: "Quận 4",
-            prefix: "",
-         },
-         {
-            id: 17,
-            name: "Quận 5",
-            prefix: "",
-         },
-         {
-            id: 18,
-            name: "Quận 6",
-            prefix: "",
-         },
-         {
-            id: 19,
-            name: "Quận 7",
-            prefix: "",
-         },
-         {
-            id: 20,
-            name: "Quận 8",
-            prefix: "",
-         },
-         {
-            id: 21,
-            name: "Quận 9",
-            prefix: "",
-         },
-         {
-            id: 22,
-            name: "Tân Bình",
-            prefix: "Quận",
-         },
-         {
-            id: 23,
-            name: "Tân Phú",
-            prefix: "Quận",
-         },
-         {
-            id: 24,
-            name: "Thủ Đức",
-            prefix: "Quận",
-         },
-      ];
-
-      const options = dataDistricts.map((item: any) => ({
+      const options = (dataDistricts ?? []).map((item: any) => ({
          key: item.id,
          label: item.name,
          value: item.name,
@@ -306,10 +177,10 @@ const FillCompany = () => {
          <Container>
             <Row gutter={[20, 20]}>
                <Col span={14}>
-                  <div className="header">
+                  {/* <div className="header">
                      <span>Complete profile company</span>
                      <span>You'll need to complement profile to begin post a job</span>
-                  </div>
+                  </div> */}
                   <ImgWrapper className="wrapper">
                      <ImgWrapper className="wrapper-img">
                         <Upload
@@ -377,22 +248,28 @@ const FillCompany = () => {
                               required
                               showSearch
                               onSearch={(value) => setSearchProvince(value)}
+                              onSelect={(value: any) => {
+                                 form.setValue("province", value);
+                                 form.setValue("district", undefined);
+                              }}
                               options={provinces || []}
                               loading={loadingProvince || fetchingProvinces}
                            />
                         </Col>
                         <Col span={12}>
-                           <Select
-                              required
-                              disabled={!form.watch("province")}
-                              name="district"
-                              title="District"
-                              placeholder="Please choose province first!"
-                              showSearch={true}
-                              onSearch={(value) => setSearchDistrict(value)}
-                              options={districts || []}
-                              loading={loadingDistricts || fetchingDistricts}
-                           />
+                           <Spin spinning={loadingDistricts || fetchingDistricts}>
+                              <Select
+                                 required
+                                 disabled={!form.watch("province")}
+                                 name="district"
+                                 title="District"
+                                 placeholder="Please choose province first!"
+                                 showSearch={true}
+                                 onSearch={(value) => setSearchDistrict(value)}
+                                 options={districts || []}
+                                 loading={loadingDistricts || fetchingDistricts}
+                              />
+                           </Spin>
                         </Col>
                         <Col span={24}>
                            <Input

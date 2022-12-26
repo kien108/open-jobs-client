@@ -83,6 +83,15 @@ export const GroupButton = styled.div`
    justify-content: center;
    gap: 20px;
    margin-top: 12px;
+
+   .title {
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #1b1f3b;
+      text-align: left;
+   }
 `;
 
 export const StyledNotFound = styled.div`

@@ -9,6 +9,7 @@ export {
    useGetSpecializationsQuery,
    useGetSkillsQuery,
    useApplyJobMutation,
+   useGetListDistrictsQuery,
 } from "./JobAPI";
 
 export {
@@ -17,13 +18,13 @@ export {
    useUpdateProfileMutation,
    useUpdateCVMutation,
    useGetCVQuery,
-   useGetDistrictsQuery,
    useGetCVAppliedByUserIdQuery,
+   useCancelApplyCVMutation,
 } from "./UserAPI";
 
 export {
    CompanyAPI,
    useGetJobCompanyQuery,
-   useGetCompaniesQuery,
+   useLazyGetCompaniesQuery,
    useGetCompanyByIdQuery,
 } from "./CompanyAPI";

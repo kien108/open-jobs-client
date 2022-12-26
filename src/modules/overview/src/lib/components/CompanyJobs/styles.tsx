@@ -13,6 +13,11 @@ export const Content = styled.div`
 `;
 
 export const Container = styled.div`
+   .job-detail {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 3px;
+   }
    .title-container {
       margin-top: -15px;
       display: flex;

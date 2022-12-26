@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
 
 export const JobAPI = createApi({
-   reducerPath: "JobAPI",
+   reducerPath: "JobAPIDashBoard",
    tagTypes: ["JOBS", "COMPANY_JOBS", "CV_APPLIED", "CV_MATCHED"],
    baseQuery,
    endpoints: (builder) => ({
@@ -21,6 +21,12 @@ export const JobAPI = createApi({
       getProvinces: builder.query({
          query: (params) => ({
             url: "/location/search-province",
+            params,
+         }),
+      }),
+      getListDistricts: builder.query({
+         query: (params) => ({
+            url: "/location/search-district",
             params,
          }),
       }),
@@ -97,6 +103,20 @@ export const JobAPI = createApi({
          }),
          invalidatesTags: ["CV_APPLIED"],
       }),
+      exportCVs: builder.mutation({
+         query: (body) => ({
+            url: `/export/accepted-cv`,
+            method: "POST",
+            body,
+         }),
+      }),
+      downloadExport: builder.query({
+         query: (params) => ({
+            url: `/export/download`,
+            params,
+            responseHandler: (response) => response.blob(),
+         }),
+      }),
    }),
 });
 
@@ -115,4 +135,7 @@ export const {
    useRejectCVMutation,
    useAcceptCVMutation,
    useRejectJobCvMutation,
+   useGetListDistrictsQuery,
+   useExportCVsMutation,
+   useLazyDownloadExportQuery,
 } = JobAPI;

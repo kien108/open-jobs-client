@@ -5,6 +5,7 @@ import {
    Button,
    CloseIcon,
    DeleteIcon,
+   DownloadIcon,
    EditIcon,
    EyeIcon,
    Input,
@@ -36,10 +37,14 @@ import {
 } from "./styles";
 import { Col, Row } from "antd";
 
+import FileSaver from "file-saver";
+
 import {
    useAcceptCVMutation,
+   useExportCVsMutation,
    useGetCvAppliedQuery,
    useGetCvMatchedQuery,
+   useLazyDownloadExportQuery,
    useRejectCVMutation,
 } from "../../services";
 const CVApply = () => {
@@ -90,49 +95,55 @@ const CVApply = () => {
    );
 
    const [rejectCV, { isLoading: loadingReject }] = useRejectCVMutation();
-
+   const [exportCVs, { isLoading: loadingExport, data: dataExport }] = useExportCVsMutation();
+   const [download, { isLoading: loadingDownload }] = useLazyDownloadExportQuery();
    const Status = {
       ACCEPTED: "accept",
       REJECTED: "reject",
       NEW: "new",
    };
+
    const columns: ColumnsType<any> = [
       {
-         title: t("Title"),
-         dataIndex: "title",
-         key: "title",
+         title: t("First Name"),
+         dataIndex: "firstName",
+         key: "firstName",
          sorter: true,
          render: (item) => <span className="col">{item || "-"}</span>,
       },
       {
-         title: t("Major"),
-         dataIndex: "major",
-         key: "major",
+         title: t("Last Name"),
+         dataIndex: "lastName",
+         key: "lastName",
+         sorter: true,
+         render: (item) => <span className="col">{item}</span>,
+      },
+      {
+         title: t("Email"),
+         dataIndex: "email",
+         key: "email",
+         sorter: true,
+         render: (item) => <span className="col">{item}</span>,
+      },
+      {
+         title: t("Phone"),
+         dataIndex: "phone",
+         key: "phone",
          sorter: true,
          render: (item) => <span className="col">{item || "-"}</span>,
       },
       {
-         title: t("Specialization"),
-         dataIndex: "specialization",
-         key: "specialization",
+         title: t("Gender"),
+         dataIndex: "gender",
+         key: "gender",
          sorter: true,
          render: (item) => <span className="col">{item || "-"}</span>,
       },
-      {
-         title: t("Skills"),
-         dataIndex: "skills",
-         key: "skills",
-         sorter: true,
-         render: (_: string, record: any) => (
-            <span className="col">
-               {record?.listSkill?.map((item: any) => item?.name).join(" - ")}
-            </span>
-         ),
-      },
+
       {
          title: t("Status"),
-         dataIndex: "status",
-         key: "skills",
+         dataIndex: "cvStatus",
+         key: "cvStatus",
          sorter: true,
          render: (value: string) => (
             <span className={`status ${value ?? "NEW"}`}>{value ?? "NEW"}</span>
@@ -148,15 +159,12 @@ const CVApply = () => {
                      navigate({
                         pathname: `${record?.userId}`,
                         search: createSearchParams({
-                           status: record?.status,
+                           status: record?.cvStatus,
                         }).toString(),
                      });
                   }}
                >
                   <EyeIcon />
-               </BtnFunction>
-               <BtnFunction onClick={() => handleOpenDelete(record)}>
-                  <DeleteIcon />
                </BtnFunction>
             </StyledFunctions>
          ),
@@ -198,8 +206,44 @@ const CVApply = () => {
             });
    };
 
+   const handleExport = () => {
+      const appliedCVs = dataSource.map((item: any) => ({
+         firstName: item?.firstName,
+         lastName: item?.lastName,
+         email: item?.email,
+         phone: item?.phone,
+         gender: item?.gender,
+         status: item?.status,
+         url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.cvId}?status=${item?.cvStatus}`,
+      }));
+      const body = {
+         jobId: id,
+         appliedCVs,
+      };
+
+      exportCVs(body)
+         .unwrap()
+         .then((data) => {
+            download({ filename: data?.pathName })
+               .unwrap()
+               .then((res) => FileSaver.saveAs(res, "accepted-cvs.xlsx"))
+               .catch((err) => {
+                  openNotification({
+                     type: "error",
+                     message: t("common:ERRORS.SERVER_ERROR"),
+                  });
+               });
+         })
+         .catch((error) => {
+            openNotification({
+               type: "error",
+               message: t("common:ERRORS.SERVER_ERROR"),
+            });
+         });
+   };
+
    useEffect(() => {
-      const dataSource = dataCVs?.listCv?.map((item: any) => ({
+      const dataSource = dataCVs?.map((item: any) => ({
          ...item,
          key: item?.id,
          major: item?.major?.name,
@@ -249,6 +293,16 @@ const CVApply = () => {
             </div>
          </div>
          <ContainerTable>
+            <Button
+               className="btn-export"
+               disabled={dataSource.length === 0}
+               loading={loadingExport}
+               height={44}
+               icon={<DownloadIcon />}
+               onClick={handleExport}
+            >
+               {t("Export Accepted CVs")}
+            </Button>
             <Table
                columns={columns}
                dataSource={dataSource}
@@ -256,6 +310,7 @@ const CVApply = () => {
                loading={loadingCVs || fetchingCVs}
                totalElements={dataCVs?.totalElements || 0}
                totalPages={dataCVs?.totalPages || 0}
+               locale={{ emptyText: "No CV Applied" }}
             />
          </ContainerTable>
 

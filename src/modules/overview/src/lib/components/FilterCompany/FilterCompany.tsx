@@ -1,7 +1,7 @@
 import { Button, Input, SearchIcon, Select } from "../../../../../../libs/components";
 import { Col, Row } from "antd";
 import { debounce } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
@@ -11,7 +11,10 @@ import { v4 as uuidv4 } from "uuid";
 import { useGetProvincesQuery } from "../../services";
 import { useDebounce } from "../../../../../../libs/common";
 
-const FilterCompany = () => {
+interface IProps {
+   handleSearchCompany: (params: any) => void;
+}
+const FilterCompany: FC<IProps> = ({ handleSearchCompany }) => {
    const { t } = useTranslation();
 
    const [searchParams, setSearchParams] = useSearchParams();
@@ -53,8 +56,6 @@ const FilterCompany = () => {
    const handleOnChange = debounce(setValueToSearchParams, 500);
 
    useEffect(() => {
-      console.log(dataProvinces);
-
       if (!dataProvinces) return;
 
       const options = dataProvinces.map((item: any) => ({
@@ -78,9 +79,13 @@ const FilterCompany = () => {
                      placeholder="company name"
                      icons={<SearchIcon width={20} />}
                      name="keyword"
-                     onChange={(e: any) => {
-                        form.setValue("keyword", e.target.value);
-                        handleOnChange("keyword", e.target.value);
+                     onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                           handleSearchCompany({
+                              keyword: form.watch("keyword") ?? "",
+                              location: form.watch("location") ?? "",
+                           });
+                        }
                      }}
                   />
                </Col>
@@ -97,7 +102,16 @@ const FilterCompany = () => {
                   />
                </Col>
                <Col span={2} style={{ alignSelf: "flex-end" }}>
-                  <Button className="btn-find" height={46}>
+                  <Button
+                     className="btn-find"
+                     height={46}
+                     onClick={() =>
+                        handleSearchCompany({
+                           keyword: form.watch("keyword") ?? "",
+                           location: form.watch("location") ?? "",
+                        })
+                     }
+                  >
                      {t("findCompanies")}
                   </Button>
                </Col>

@@ -5,6 +5,7 @@ import {
    Button,
    CloseIcon,
    DeleteIcon,
+   DownloadIcon,
    EditIcon,
    EyeIcon,
    Input,
@@ -36,7 +37,13 @@ import {
 } from "./styles";
 import { Col, Row } from "antd";
 
-import { useGetCvMatchedQuery, useRejectCVMutation } from "../../../services";
+import {
+   useExportCVsMutation,
+   useGetCvMatchedQuery,
+   useLazyDownloadExportQuery,
+   useRejectCVMutation,
+} from "../../../services";
+import FileSaver from "file-saver";
 const CVMatched = () => {
    const { t } = useTranslation();
    const [selectedSkill, setSelectedSkill] = useState<any>(undefined);
@@ -66,12 +73,6 @@ const CVMatched = () => {
    });
 
    const {
-      isOpen: isOpenDelete,
-      handleClose: handleCloseDelete,
-      handleOpen: handleOpenDeleteModal,
-   } = useModal();
-
-   const {
       data: dataCVs,
       isLoading: loadingCVs,
       isFetching: fetchingCVs,
@@ -87,6 +88,8 @@ const CVMatched = () => {
    );
 
    const [rejectCV, { isLoading: loadingReject }] = useRejectCVMutation();
+   const [exportCVs, { isLoading: loadingExport }] = useExportCVsMutation();
+   const [download, { isLoading: loadingDownload }] = useLazyDownloadExportQuery();
 
    const columns: ColumnsType<any> = [
       {
@@ -167,10 +170,10 @@ const CVMatched = () => {
       handleOpen();
    };
 
-   const handleOpenDelete = (cv: any) => {
-      setSelectedCV(cv);
-      handleOpenDeleteModal();
-   };
+   // const handleOpenDelete = (cv: any) => {
+   //    setSelectedCV(cv);
+   //    handleOpenDeleteModal();
+   // };
    const setValueToSearchParams = (name: string, value: string) => {
       if (value) {
          searchParams.set(name, value);
@@ -202,24 +205,59 @@ const CVMatched = () => {
    //          });
    // };
 
-   const handleConfirmDelete = () => {
-      selectedCV &&
-         rejectCV({ jobId: id, cvId: selectedCV?.cvId })
-            .unwrap()
-            .then(() => {
-               openNotification({
-                  type: "success",
-                  message: t("Delete CV successful!!!"),
+   // const handleConfirmDelete = () => {
+   //    selectedCV &&
+   //       rejectCV({ jobId: id, cvId: selectedCV?.cvId })
+   //          .unwrap()
+   //          .then(() => {
+   //             openNotification({
+   //                type: "success",
+   //                message: t("Delete CV successful!!!"),
+   //             });
+   //             setSelectedCV(undefined);
+   //             handleCloseDelete();
+   //          })
+   //          .catch((error) => {
+   //             openNotification({
+   //                type: "error",
+   //                message: t("common:ERRORS.SERVER_ERROR"),
+   //             });
+   //          });
+   // };
+
+   const handleExport = () => {
+      const matchedCVs = dataSource.map((item: any) => ({
+         firstName: item?.firstName,
+         lastName: item?.lastName,
+         email: item?.email,
+         phone: item?.phone,
+         gender: item?.gender,
+         status: item?.status,
+         url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.cvId}?status=${item?.cvStatus}`,
+      }));
+      const body = {
+         jobId: id,
+         matchedCVs,
+      };
+      exportCVs(body)
+         .unwrap()
+         .then((data) => {
+            download({ filename: data?.pathName })
+               .unwrap()
+               .then((res) => FileSaver.saveAs(res, "accepted-cvs.xlsx"))
+               .catch((err) => {
+                  openNotification({
+                     type: "error",
+                     message: t("common:ERRORS.SERVER_ERROR"),
+                  });
                });
-               setSelectedCV(undefined);
-               handleCloseDelete();
-            })
-            .catch((error) => {
-               openNotification({
-                  type: "error",
-                  message: t("common:ERRORS.SERVER_ERROR"),
-               });
+         })
+         .catch((error) => {
+            openNotification({
+               type: "error",
+               message: t("common:ERRORS.SERVER_ERROR"),
             });
+         });
    };
 
    useEffect(() => {
@@ -271,6 +309,16 @@ const CVMatched = () => {
             </div>
          </div>
          <ContainerTable>
+            <Button
+               className="btn-export"
+               disabled={dataSource.length === 0}
+               loading={loadingExport}
+               height={44}
+               icon={<DownloadIcon />}
+               onClick={handleExport}
+            >
+               {t("Export Accepted CVs")}
+            </Button>
             <Table
                columns={columns}
                dataSource={dataSource}
@@ -278,41 +326,9 @@ const CVMatched = () => {
                loading={loadingCVs || fetchingCVs}
                totalElements={0}
                totalPages={0}
+               locale={{ emptyText: "No CV Matched" }}
             />
          </ContainerTable>
-
-         <Modal
-            type="confirm"
-            open={isOpenDelete}
-            onCancel={() => {
-               handleCloseDelete();
-            }}
-            confirmIcon="?"
-            title={t("Do to want to delete this CV?")}
-         >
-            <GroupButton>
-               <Button
-                  height={44}
-                  style={{ padding: "0 24px" }}
-                  key="back"
-                  border="outline"
-                  onClick={() => {
-                     setSelectedCV(undefined);
-                     handleCloseDelete();
-                  }}
-               >
-                  {t("common:confirm.cancel")}
-               </Button>
-               <Button
-                  height={44}
-                  key="submit"
-                  loading={loadingReject}
-                  onClick={handleConfirmDelete}
-               >
-                  {t(t("common:confirm.ok"))}
-               </Button>
-            </GroupButton>
-         </Modal>
       </Container>
    );
 };

@@ -45,15 +45,6 @@ const Jobs = () => {
    }
 
    useEffect(() => {
-      tableInstance.setParams((prev: any) => {
-         return {
-            ...prev,
-            size: 5,
-         };
-      });
-   }, []);
-
-   useEffect(() => {
       const entries = searchParams.entries();
       const params = paramsToObject(entries);
       searchJobs({ ...tableInstance.params, ...params });
@@ -101,8 +92,10 @@ const Jobs = () => {
                            total={jobs?.totalPages}
                         />
                      </Col>
-                     <Col span={13}>
-                        <JobDetail id={selectedId} isCompany={false} />
+                     <Col span={13} className="">
+                        <div className="job-detail">
+                           <JobDetail id={selectedId} isCompany={false} />
+                        </div>
                      </Col>
                   </Row>
                </Content>

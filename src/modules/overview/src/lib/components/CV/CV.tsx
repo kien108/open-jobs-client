@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BtnFunction, Container, GroupButton, StyledListUnits } from "./styles";
+import { BtnFunction, Container, GroupButton, StyledBtnsHeader, StyledListUnits } from "./styles";
 import {
    useCommonSelector,
    RootState,
@@ -9,6 +9,7 @@ import {
 import {
    Button,
    DeleteIcon,
+   DownloadIcon,
    Input,
    MinimizeIcon,
    Modal,
@@ -16,6 +17,7 @@ import {
    PlusIcon,
    Select,
    Table,
+   Title,
 } from "../../../../../../libs/components";
 
 import Avatar from "react-avatar";
@@ -33,7 +35,7 @@ import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import { Col, Divider, Row, Spin } from "antd";
+import { Col, Divider, Row, Space, Spin } from "antd";
 import { MdEmail, MdOutlineNavigateNext } from "react-icons/md";
 import { BsArrowLeft, BsFillPersonFill, BsPlusLg } from "react-icons/bs";
 
@@ -42,6 +44,10 @@ import { ExperienceValue } from "../../../../../dashboard/types/JobModel";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 
+import * as htmlToImage from "html-to-image";
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 type FormType = {
    listSkill: any;
    objective: string;
@@ -52,11 +58,15 @@ type FormType = {
    specializationId: string;
    title: string;
 };
+import { useReactToPrint } from "react-to-print";
+import { EditorEdit } from "../EditorEdit";
 
 const CV = () => {
    const { id } = useCommonSelector((state: RootState) => state.user.user);
    const tableInstance = Table.useTable();
    const navigate = useNavigate();
+
+   const cvRef = useRef<any>(null);
 
    const temp = useRef();
    const { t } = useTranslation();
@@ -269,14 +279,15 @@ const CV = () => {
    ];
 
    const onSubmit = (data: any) => {
-      // data?.listSkill.forEach((item: any) => {
-      //    listSkill.push({
-      //       skill: {
-      //          ...item,
-      //       },
-      //    });
-      // });
+      const listSkill: any = [];
 
+      data?.listSkill.forEach((item: any) => {
+         listSkill.push({
+            skill: {
+               ...item,
+            },
+         });
+      });
       const body = {
          ...data,
          listSkill: data?.listSkill.map((item: any) => ({
@@ -287,7 +298,6 @@ const CV = () => {
          id: user?.cv?.id,
          userId: id,
       };
-
       if (
          form.watch("listSkill").filter((item: any) => item?.name && item?.experience).length === 0
       ) {
@@ -310,11 +320,24 @@ const CV = () => {
                   type: "error",
                   message: t("INTERNAL SERVER ERROR!!!"),
                });
-               navigate(-1);
             });
       }
    };
 
+   // const handleExport = () => {
+   //    html2canvas(cvRef.current).then((canvas) => {
+   //       const imgData = canvas.toDataURL("image/png");
+   //       const pdf = new jsPDF({ format: "a4", unit: "px" });
+   //       const imgProps = pdf.getImageProperties(canvas);
+   //       const pdfWidth = pdf.internal.pageSize.getWidth();
+   //       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+   //       console.log({ imgData });
+   //       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+   //       pdf.save("your-cv.pdf");
+   //    });
+   // };
    useEffect(() => {
       const options = dataMajors?.map((item: any) => ({
          key: item.id,
@@ -367,6 +390,7 @@ const CV = () => {
          <BtnFunction className="btn-back" onClick={() => navigate(-1)}>
             <BsArrowLeft size={23} />
          </BtnFunction>
+         <Title style={{ textAlign: "center" }}>Edit CV</Title>
          <Container>
             <FormProvider {...form}>
                <Row gutter={[30, 30]}>
@@ -401,20 +425,28 @@ const CV = () => {
                         </div>
                         <div className="extraInformation">
                            <div className="objective">
-                              <EmailVariables
+                              <EditorEdit
                                  data={user?.cv?.objective}
                                  editorRef={objectRef}
                                  name="objective"
                                  label={t("objective")}
                               />
+                              {/* <EmailVariables /> */}
                            </div>
                            <div className="objective">
-                              <EmailVariables
+                              <EditorEdit
                                  data={user?.cv?.education}
                                  editorRef={educationRef}
                                  name="education"
                                  label={t("education")}
                               />
+
+                              {/* <EmailVariables
+                                 data={user?.cv?.education}
+                                 editorRef={educationRef}
+                                 name="education"
+                                 label={t("education")}
+                              /> */}
                            </div>
                         </div>
                      </div>
@@ -422,7 +454,6 @@ const CV = () => {
                   <Col span={13}>
                      <div className="container">
                         <div className="listSkill">
-                           <span className="listSkill-title">SKILLS</span>
                            <Row gutter={[10, 10]}>
                               <Col span={12}>
                                  <Select
@@ -455,11 +486,16 @@ const CV = () => {
                            {form.watch("majorId") && form.watch("specializationId") && (
                               <>
                                  <Col span={24}>
-                                    <BtnFunction
-                                       onClick={() => append({ name: "", experience: "" })}
-                                    >
-                                       <BsPlusLg />
-                                    </BtnFunction>
+                                    <GroupButton>
+                                       <div className="cv-item" style={{ marginTop: "20px" }}>
+                                          <span className="title">SKILLS</span>
+                                       </div>
+                                       <BtnFunction
+                                          onClick={() => append({ name: "", experience: "" })}
+                                       >
+                                          <BsPlusLg />
+                                       </BtnFunction>
+                                    </GroupButton>
 
                                     <Table
                                        dataSource={fields.map((item, index) => ({
@@ -482,20 +518,32 @@ const CV = () => {
                         </div>
 
                         <div className="objective">
-                           <EmailVariables
+                           <EditorEdit
                               data={user?.cv?.experience}
                               editorRef={experienceRef}
                               name="experience"
                               label={t("experience")}
                            />
+                           {/* <EmailVariables
+                              data={user?.cv?.experience}
+                              editorRef={experienceRef}
+                              name="experience"
+                              label={t("experience")}
+                           /> */}
                         </div>
                         <div className="objective">
-                           <EmailVariables
+                           <EditorEdit
                               data={user?.cv?.certificate}
                               editorRef={certificateRef}
                               name="certificate"
                               label={t("certificate")}
                            />
+                           {/* <EmailVariables
+                              data={user?.cv?.certificate}
+                              editorRef={certificateRef}
+                              name="certificate"
+                              label={t("certificate")}
+                           /> */}
                         </div>
                      </div>
                   </Col>

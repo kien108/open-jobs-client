@@ -13,6 +13,7 @@ export interface IUserGeneral {
    company?: any;
    phone?: string;
    companyId?: string;
+   cv?: any;
 }
 
 export interface PermissionState {
