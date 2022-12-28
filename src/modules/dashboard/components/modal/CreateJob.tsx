@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 
 import {
    Button,
+   DatePicker,
    DeleteIcon,
    Input,
    MinimizeIcon,
@@ -105,6 +106,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             quantity: yup.number().emptyAsUndefined(),
             hoursPerWeek: yup.number().emptyAsUndefined(),
             workPlace: yup.string(),
+            expiredAt: yup.string().required(t("common:form.required")),
             skills: yup.array().of(
                yup
                   .object()
@@ -485,6 +487,14 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         label={t("Hours per week")}
                         name="hoursPerWeek"
                         placeholder={t("Enter hoursPerWeek per week")}
+                     />
+                  </Col>
+                  <Col span={12}>
+                     <DatePicker
+                        name="expiredAt"
+                        label="Expired At"
+                        required
+                        format={"DD/MM/YYYY"}
                      />
                   </Col>
                   <Col span={24}>
