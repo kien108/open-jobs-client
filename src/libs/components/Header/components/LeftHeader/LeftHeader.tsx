@@ -12,6 +12,8 @@ import {
 } from "./styles";
 
 import ImageLogo from "../../../../../assets/img/logo.png";
+import { getToken } from "./../../../../common/utils/remember";
+import { openNotification } from "../../../../components";
 
 const LeftHeader = () => {
    const { pathname } = useLocation();
@@ -36,7 +38,21 @@ const LeftHeader = () => {
                   <StyledLink
                      key={item.key}
                      tab={
-                        <Link className="custom-link-header" to={item.path}>
+                        <Link
+                           className="custom-link-header"
+                           to={item.path}
+                           onClick={(e) => {
+                              if (item.path.includes("applied")) {
+                                 if (!getToken()) {
+                                    e.preventDefault();
+                                    openNotification({
+                                       type: "warning",
+                                       message: "Please login firstly!",
+                                    });
+                                 }
+                              }
+                           }}
+                        >
                            {t(`header.${item.display}`)}
                         </Link>
                      }

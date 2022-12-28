@@ -31,7 +31,7 @@ const accounts: AccountType[] = [
    {
       id: 3,
       title: "header.signOut",
-      path: "/auth",
+      path: "/overview",
    },
 ];
 

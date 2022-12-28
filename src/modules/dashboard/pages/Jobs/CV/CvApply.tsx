@@ -128,7 +128,7 @@ const CVMatched = () => {
          render: (item) => <span className="col">{item}</span>,
       },
       {
-         title: t("Point"),
+         title: t("Matched Skills"),
          dataIndex: "point",
          key: "point",
          sorter: true,
@@ -234,7 +234,7 @@ const CVMatched = () => {
             email: item?.email,
             phone: item?.phone,
             gender: item?.gender,
-            url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.cvId}?status=${item?.cvStatus}`,
+            url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.userId}?status=${item?.cvStatus}`,
          }));
 
       if (matchedCVs.length === 0) {

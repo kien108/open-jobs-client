@@ -59,8 +59,13 @@ const CVDetail = () => {
 
    const { t } = useTranslation();
 
-   const { data: user, isLoading, isFetching } = useGetProfileQuery(userId, { skip: !userId });
+   const {
+      data: user,
+      isLoading,
+      isFetching,
+   } = useGetProfileQuery(userId, { skip: !userId, refetchOnMountOrArgChange: true });
 
+   console.log(user);
    const [acceptCV, { isLoading: loadingAccept }] = useAcceptCVMutation();
    const [rejectCV, { isLoading: loadingReject }] = useRejectJobCvMutation();
 

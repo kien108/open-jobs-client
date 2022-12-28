@@ -14,6 +14,7 @@ import {
    useCommonSelector,
    RootState,
    getToken,
+   setToken,
 } from "../../../../common";
 import { LanguageIcon, NotificationIcon } from "../../../Icons";
 import { Image } from "../../../Avatar";
@@ -96,7 +97,13 @@ const RightHeader = ({ languages, accounts }: Props) => {
                            <NavLink key={account.id} to={account.path}>
                               <button
                                  className="button-content"
-                                 onClick={() => setVisiblePopover(false)}
+                                 onClick={() => {
+                                    setVisiblePopover(false);
+                                    if (account?.id === 3) {
+                                       localStorage.removeItem("access_token");
+                                       localStorage.removeItem("userId");
+                                    }
+                                 }}
                               >
                                  <Text>{t(account.title)}</Text>
                               </button>
