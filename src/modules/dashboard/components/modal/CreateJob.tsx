@@ -55,6 +55,7 @@ import {
 } from "../../services";
 import { BsPlusLg } from "react-icons/bs";
 import { ColumnsType } from "antd/es/table";
+import moment from "moment";
 
 interface ICreateAndEditAdmin {
    handleClose: () => void;
@@ -312,6 +313,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       const body = {
          ...data,
          companyId: user?.companyId,
+         expiredAt: moment(data?.expiredAt).format("x"),
          listJobSkillDTO: data?.skills.map((item: any) => ({
             isRequired: true,
             skill: item,
@@ -375,7 +377,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       setSkills(options || []);
    }, [dataSkills]);
 
-   console.log(form.watch("skills"));
    return (
       <Spin spinning={false}>
          <StyledCreateAndEditHr>
@@ -495,6 +496,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         label="Expired At"
                         required
                         format={"DD/MM/YYYY"}
+                        disabledDate={(value) => moment(value).isBefore(moment())}
                      />
                   </Col>
                   <Col span={24}>
@@ -506,6 +508,10 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   </Col>
                </Row>
 
+               <span className="note">
+                  * Tin tuyển dụng hết hạn sẽ bị xoá sau 7 ngày (Bạn có thể gia hạn thêm ngày hết
+                  hạn)
+               </span>
                <GroupButton>
                   <Button
                      loading={loadingCreateJob}

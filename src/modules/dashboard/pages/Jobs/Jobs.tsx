@@ -13,6 +13,7 @@ import {
    Modal,
    openNotification,
    SearchIcon,
+   Status,
    Table,
    Title,
 } from "../../../../libs/components";
@@ -29,7 +30,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { debounce } from "lodash";
 import { GroupButton } from "../../components/modal/styles";
-import { MdOutlinePassword } from "react-icons/md";
+import { MdOutlinePassword, MdOutlineUpdate } from "react-icons/md";
 import { CreateJob, JobPost } from "../../components/modal";
 import {
    useGetJobsQuery,
@@ -38,6 +39,7 @@ import {
    useGetSpecializationsQuery,
 } from "../../services";
 import { useDeleteJobMutation, useGetJobCompanyQuery } from "../../services/JobAPIDashBoard";
+import ModalRenewal from "../../components/modal/ModalRenewal";
 
 type FormType = {
    listSkill: any;
@@ -55,7 +57,7 @@ const Jobs = () => {
    const tableInstance = Table.useTable();
    const [dataSource, setDataSource] = useState<any>([]);
    const [selectedId, setSelectedId] = useState<string | undefined>("");
-
+   const [selectedExpired, setSelectedExpired] = useState<any>("");
    const navigate = useNavigate();
 
    const { user } = useCommonSelector((state: RootState) => state.user);
@@ -98,6 +100,12 @@ const Jobs = () => {
       handleOpen: handleOpenDeleteModal,
    } = useModal();
 
+   const {
+      isOpen: isOpenRenewal,
+      handleClose: handleCloseRenewal,
+      handleOpen: handleOpenRenewalModal,
+   } = useModal();
+
    const [deleteJob, { isLoading: loadingDeleteJob }] = useDeleteJobMutation();
 
    const columns: ColumnsType<any> = [
@@ -130,7 +138,35 @@ const Jobs = () => {
          dataIndex: "createdAt",
          key: "createdAt",
          sorter: true,
-         render: (item) => <span>{moment(item).format("MM/DD/YYYY")}</span>,
+         render: (item) => <span>{moment(item).format("DD/MM/YYYY")}</span>,
+      },
+      {
+         title: t("Expired At"),
+         dataIndex: "expiredAt",
+         key: "expiredAt",
+         sorter: true,
+         render: (item) => <span>{item ? moment(item).format("DD/MM/YYYY") : "N/A"}</span>,
+      },
+      {
+         title: t("Expired At"),
+         dataIndex: "expiredAt",
+         key: "expiredAt",
+         sorter: true,
+         width: "10%",
+
+         render: (item) => (
+            <span>
+               {item ? (
+                  <Status
+                     isActive={moment(item).isAfter(moment())}
+                     activeMsg="In-progress"
+                     inactiveMsg="Expired"
+                  />
+               ) : (
+                  <Status isActive={true} activeMsg="In-progress" inactiveMsg="Expired" />
+               )}
+            </span>
+         ),
       },
 
       {
@@ -149,6 +185,9 @@ const Jobs = () => {
                </BtnFunction>
                <BtnFunction onClick={() => handleOpenDelete(record.id)}>
                   <DeleteIcon />
+               </BtnFunction>
+               <BtnFunction onClick={() => handleOpenRenewal(record)}>
+                  <MdOutlineUpdate size={24} className="icon-renewal" />
                </BtnFunction>
             </StyledFunctions>
          ),
@@ -174,6 +213,13 @@ const Jobs = () => {
    const handleOpenDelete = (id: string) => {
       setSelectedId(id);
       handleOpenDeleteModal();
+   };
+
+   const handleOpenRenewal = (record: any) => {
+      searchParams.set("id", record?.id);
+      setSearchParams(searchParams);
+      setSelectedExpired(record?.expiredAt);
+      handleOpenRenewalModal();
    };
 
    const handleOnChange = debounce(setValueToSearchParams, 500);
@@ -300,6 +346,15 @@ const Jobs = () => {
                   {t(t("common:confirm.ok"))}
                </Button>
             </GroupButton>
+         </Modal>
+
+         <Modal
+            destroyOnClose
+            visible={isOpenRenewal}
+            title="Renewal job"
+            onCancel={handleCloseRenewal}
+         >
+            <ModalRenewal handleClose={handleCloseRenewal} expiredAt={selectedExpired} />
          </Modal>
       </>
    );

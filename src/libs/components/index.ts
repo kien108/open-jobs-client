@@ -19,3 +19,4 @@ export * from "./Tag";
 export * from "./Tag2";
 export * from "./Tooltip";
 export * from "./FullCalendar";
+export * from "./Status";

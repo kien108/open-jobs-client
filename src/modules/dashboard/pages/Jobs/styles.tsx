@@ -32,6 +32,12 @@ export const BtnFunction: StyledComponent<any, any> = styled.div`
       }
    }
 
+   .icon-renewal {
+      path:first-child {
+         fill: transparent;
+      }
+   }
+
    &:hover {
       background: ${(props) => props.theme.softBlue};
       svg {

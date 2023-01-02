@@ -6,6 +6,11 @@ export const StyledCreateAndEditHr = styled.div`
    gap: 20px;
    margin-top: 20px;
 
+   .note {
+      font-style: italic;
+      font-weight: 500;
+   }
+
    .avatar {
       margin: 30px 0;
    }
