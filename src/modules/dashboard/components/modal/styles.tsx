@@ -6,6 +6,11 @@ export const StyledCreateAndEditHr = styled.div`
    gap: 20px;
    margin-top: 20px;
 
+   .not-found {
+      color: #000;
+      font-weight: 500;
+   }
+
    .note {
       font-style: italic;
       font-weight: 500;

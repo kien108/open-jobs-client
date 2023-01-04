@@ -84,7 +84,7 @@ const JobsApplied = () => {
             <GroupButton>
                <BtnFunction
                   onClick={() => {
-                     setSelectedId(record?.id);
+                     setSelectedId(record?.job?.id);
                      handleOpen();
                   }}
                >
@@ -93,7 +93,7 @@ const JobsApplied = () => {
                <BtnFunction
                   onClick={() => {
                      handleOpenDeleteModal();
-                     setSelectedId(record?.id);
+                     setSelectedId(record?.job?.id);
                   }}
                >
                   <DeleteIcon />

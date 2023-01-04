@@ -72,7 +72,7 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
                   label="New Expired At"
                   required
                   format={"DD/MM/YYYY"}
-                  disabledDate={(value) => moment(value).isBefore(moment())}
+                  disabledDate={(value) => moment(value).isBefore(moment().subtract(1, "days"))}
                />
             </Col>
          </Row>

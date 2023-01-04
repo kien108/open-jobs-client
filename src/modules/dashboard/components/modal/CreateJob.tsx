@@ -243,6 +243,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                showSearch
                notFoundContent={
                   <span
+                     style={{ color: "#000", fontWeight: 500, cursor: "pointer", width: "100%" }}
                      onClick={() => {
                         form.setValue(`skills.[${record.key}].name`, searchSkill, {
                            shouldValidate: true,
@@ -509,8 +510,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                </Row>
 
                <span className="note">
-                  * Tin tuyển dụng hết hạn sẽ bị xoá sau 7 ngày (Bạn có thể gia hạn thêm ngày hết
-                  hạn)
+                  * Tin tuyển dụng hết hạn sẽ bị xoá sau 7 ngày (Bạn có thể gia hạn tin tuyển dụng)
                </span>
                <GroupButton>
                   <Button

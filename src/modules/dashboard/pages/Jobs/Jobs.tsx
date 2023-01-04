@@ -149,7 +149,7 @@ const Jobs = () => {
          render: (item) => <span>{item ? moment(item).format("DD/MM/YYYY") : "N/A"}</span>,
       },
       {
-         title: t("Expired At"),
+         title: t("Status"),
          dataIndex: "expiredAt",
          key: "expiredAt",
          sorter: true,
