@@ -114,6 +114,7 @@ const Jobs = () => {
          dataIndex: "title",
          key: "title",
          sorter: true,
+         width: "20%",
       },
       {
          title: t("WorkPlace"),
@@ -186,9 +187,11 @@ const Jobs = () => {
                <BtnFunction onClick={() => handleOpenDelete(record.id)}>
                   <DeleteIcon />
                </BtnFunction>
-               <BtnFunction onClick={() => handleOpenRenewal(record)}>
-                  <MdOutlineUpdate size={24} className="icon-renewal" />
-               </BtnFunction>
+               {moment(record?.expiredAt).isBefore(moment()) && (
+                  <BtnFunction onClick={() => handleOpenRenewal(record)}>
+                     <MdOutlineUpdate size={24} className="icon-renewal" />
+                  </BtnFunction>
+               )}
             </StyledFunctions>
          ),
       },

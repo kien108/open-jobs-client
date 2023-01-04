@@ -5,9 +5,10 @@ import React, { FC } from "react";
 import { FormProvider, useForm, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
-import { Button, DatePicker } from "../../../../libs/components";
+import { Button, DatePicker, openNotification } from "../../../../libs/components";
 import { GroupButton } from "./styles";
 import { useSearchParams } from "react-router-dom";
+import { useRenewalJobMutation } from "../../services";
 interface IProps {
    handleClose: () => void;
    expiredAt?: any;
@@ -25,14 +26,33 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
       },
       resolver: yupResolver(
          yup.object({
-            expiredAt: yup.string().required(t("common:form.required")),
+            expiredAt: yup.string(),
             newExpiredAt: yup.string().required(t("common:form.required")),
          })
       ),
    });
 
+   const [renewal, { isLoading: loadingRenewal }] = useRenewalJobMutation();
+
    const onSubmit = (data: any) => {
-      console.log(data);
+      renewal({
+         jobId: searchParams.get("id"),
+         expiredDate: Number(moment(data?.newExpiredAt).format("x")),
+      })
+         .unwrap()
+         .then(() => {
+            openNotification({
+               type: "success",
+               message: "Renewal expired date successfully!",
+            });
+         })
+         .catch((err) => {
+            openNotification({
+               type: "error",
+               message: t("common:ERRORS.SERVER_ERROR"),
+            });
+         })
+         .finally(() => handleClose());
    };
 
    return (
@@ -42,7 +62,6 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
                <DatePicker
                   name="expiredAt"
                   label="Expired At"
-                  required
                   format={"DD/MM/YYYY"}
                   disabled={true}
                />
@@ -59,7 +78,7 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
          </Row>
          <GroupButton style={{ marginTop: "30px" }}>
             <Button
-               loading={false}
+               loading={loadingRenewal}
                onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

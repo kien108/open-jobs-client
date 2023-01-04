@@ -8,6 +8,7 @@ import { I18nextProvider } from "react-i18next";
 import "antd/dist/antd.css";
 import { ModuleOverview } from "./modules/overview/src";
 import ModuleDashboard from "./modules/dashboard/modules-dashboard";
+import { ModuleCVReview } from "./modules/cv-review";
 
 export function App() {
    return (
@@ -23,6 +24,7 @@ export function App() {
 
                <Route path="auth/*" element={<ModulesAuth />} />
                {/* <Route path="common" element={<CommonPage />} /> */}
+               <Route path="cv-review/*" element={<ModuleCVReview />} />
             </Routes>
          </I18nextProvider>
       </BrowserRouter>

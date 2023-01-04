@@ -234,7 +234,7 @@ const CVMatched = () => {
             email: item?.email,
             phone: item?.phone,
             gender: item?.gender,
-            url: `http://localhost:5173/dashboard/jobs/${id}/cv-matched/${item?.userId}?status=${item?.cvStatus}`,
+            url: `http://localhost:5173/cv-review/${item?.userId}`,
          }));
 
       if (matchedCVs.length === 0) {
