@@ -116,6 +116,7 @@ const Login = () => {
          openNotification({
             type: "error",
             message: localStorage.getItem("loginErr") ?? "INTERNAL SERVER ERROR",
+            duration: 30,
          });
       }
    }, []);
