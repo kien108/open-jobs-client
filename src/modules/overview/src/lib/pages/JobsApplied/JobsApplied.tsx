@@ -24,6 +24,7 @@ const JobsApplied = () => {
    const user = useCommonSelector((state: RootState) => state.user.user);
    const tableInstances = Table.useTable();
    const [dataSources, setDataSources] = useState([]);
+
    const navigate = useNavigate();
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
@@ -70,10 +71,10 @@ const JobsApplied = () => {
 
       {
          title: t("appliedAt"),
-         dataIndex: "createdAt",
-         key: "createdAt",
+         dataIndex: "applyDate",
+         key: "applyDate",
          width: "20%",
-         render: (item) => <span>{moment(item).format("MM/DD/YYYY")}</span>,
+         render: (item) => <span>{moment(item).format("DD/MM/YYYY")}</span>,
       },
       {
          title: t("Action"),
@@ -123,11 +124,11 @@ const JobsApplied = () => {
    };
 
    useEffect(() => {
-      const dataSource = (dataJobs?.listJob ?? []).map((item: any) => ({
+      const dataSource = (dataJobs?.listJobCv ?? []).map((item: any) => ({
          key: item?.id,
-         title: item?.title,
-         companyName: item?.company?.name,
-         jobPosition: item?.specialization?.name,
+         title: item?.job?.title,
+         companyName: item?.job?.company?.name,
+         jobPosition: item?.job?.specialization?.name,
          createAt: item?.createdAt,
          ...item,
       }));

@@ -2,19 +2,19 @@ export const navLinks = [
    {
       path: "/overview/jobs",
       display: "findJobs",
-      // display: "Find jobs",
       key: "/overview/jobs",
+      isLogin: false,
    },
    {
       path: "/overview/companies",
       display: "findCompanies",
-      // display: "Find Companies",
       key: "/overview/companies",
+      isLogin: false,
    },
    {
       path: "/overview/jobs-applied",
       display: "jobApplied",
-      // display: "Find Companies",
       key: "/overview/jobs-applied",
+      isLogin: true,
    },
 ];

@@ -1,5 +1,6 @@
 export interface LinkType {
-  path: string;
-  display: string;
-  key: string;
+   path: string;
+   display: string;
+   key: string;
+   isLogin?: boolean;
 }

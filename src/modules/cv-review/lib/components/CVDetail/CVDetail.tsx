@@ -168,6 +168,12 @@ const CVDetail = () => {
                                  {Parser(`${user?.cv?.objective}`)}
                               </div>
                            </div>
+                           <div className="extraInformation">
+                              <div className="cv-item">
+                                 <span className="title">Education</span>
+                                 {Parser(`${user?.cv?.education}`)}
+                              </div>
+                           </div>
                         </div>
                      </Col>
                      <Col span={13}>

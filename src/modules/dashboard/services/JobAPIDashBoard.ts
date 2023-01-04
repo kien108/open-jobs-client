@@ -117,6 +117,7 @@ export const JobAPI = createApi({
             responseHandler: (response) => response.blob(),
          }),
       }),
+
       renewalJob: builder.mutation({
          query: ({ jobId, ...params }) => ({
             url: `/job/${jobId}/reset-expired-date`,
