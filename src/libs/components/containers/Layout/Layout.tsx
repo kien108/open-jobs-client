@@ -36,6 +36,7 @@ const Layout = () => {
 
          const role = new URLSearchParams(search).get("role");
          const id = new URLSearchParams(search).get("id");
+         const error = new URLSearchParams(search).get("error");
 
          const accessToken = new URLSearchParams(search).get("access-token");
 
@@ -48,7 +49,7 @@ const Layout = () => {
          }
 
          if (!role || !id || !accessToken) {
-            localStorage.setItem("loginErr", JSON.stringify(true));
+            localStorage.setItem("loginErr", error ? error : "INTERNAL SERVER ERROR");
             navigate("/auth");
          }
 
