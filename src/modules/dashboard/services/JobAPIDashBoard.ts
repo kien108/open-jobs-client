@@ -124,6 +124,7 @@ export const JobAPI = createApi({
             body: {},
             params,
          }),
+         invalidatesTags: ["COMPANY_JOBS", "JOBS"],
       }),
    }),
 });
