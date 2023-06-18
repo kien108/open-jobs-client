@@ -41,52 +41,6 @@ const RightHeader = ({ languages, accounts }: Props) => {
    return (
       <StyledRightHeader>
          <div className="dropdown">
-            <Popover
-               overlayClassName="styled-header-popover"
-               trigger="click"
-               visible={visiblePopover}
-               onVisibleChange={handleVisibleChange}
-               content={
-                  <div className="dropdown-group-btn">
-                     {languages.map((language) => (
-                        <button
-                           className="button-content"
-                           key={language.id}
-                           onClick={() => {
-                              i18n
-                                 .changeLanguage(language.code)
-                                 .then(() => setVisiblePopover(false));
-                              dispatch(changeLang(language.code));
-                           }}
-                        >
-                           <Text>{language.title}</Text>
-                        </button>
-                     ))}
-                  </div>
-               }
-            >
-               <button className="button-header hover">
-                  <LanguageIcon width="30px" height="36px" />
-               </button>
-            </Popover>
-         </div>
-
-         {/* {accessToken && (
-            <div className="notification">
-               <Popover
-                  overlayClassName="styled-header-popover"
-                  content={<Notification></Notification>}
-                  trigger="click"
-               >
-                  <button className="button-header hover">
-                     <NotificationIcon width="30px" height="36px" />
-                     <div className="number-notification">1</div>
-                  </button>
-               </Popover>
-            </div>
-         )} */}
-
-         <div className="dropdown">
             {accessToken ? (
                <Popover
                   overlayClassName="styled-header-popover"

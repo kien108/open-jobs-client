@@ -1,7 +1,8 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
+import React, { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 import {
    Button,
+   Checkbox,
    DatePicker,
    DeleteIcon,
    Input,
@@ -31,7 +32,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, useFieldArray } from "react-hook-form";
 
 import { useTranslation } from "react-i18next";
-import { Col, Divider, Row, Spin } from "antd";
+import { Col, Divider, Radio, Row, Spin } from "antd";
 
 import {
    RootState,
@@ -56,6 +57,8 @@ import {
 import { BsPlusLg } from "react-icons/bs";
 import { ColumnsType } from "antd/es/table";
 import moment from "moment";
+import { convertEnumToArrayWithoutNumber, convertPrice } from "../../utils";
+import { EJobLevels, EJobTypes } from "../../../../types";
 
 interface ICreateAndEditAdmin {
    handleClose: () => void;
@@ -71,6 +74,10 @@ type FormType = {
    majorId: string;
    specializationId: string;
    hoursPerWeek: number;
+   maxSalary: any;
+   minSalary: any;
+   jobType: any;
+   jobLevel: any;
 };
 
 const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
@@ -85,6 +92,9 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const [message, setMessage] = useState<string | undefined>(undefined);
    const contentRef = useRef<any>(null);
    const [searchSkill, setSearchSkill] = useState<string>("");
+   const [isNego, setIsNego] = useState<boolean>(false);
+   const [isRenew, setIsRenew] = useState<boolean>(false);
+
    const { isOpen: openConfirmMajor, handleClose: closeMajor, handleOpen: openMajor } = useModal();
 
    const form = useForm<FormType>({
@@ -97,17 +107,26 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          majorId: undefined,
          specializationId: undefined,
          hoursPerWeek: 0,
+         minSalary: "",
+         maxSalary: "",
       },
       resolver: yupResolver(
          yup.object({
             title: yup.string().trim().required(t("common:form.required")),
             majorId: yup.string().trim().required(t("common:form.required")),
             specializationId: yup.string().trim().required(t("common:form.required")),
-            salary: yup.string().trim().required(t("common:form.required")),
             quantity: yup.number().emptyAsUndefined(),
             hoursPerWeek: yup.number().emptyAsUndefined(),
-            workPlace: yup.string(),
-            expiredAt: yup.string().required(t("common:form.required")),
+            workPlace: yup.string().required(t("common:form.required")).nullable(),
+            expiredAt: yup.string().required(t("common:form.required")).nullable(),
+            jobType: yup.string().required(t("common:form.required")).nullable(),
+            jobLevel: yup.string().required(t("common:form.required")).nullable(),
+            minSalary: isNego
+               ? yup.string()
+               : yup.string().required(t("common:form.required")).nullable(),
+            maxSalary: isNego
+               ? yup.string()
+               : yup.string().required(t("common:form.required")).nullable(),
             skills: yup.array().of(
                yup
                   .object()
@@ -126,15 +145,26 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                            .when("name", {
                               is: (value: any) => value,
                               then: (schema: any) => schema.required(t("common:form.required")),
+                           })
+                           .when("isRequired", {
+                              is: (value: any) => value === "true",
+                              then: (schema: any) => schema.required(t("common:form.required")),
                            }),
+
+                        isRequired: yup.string(),
                      },
-                     [["name", "experience"]]
+                     [
+                        ["name", "experience"],
+                        ["experience", "isRequired"],
+                     ]
                   )
-                  .unique("name", t("Skill duplicate"))
+                  .unique("name", t("Tên kỹ năng trùng"))
             ),
          })
       ),
    });
+
+   console.log(form.formState.errors);
 
    const {
       data: dataMajors,
@@ -165,43 +195,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       name: "skills",
    });
 
-   const handleAddMoreSkill = () => {
-      append({ skill: "", experience: "ANY" });
-   };
-
-   const experiences = [
-      {
-         key: ExperienceValue.LESS_THAN_ONE_YEAR,
-         label: ExperienceValue.LESS_THAN_ONE_YEAR,
-         value: ExperienceValue.LESS_THAN_ONE_YEAR.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.LESS_THAN_ONE_YEAR}</span>,
-      },
-      {
-         key: ExperienceValue.ONE_TO_THREE_YEARS,
-         label: ExperienceValue.ONE_TO_THREE_YEARS,
-         value: ExperienceValue.ONE_TO_THREE_YEARS.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.ONE_TO_THREE_YEARS}</span>,
-      },
-      {
-         key: ExperienceValue.THREE_TO_FIVE_YEARS,
-         label: ExperienceValue.THREE_TO_FIVE_YEARS,
-         value: ExperienceValue.THREE_TO_FIVE_YEARS.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.THREE_TO_FIVE_YEARS}</span>,
-      },
-      {
-         key: ExperienceValue.MORE_THAN_FIVE_YEARS,
-         label: ExperienceValue.MORE_THAN_FIVE_YEARS,
-         value: ExperienceValue.MORE_THAN_FIVE_YEARS.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.MORE_THAN_FIVE_YEARS}</span>,
-      },
-      {
-         key: ExperienceValue.ANY,
-         label: ExperienceValue.ANY,
-         value: ExperienceValue.ANY,
-         render: () => <span>{ExperienceValue.ANY}</span>,
-      },
-   ];
-
    const workplaces = [
       {
          key: WorkPlace.ONSITE,
@@ -222,12 +215,13 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          render: () => <span>{WorkPlace.HYBRID}</span>,
       },
    ];
+
    const columns: ColumnsType<any> = [
       {
          title: t("Name"),
          dataIndex: "name",
          key: "name",
-         width: "45%",
+         width: "23%",
          render: (_: string, record: any) => (
             <Select
                name={`skills.[${record.key}].name`}
@@ -254,7 +248,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                            isVerified: false,
                         });
 
-                        form.trigger(`skills.[${record.key}].experience`);
+                        // form.trigger(`skills.[${record.key}].experience`);
                         form.trigger(`skills.[${record.key}].name`);
                      }}
                   >{`${searchSkill} (new skill)`}</span>
@@ -264,30 +258,62 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          ),
       },
       {
-         title: t("EXP"),
+         title: "Năm kinh nghiệm",
          dataIndex: "experience",
-         key: "experience",
-         width: "45%",
-
-         render: (_: string, record: any) => (
-            <Select
+         key: "weight",
+         width: "20%",
+         render: (value, record) => (
+            <Input
+               parentName="skills"
+               isFieldArray={true}
+               type="number"
                name={`skills.[${record.key}].experience`}
-               placeholder="Select experience"
-               onSelect={() => {
+               disabled={!Boolean(form.watch(`skills.[${record.key}].isRequired`))}
+               allowClear
+            />
+         ),
+      },
+      {
+         title: "Độ ưu tiên / 100%",
+         dataIndex: "weight",
+         key: "weight",
+         width: "30%",
+         render: (value, record) => (
+            <Input
+               type="number"
+               name={`skills.[${record.key}].weight`}
+               onChange={(value) => handleEnterWeight(record?.key, value)}
+               allowClear
+            />
+         ),
+      },
+      {
+         title: "Bắt buộc",
+         dataIndex: "isRequired",
+         key: "weight",
+         width: "13%",
+         render: (value, record) => (
+            <Checkbox
+               name={`skills.[${record.key}].isRequired`}
+               onChange={(e) => {
+                  form.setValue(`skills.[${record.key}].isRequired`, e.target.checked, {
+                     shouldValidate: true,
+                  });
                   form.trigger(`skills.[${record.key}].experience`);
-                  form.trigger(`skills.[${record.key}].name`);
+
+                  !e.target.checked &&
+                     form.setValue(`skills.[${record.key}].experience`, "", {
+                        shouldValidate: true,
+                     });
                }}
-               onClear={() => form.trigger(`skills.[${record.key}].name`)}
-               options={experiences || []}
-               loading={false}
             />
          ),
       },
 
       {
-         title: t("Action"),
+         title: "Chức năng",
          dataIndex: "id",
-         width: "10%",
+         width: "14%",
 
          render: (_: string, record: any) => (
             <BtnFunction
@@ -308,6 +334,49 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          ),
       },
    ];
+
+   const handleEnterWeight = (idx: any, value: any) => {
+      const name = `skills.${idx}.weight` as any;
+
+      let remainWeight = 0;
+
+      form.watch("skills")?.map((item: any, index: any) => {
+         if (idx !== index) {
+            remainWeight += Number(item?.weight);
+         }
+      });
+
+      let result = Number(value);
+
+      if (remainWeight >= 100) {
+         form.setValue(name, 0);
+         return;
+      }
+
+      if (remainWeight + Number(value) > 100) {
+         result = 100 - remainWeight;
+      }
+
+      form.setValue(name, result);
+   };
+
+   const jobLevels = useMemo(() => {
+      return convertEnumToArrayWithoutNumber(EJobLevels)?.map((item) => ({
+         key: item.id,
+         label: item.value,
+         value: item.key,
+         render: () => item.value,
+      }));
+   }, []);
+
+   const jobTypes = useMemo(() => {
+      return convertEnumToArrayWithoutNumber(EJobTypes)?.map((item) => ({
+         key: item.id,
+         label: item.value,
+         value: item.key,
+         render: () => item.value,
+      }));
+   }, []);
 
    const onSubmit = (data: any) => {
       // createJob
@@ -383,6 +452,26 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          <StyledCreateAndEditHr>
             <FormProvider {...form}>
                <Row gutter={[20, 20]}>
+                  <Col span={12}>
+                     <Radio.Group onChange={(e) => setIsRenew(e.target.value)} value={isRenew}>
+                        <Radio value={true}>Tạo mới</Radio>
+                        <Radio value={false}>Sử dụng tin tuyển dụng cũ</Radio>
+                     </Radio.Group>
+                  </Col>
+
+                  {!isRenew && (
+                     <Col span={12}>
+                        <Select
+                           name="majorId"
+                           title="Tin tuyển dụng cũ"
+                           placeholder="Select major"
+                           required
+                           options={majors || []}
+                           loading={false}
+                        />
+                     </Col>
+                  )}
+
                   <Col span={24}>
                      <Input
                         required
@@ -432,7 +521,12 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                                        <span className="title">SKILLS</span>
                                     </div>
                                     <BtnFunction
-                                       onClick={() => append({ name: "", experience: "" })}
+                                       onClick={() =>
+                                          append(
+                                             { name: "", isRequired: false, weight: 0 },
+                                             { shouldFocus: true }
+                                          )
+                                       }
                                     >
                                        <BsPlusLg />
                                     </BtnFunction>
@@ -468,21 +562,64 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                      />
                   </Col>
                   <Col span={12}>
+                     <Spin spinning={false}>
+                        <Select name="jobLevel" title="Vị trí" required options={jobLevels} />
+                     </Spin>
+                  </Col>
+
+                  <Col span={12}>
+                     <Spin spinning={false}>
+                        <Select name="jobType" title="Loaị công việc" required options={jobTypes} />
+                     </Spin>
+                  </Col>
+                  <Col span={12}>
                      <Select
                         name={"workPlace"}
                         options={workplaces}
                         title="WorkPlace"
                         defaultValue={["ONSITE"]}
-                     />
-                  </Col>
-                  <Col span={12}>
-                     <Input
                         required
-                        label={t("Salary")}
-                        name="salary"
-                        placeholder={t("10,000,000")}
                      />
                   </Col>
+
+                  <Col span={12}>
+                     <Radio.Group onChange={(e) => setIsNego(e.target.value)} value={isNego}>
+                        <Radio value={true}>Lương thỏa thuận</Radio>
+                        <Radio value={false}>Mức lương</Radio>
+                     </Radio.Group>
+                  </Col>
+                  {!isNego && (
+                     <>
+                        <Col span={6}>
+                           <Input
+                              className="minSalary"
+                              label="Lương tối thiểu"
+                              name="minSalary"
+                              allowClear
+                              required
+                              onChange={(e: any) => {
+                                 form.setValue("minSalary", convertPrice(e.target.value), {
+                                    shouldValidate: true,
+                                 });
+                              }}
+                           />
+                        </Col>
+                        <Col span={6}>
+                           <Input
+                              className="maxSalary"
+                              label="Lương tối đa"
+                              name="maxSalary"
+                              allowClear
+                              required
+                              onChange={(e: any) => {
+                                 form.setValue("maxSalary", convertPrice(e.target.value), {
+                                    shouldValidate: true,
+                                 });
+                              }}
+                           />
+                        </Col>
+                     </>
+                  )}
                   <Col span={12}>
                      <Input
                         type="number"
@@ -494,7 +631,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   <Col span={12}>
                      <DatePicker
                         name="expiredAt"
-                        label="Expired At"
+                        label="Ngày hết hạn"
                         required
                         format={"DD/MM/YYYY"}
                         disabledDate={(value) => moment(value).isBefore(moment())}

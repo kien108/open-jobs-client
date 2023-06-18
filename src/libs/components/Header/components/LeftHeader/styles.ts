@@ -45,7 +45,8 @@ export const StyledContainerLink = styled(Tabs)`
       padding: 0;
       &:hover {
          .custom-link-header {
-            color: ${(props) => props.theme.textDefault};
+            /* color: ${(props) => props.theme.textDefault}; */
+            color: ${(props) => props.theme.strongBlue};
          }
       }
    }
@@ -61,13 +62,15 @@ export const StyledContainerLink = styled(Tabs)`
       align-items: center;
       font-size: 14px;
       font-weight: 500;
-      color: rgb(45, 45, 45);
+      /* color: rgb(45, 45, 45); */
+      color: white;
       font-family: "Noto Sans", sans-serif;
       text-shadow: none;
    }
    .ant-tabs-tab-active {
       .custom-link-header {
-         color: ${(props) => props.theme.strongBlue};
+         /* color: ${(props) => props.theme.strongBlue}; */
+         color: #1864e6;
          &:hover {
             color: ${(props) => props.theme.strongBlue};
          }

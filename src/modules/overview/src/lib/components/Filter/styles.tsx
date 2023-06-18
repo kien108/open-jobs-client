@@ -9,6 +9,20 @@ export const StyledOption: StyledComponent<any, any> = styled.span`
 export const Container: StyledComponent<any, any> = styled.div`
    margin-bottom: 20px;
 
+   .header {
+      border: 1px solid ${(props) => props.theme.strongBlue};
+      border-top-width: 2px;
+      padding: 10px 8px;
+      border-radius: 4px 4px 0 0;
+   }
+
+   .filter {
+      border: 1px solid ${(props) => props.theme.strongBlue};
+      padding: 10px 8px;
+
+      border-radius: 0 0 4px 4px;
+   }
+
    label.sub-label {
       color: #2d2d2d;
       font-size: 0.875rem;
@@ -20,6 +34,12 @@ export const Container: StyledComponent<any, any> = styled.div`
    .search {
       border: 1px solid #a3a3a3;
       border-radius: 0.5rem;
+      height: 46px;
+
+      & + label {
+         font-weight: 600;
+         color: black;
+      }
    }
 
    .ant-select-selector {
@@ -40,7 +60,7 @@ export const Container: StyledComponent<any, any> = styled.div`
       color: #2d2d2d;
       font-size: 0.875rem;
       letter-spacing: 0;
-      font-weight: 700;
+      font-weight: 600;
       line-height: 1.125rem;
    }
 
@@ -52,7 +72,6 @@ export const Container: StyledComponent<any, any> = styled.div`
       letter-spacing: 0;
       font-weight: 700;
       line-height: 1.43;
-      margin: 0 0 1rem;
       line-height: 1.125rem;
       padding: 0.75rem 1rem;
       display: block;
@@ -67,6 +86,19 @@ export const Container: StyledComponent<any, any> = styled.div`
       box-shadow: none;
       text-align: center;
       text-decoration: none;
-      min-width: 94px;
+      width: 100%;
+   }
+
+   .btn-filter {
+      border: 1px solid #a3a3a3;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 46px;
+      font-weight: 500;
+
+      cursor: pointer;
+      gap: 2px;
    }
 `;

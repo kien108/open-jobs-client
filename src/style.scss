@@ -1,0 +1,11 @@
+@import "antd/dist/antd.css";
+@import "./variable.scss";
+
+* {
+   font-family: "Inter", -apple-system, "BlinkMacSystemFont", system-ui, "Roboto", "Segoe UI",
+      "Helvetica Neue", sans-serif;
+}
+
+body {
+   overflow: hidden;
+}

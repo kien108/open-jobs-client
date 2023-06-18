@@ -5,10 +5,12 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { ModulesAuth } from "./modules/auth/src";
 import { I18nextProvider } from "react-i18next";
-import "antd/dist/antd.css";
 import { ModuleOverview } from "./modules/overview/src";
 import ModuleDashboard from "./modules/dashboard/modules-dashboard";
 import { ModuleCVReview } from "./modules/cv-review";
+
+import "./style.scss";
+import "antd/dist/antd.css";
 
 export function App() {
    return (

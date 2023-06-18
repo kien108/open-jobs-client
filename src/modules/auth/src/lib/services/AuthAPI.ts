@@ -12,7 +12,14 @@ export const AuthAPI = createApi({
             method: "POST",
          }),
       }),
+      createHeadHunter: builder.mutation<any, any>({
+         query: (body) => ({
+            url: "/company/register",
+            body,
+            method: "POST",
+         }),
+      }),
    }),
 });
 
-export const { useLoginMutation } = AuthAPI;
+export const { useLoginMutation, useCreateHeadHunterMutation } = AuthAPI;

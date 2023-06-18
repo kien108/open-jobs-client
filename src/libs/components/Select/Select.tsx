@@ -50,7 +50,7 @@ const Select = ({
       formState: { errors },
    } = useFormContext();
 
-   const errorMessage: any =
+   const errorMessage =
       message || (errors && name ? get(errors, `${name}.message`, undefined) : "");
 
    const { t } = useTranslation();

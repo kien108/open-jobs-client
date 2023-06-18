@@ -53,6 +53,10 @@ export const StyledCreateAndEditHr = styled.div`
       gap: 20px;
    }
 
+   .ant-input-number-disabled input {
+      background-color: #d3d1d1;
+   }
+
    .label {
       font-weight: 700;
       font-size: 17px;

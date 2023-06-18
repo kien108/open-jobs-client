@@ -14,7 +14,7 @@ import { ContactInformation } from "./components/ContactInformation";
 import { CV } from "./components/CV";
 import { CompanyDetail } from "./pages/CompanyDetail";
 import { Companies } from "./pages/Companies";
-import { JobsApplied } from "./pages";
+import { Home, JobsApplied } from "./pages";
 import { CVDetail } from "./components/CVDetail";
 
 export function ModuleOverview() {
@@ -29,8 +29,12 @@ export function ModuleOverview() {
          <I18nextProvider i18n={i18n}>
             <Routes>
                <Route path="/">
-                  <Route index element={<Navigate to="jobs" />} />
-                  <Route path="jobs" element={<Jobs />} />
+                  <Route index element={<Navigate to="welcome" />} />
+                  <Route path="welcome/*" element={<Home />}>
+                     <Route index element={<>home page</>} />
+                     <Route path="jobs" element={<Jobs />} />
+                  </Route>
+
                   <Route path="companies" element={<Companies />} />
                   <Route path="companies/:id" element={<CompanyDetail />} />
                   {/* <Route path="validate" element={<FillCompany />} /> */}

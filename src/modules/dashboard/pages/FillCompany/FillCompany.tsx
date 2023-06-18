@@ -1,28 +1,81 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Container, ImgWrapper } from "./styles";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, EditIcon, Input, openNotification, Select } from "../../../../libs/components";
+import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
+
+import {
+   Button,
+   Input,
+   openNotification,
+   OptionType,
+   Select,
+   Switch,
+   UploadMultiple,
+   UploadSingle,
+} from "../../../../libs/components";
+
+import { GroupButton, StyledCreateAndEditHr, StyledExtendOption, StyledNotFound } from "./styles";
 
 import * as yup from "yup";
-import { useTranslation } from "react-i18next";
-import { Col, Divider, Row, Spin, Upload } from "antd";
-import ImgCrop from "antd-img-crop";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Company from "../../assets/company.png";
-import { RootState, useCommonSelector, useDebounce } from "../../../../libs/common";
+import { FormProvider, useForm, useFieldArray } from "react-hook-form";
+
+import { useTranslation } from "react-i18next";
+import { Col, Divider, Row, Spin } from "antd";
 import {
-   useGetListDistrictsQuery,
    useGetProfileQuery,
+   useGetListDistrictsQuery,
    useGetProvincesQuery,
    useUpdateProfileMutation,
 } from "../../services";
-import { EmailVariables } from "../../components/EmailVariables";
-import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 
-const FillCompany = () => {
+import { useCommonSelector, useDebounce, useGetAdminByIdQuery } from "../../../../libs/common";
+import { useSearchParams } from "react-router-dom";
+import Avatar from "react-avatar";
+import { randomColor } from "../../../../utils";
+
+import { v4 as uuidv4 } from "uuid";
+import { EmailVariables, Title } from "../../components";
+
+import { HiInformationCircle } from "react-icons/hi";
+import { FaUserCircle } from "react-icons/fa";
+import { ECompanyType, EMemberTypes } from "../../../../types";
+import moment from "moment";
+import { RootState } from "../../redux/store";
+interface ICreateAndEditAdmin {
+   handleClose: () => void;
+}
+
+interface FormType {
+   firstName: any;
+   email: any;
+   companyName: any;
+   isActive: any;
+   accountBalance: number;
+   province: any;
+   district: any;
+   avatar: any;
+   scope: any;
+   companyPhone: any;
+   description: any;
+   phone: any;
+   position: any;
+   company_type: any;
+   member_type: any;
+   extraAddress: any;
+   imgs: any;
+}
+const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const { t } = useTranslation();
    const { id } = useCommonSelector((state: RootState) => state.user.user);
+
+   const [searchParams, setSearchParams] = useSearchParams();
+
+   const [message, setMessage] = useState<string | undefined>(undefined);
+   const [isEdit, setEdit] = useState<boolean>(false);
+   const contentRef = useRef<any>(undefined);
+   const [avatar, setAvatar] = useState<any>();
+   const [imgs, setImgs] = useState<any>();
+   const [formReset, setFormReset] = useState<boolean>(false);
+
    const [districts, setDistricts] = useState<any>([]);
    const [provinces, setProvinces] = useState<any>([]);
    const [searchProvince, setSearchProvince] = useState<any>("");
@@ -32,42 +85,45 @@ const FillCompany = () => {
 
    const searchDistrictDebounce = useDebounce(searchDistrict, 300);
 
-   const contentRef = useRef(undefined);
-   const [fileList, setFileList] = useState<UploadFile[]>([]);
-
-   const {
-      data: user,
-      isLoading: loadingProfile,
-      isFetching: fetchingProfile,
-   } = useGetProfileQuery(id, { skip: !id, refetchOnMountOrArgChange: true });
-
-   const [upload, { isLoading: loadingUpload }] = useUpdateProfileMutation();
-
-   const form = useForm({
-      mode: "all",
+   const form = useForm<FormType>({
       defaultValues: {
-         name: "",
-         totalEmployee: 0,
-         phone: "",
          firstName: "",
-         lastName: "",
-         province: undefined,
-         district: undefined,
-         extraValue: "",
+         email: "",
+         companyName: "",
+         isActive: true,
+         accountBalance: 0,
+         province: "",
+         district: "",
+         avatar: "",
+         scope: "",
+         companyPhone: "",
+         description: "",
+         phone: "",
+         position: "",
+         company_type: "",
+         member_type: "",
          extraAddress: "",
+         imgs: [],
       },
       resolver: yupResolver(
          yup.object({
-            name: yup.string().required(t("common:form.required")),
-            totalEmployee: yup.number().nullable(),
-            phone: yup.string().required(t("common:form.required")),
-            firstName: yup.string().required(t("common:form.required")),
-            lastName: yup.string().required(t("common:form.required")),
-            province: yup.string().required(t("common:form.required")),
-            district: yup.string().required(t("common:form.required")),
-            extraAddress: yup.string(),
+            firstName: isEdit
+               ? yup.string()
+               : yup.string().trim().required(t("common:form.required")),
+            companyName: isEdit
+               ? yup.string()
+               : yup.string().trim().required(t("common:form.required")),
+            email: isEdit
+               ? yup.string()
+               : yup.string().email(t("common:form.email")).required(t("common:form.required")),
+            isActive: yup.boolean(),
          })
       ),
+   });
+
+   const { fields, remove } = useFieldArray({
+      name: "imgs",
+      control: form.control,
    });
 
    const {
@@ -85,28 +141,64 @@ const FillCompany = () => {
       isFetching: fetchingDistricts,
    } = useGetListDistrictsQuery(
       { keyword: searchDistrictDebounce, province: form.watch("province") },
-      { refetchOnMountOrArgChange: true }
+      { refetchOnMountOrArgChange: true, skip: !form.watch("province") }
    );
 
+   const [checkedStatus, setCheckedStatus] = useState<boolean>(form.getValues("isActive"));
+
+   const [updateHr, { isLoading: loadingUpdate }] = useUpdateProfileMutation();
+
+   const { data: dataAccount, isFetching: loadingAccount } = useGetProfileQuery(id, {
+      skip: !id,
+      refetchOnMountOrArgChange: true,
+   });
+
+   function isBase64(str: any) {
+      const base64Regex = /^(data:image\/[a-z]+;base64,)?[A-Za-z0-9+/=]+$/;
+      return base64Regex.test(str);
+   }
+
    const onSubmit = (data: any) => {
-      upload({
-         authProvider: "DATABASE",
-         ...user,
+      const { companyName, ...dataBody } = data;
+
+      const base64Imgs = imgs?.filter((item: any) => isBase64(item?.url || item?.thumbUrl));
+      const existImgs = imgs?.filter((item: any) => !isBase64(item?.url || item?.thumbUrl));
+      const payload = {
+         ...dataAccount,
          company: {
-            ...user.company,
-            ...data,
+            ...dataAccount?.company,
+            accountBalance: data?.accountBalance,
             address: `${data?.extraAddress},${data?.district},${data?.province}`,
-            logoUrl: fileList[0].url || fileList[0].thumbUrl,
+            base64Images: (base64Imgs ?? [])?.map((item: any) => item?.url || item?.thumbUrl),
+            imageUrlsString: (existImgs ?? [])
+               ?.map((item: any) => item?.url || item?.thumbUrl)
+               ?.join(", "),
+            companyType: data?.company_type,
+            description: data?.description,
+            isActive: checkedStatus,
+            logoUrl: avatar?.[0]?.url || avatar?.[0]?.thumbUrl,
+            memberType: data?.member_type,
+            name: data?.companyName,
+            phone: data?.companyPhone,
+            scope: data?.scope,
          },
+
          firstName: data?.firstName,
-         lastName: data?.lastName,
-      })
+         email: data?.email,
+         position: data?.position,
+         phone: data?.phone,
+      };
+
+      updateHr(payload)
          .unwrap()
          .then(() => {
             openNotification({
                type: "success",
-               message: t("Update company profile successfully!!!"),
+               message: t("Update this account successfully!!!"),
             });
+            searchParams.delete("id");
+            setSearchParams(searchParams);
+            handleClose();
          })
          .catch((error) => {
             openNotification({
@@ -115,6 +207,44 @@ const FillCompany = () => {
             });
          });
    };
+
+   useEffect(() => {
+      if (!dataAccount) return;
+      const { setValue } = form;
+      const { company } = dataAccount;
+      const [extraAddress, district, province] = company?.address?.split(",") || Array(3).fill("");
+
+      setValue("avatar", company?.logoUrl, { shouldDirty: true });
+      company?.logoUrl &&
+         setAvatar([
+            {
+               url: company?.logoUrl,
+            },
+         ]);
+
+      setValue("companyName", company.name);
+      setValue("email", dataAccount.email);
+      setValue("scope", company?.scope);
+      setValue("companyPhone", company?.phone);
+      setValue("company_type", company?.companyType);
+      setValue("member_type", company?.memberType);
+      setValue("accountBalance", company?.accountBalance);
+      province && setValue("province", province);
+      district && setValue("district", district);
+      extraAddress && setValue("extraAddress", extraAddress);
+
+      setImgs(company?.imageUrls);
+      setValue("imgs", company?.imageUrls ?? [], { shouldDirty: true });
+      setValue("description", company?.description);
+
+      setValue("firstName", dataAccount?.firstName);
+      setValue("phone", dataAccount?.phone);
+      setValue("position", dataAccount?.position);
+      setValue("isActive", company?.isActive);
+      setCheckedStatus(company?.isActive);
+
+      setFormReset((prev) => !prev);
+   }, [dataAccount]);
 
    useEffect(() => {
       if (!dataProvinces) return;
@@ -139,177 +269,217 @@ const FillCompany = () => {
 
       setDistricts(options);
    }, [dataDistricts]);
-
-   useEffect(() => {
-      if (!user?.company) return;
-      const { company } = user;
-      const [extraAddress, district, province] = company?.address?.split(",") || Array(3).fill("");
-
-      form.setValue("name", company?.name);
-      form.setValue("totalEmployee", company?.totalEmployee);
-      form.setValue("phone", company?.phone);
-      form.setValue("firstName", user?.firstName);
-      form.setValue("lastName", user?.lastName);
-      district && form.setValue("district", district);
-      province && form.setValue("province", province);
-      extraAddress && form.setValue("extraAddress", extraAddress);
-
-      setFileList([
-         {
-            uid: "-1",
-            name: "image.png",
-            status: "done",
-            url: company?.logoUrl,
-         },
-      ]);
-   }, [user]);
-
-   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-      setFileList(newFileList);
-   };
-
-   useEffect(() => {
-      console.log(fileList);
-   }, [fileList]);
-
    return (
-      <Spin spinning={loadingProfile}>
-         <Container>
-            <Row gutter={[20, 20]}>
-               <Col span={14}>
-                  {/* <div className="header">
-                     <span>Complete profile company</span>
-                     <span>You'll need to complement profile to begin post a job</span>
-                  </div> */}
-                  <ImgWrapper className="wrapper">
-                     <ImgWrapper className="wrapper-img">
-                        <Upload
-                           beforeUpload={() => false}
-                           listType="picture-card"
-                           fileList={fileList}
-                           maxCount={1}
-                           style={{
-                              position: fileList.length < 1 ? "relative" : "absolute",
-                           }}
-                           onChange={onChange}
-                        >
-                           <EditIcon />
-                        </Upload>
-                     </ImgWrapper>
-                  </ImgWrapper>
-                  <FormProvider {...form}>
-                     <Row gutter={[15, 15]}>
-                        <Col span={24}>
-                           <Input
-                              required
-                              name="name"
-                              placeholder="Enter your company name"
-                              label="Your company name"
-                           />
-                        </Col>
-                        <Col span={12}>
-                           <Input
-                              type="number"
-                              name="totalEmployee"
-                              placeholder="Enter your company's number of employees"
-                              label="Your company's number of employees"
-                           />
-                        </Col>
-                        <Col span={12}>
-                           <Input
-                              required
-                              name="phone"
-                              placeholder="Enter your phone number"
-                              label="Your phone number"
-                           />
-                        </Col>
-                        <Col span={12}>
-                           <Input
-                              required
-                              name="firstName"
-                              placeholder="Enter your first name"
-                              label="First Name"
-                           />
-                        </Col>
-                        <Col span={12}>
-                           <Input
-                              required
-                              name="lastName"
-                              placeholder="Enter your last name"
-                              label="Last Name"
-                           />
-                        </Col>
-                        <Divider orientation="left">Address</Divider>
-                        <Col span={12}>
-                           <Select
-                              name="province"
-                              title="Province"
-                              placeholder="Select province"
-                              required
-                              showSearch
-                              onSearch={(value) => setSearchProvince(value)}
-                              onSelect={(value: any) => {
-                                 form.setValue("province", value);
-                                 form.setValue("district", undefined);
-                              }}
-                              options={provinces || []}
-                              loading={loadingProvince || fetchingProvinces}
-                           />
-                        </Col>
-                        <Col span={12}>
-                           <Spin spinning={loadingDistricts || fetchingDistricts}>
-                              <Select
-                                 required
-                                 disabled={!form.watch("province")}
-                                 name="district"
-                                 title="District"
-                                 placeholder="Please choose province first!"
-                                 showSearch={true}
-                                 onSearch={(value) => setSearchDistrict(value)}
-                                 options={districts || []}
-                                 loading={loadingDistricts || fetchingDistricts}
-                              />
-                           </Spin>
-                        </Col>
-                        <Col span={24}>
-                           <Input
-                              name="extraAddress"
-                              placeholder="Enter your extra address"
-                              label="Extra address"
-                           />
-                        </Col>
-                        <Col span={24}>
-                           <EmailVariables
-                              data={user?.company?.description}
-                              editorRef={contentRef}
-                              name="description"
-                              label="Description"
-                           />
-                        </Col>
+      <Spin spinning={loadingAccount}>
+         <StyledCreateAndEditHr>
+            <FormProvider {...form}>
+               <Title title="Thông tin công ty" icon={<HiInformationCircle size={28} />} />
+               <UploadSingle
+                  name="avatar"
+                  setFile={setAvatar}
+                  label="Ảnh đại diện"
+                  files={avatar}
+                  maxCount={1}
+               />
+               <Row gutter={[15, 15]}>
+                  <Col span={24}>
+                     <Input
+                        required
+                        name="companyName"
+                        placeholder="Nhập Tên công ty"
+                        label="Tên công ty"
+                     />
+                  </Col>
+                  <Col span={12}>
+                     <Input
+                        label={"Email"}
+                        name="email"
+                        required
+                        placeholder={t("abc@gmail.com")}
+                        message={message}
+                     />
+                  </Col>
 
-                        <Button
-                           className="btn-save"
-                           loading={loadingUpload}
-                           onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              form.handleSubmit(onSubmit)();
-                           }}
-                        >
-                           Save and continue
-                        </Button>
-                     </Row>
-                  </FormProvider>
-               </Col>
-               <Col span={10}>
-                  <div className="right">
-                     <img src={Company} alt="" />
-                  </div>
-               </Col>
-            </Row>
-         </Container>
+                  <Col span={12}>
+                     <Input
+                        type="number"
+                        name="scope"
+                        placeholder="Số lượng nhân viên"
+                        label="Số lượng nhân viên"
+                     />
+                  </Col>
+                  <Col span={12}>
+                     <Input
+                        required
+                        name="companyPhone"
+                        placeholder="Nhập số điện thoại"
+                        label="Số điện thoại"
+                     />
+                  </Col>
+
+                  <Col span={12}>
+                     <Select
+                        name="company_type"
+                        placeholder="Chọn loại công ty"
+                        title="Loại công ty"
+                        options={[
+                           {
+                              key: 1,
+                              value: ECompanyType.PRODUCT,
+                              label: ECompanyType.PRODUCT,
+                              render: () => ECompanyType.PRODUCT,
+                           },
+                           {
+                              key: 2,
+                              value: ECompanyType.OUTSOURCE,
+                              label: ECompanyType.OUTSOURCE,
+                              render: () => ECompanyType.OUTSOURCE,
+                           },
+                           {
+                              key: 3,
+                              value: ECompanyType.HYBRID,
+                              label: ECompanyType.HYBRID,
+                              render: () => ECompanyType.HYBRID,
+                           },
+                        ]}
+                     />
+                  </Col>
+
+                  <Col span={12}>
+                     <Select
+                        disabled
+                        name="member_type"
+                        placeholder="Chọn loại thành viên"
+                        title="Loại thành viên"
+                        options={[
+                           {
+                              key: 1,
+                              value: EMemberTypes.DEFAULT,
+                              label: EMemberTypes.DEFAULT,
+                              render: () => EMemberTypes.DEFAULT,
+                           },
+                           {
+                              key: 2,
+                              value: EMemberTypes.PREMIUM,
+                              label: EMemberTypes.PREMIUM,
+                              render: () => EMemberTypes.PREMIUM,
+                           },
+                        ]}
+                     />
+                  </Col>
+
+                  <Col span={12}>
+                     <Input
+                        disabled
+                        type="number"
+                        name="accountBalance"
+                        placeholder="Số dư tài khoản"
+                        label="Số dư tài khoản"
+                     />
+                  </Col>
+
+                  <Col span={12}>
+                     <Select
+                        name="province"
+                        title="Tỉnh"
+                        placeholder="Chọn tỉnh"
+                        required
+                        showSearch
+                        onSearch={(value) => setSearchProvince(value)}
+                        onSelect={(value: any) => {
+                           form.setValue("province", value);
+                           form.setValue("district", "");
+                        }}
+                        options={provinces || []}
+                        loading={false}
+                     />
+                  </Col>
+                  <Col span={12}>
+                     <Spin spinning={loadingDistricts || fetchingDistricts}>
+                        <Select
+                           required
+                           disabled={!form.watch("province")}
+                           name="district"
+                           title="Huyện"
+                           placeholder="Chọn huyện"
+                           showSearch={true}
+                           onSearch={(value) => setSearchDistrict(value)}
+                           options={districts || []}
+                           loading={false}
+                        />
+                     </Spin>
+                  </Col>
+                  <Col span={24}>
+                     <Input
+                        name="extraAddress"
+                        placeholder="Địa chỉ cụ thể"
+                        label="Địa chỉ cụ thể"
+                     />
+                  </Col>
+
+                  <Col span={24}>
+                     <UploadMultiple
+                        name="imgs"
+                        setFile={setImgs}
+                        label="Danh sách ảnh"
+                        multiple
+                        maxCount={5}
+                        count={imgs?.length}
+                        files={imgs}
+                        remove={remove}
+                     />
+                  </Col>
+
+                  <Col span={24}>
+                     <EmailVariables
+                        data={dataAccount?.company?.description}
+                        editorRef={contentRef}
+                        name="description"
+                        label="Mô tả"
+                     />
+                  </Col>
+
+                  <Col span={24} style={{ marginTop: "20px" }}>
+                     <Title title="Thông tin người đại diện" icon={<FaUserCircle size={26} />} />
+                  </Col>
+
+                  <Col span={12}>
+                     <Input
+                        required
+                        label={"Họ và tên người đại diện"}
+                        name="firstName"
+                        placeholder={"Nhập họ và tên người đại diện"}
+                     />
+                  </Col>
+                  <Col span={12}>
+                     <Input required label="Chức vụ" name="position" placeholder={"Nhập chức vụ"} />
+                  </Col>
+                  <Col span={12}>
+                     <Input
+                        label={t("Số điện thoại")}
+                        name="phone"
+                        required
+                        placeholder={t("Nhập số điện thoại")}
+                     />
+                  </Col>
+               </Row>
+
+               <GroupButton>
+                  <Button
+                     loading={loadingUpdate}
+                     onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        form.handleSubmit(onSubmit)();
+                     }}
+                  >
+                     {t("common:confirm.save")}
+                  </Button>
+               </GroupButton>
+            </FormProvider>
+         </StyledCreateAndEditHr>
       </Spin>
    );
 };
 
-export default FillCompany;
+export default CreateAndEditHr;

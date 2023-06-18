@@ -50,6 +50,7 @@
       "styled-components": "^5.3.5",
       "tsconfig-paths": "^4.1.0",
       "uuid": "^9.0.0",
+      "uuidv4": "^6.2.13",
       "yup": "^0.32.11"
    },
    "devDependencies": {

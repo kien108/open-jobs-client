@@ -1,1 +1,1 @@
-export { AuthAPI, useLoginMutation } from "./AuthAPI";
+export { AuthAPI, useLoginMutation, useCreateHeadHunterMutation } from "./AuthAPI";

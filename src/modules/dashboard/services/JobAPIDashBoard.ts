@@ -134,6 +134,8 @@ export const {
    useGetJobsQuery,
    useGetJobByIdQuery,
    useGetProvincesQuery,
+   useGetListDistrictsQuery,
+
    useGetMajorsQuery,
    useGetSpecializationsQuery,
    useGetSkillsQuery,
@@ -145,7 +147,6 @@ export const {
    useRejectCVMutation,
    useAcceptCVMutation,
    useRejectJobCvMutation,
-   useGetListDistrictsQuery,
    useExportCVsMutation,
    useLazyDownloadExportQuery,
    useRenewalJobMutation,

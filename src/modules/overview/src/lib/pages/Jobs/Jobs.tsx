@@ -49,11 +49,13 @@ const Jobs = () => {
       const params = paramsToObject(entries);
       searchJobs({ ...tableInstance.params, ...params });
    }, [searchParams.get("page")]);
+
+   console.log("job page");
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>
             <Header>
-               <Filter handleSearchJobs={handleSearchJobs} />
+               {/* <Filter handleSearchJobs={handleSearchJobs} /> */}
                <div className="title-container">
                   <span
                      className="title"

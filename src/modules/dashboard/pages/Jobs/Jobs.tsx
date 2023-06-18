@@ -257,7 +257,7 @@ const Jobs = () => {
 
    return (
       <>
-         <Header handleOpenCreate={handleOpen} title="Jobs Management" />
+         <Header handleOpenCreate={handleOpen} title="Quản lý tin tuyển dụng" />
          <ContainerTable>
             <FormProvider {...form}>
                {/* <Input

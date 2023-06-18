@@ -14,7 +14,7 @@ export const StyledRightHeader = styled.div`
    align-items: center;
    border-style: solid;
    border-color: #e5e7eb;
-   background-color: #fff;
+   background-color: #222831;
 
    .notification {
       position: relative;

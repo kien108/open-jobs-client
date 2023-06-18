@@ -6,6 +6,7 @@ export const StyledHeader = styled.header`
    font-family: "Noto Sans", sans-serif;
    box-shadow: 0 0 #0000, 0 0 #0000, 0 10px 15px -3px rgb(0 0 0 / 0.1),
       0 4px 6px -4px rgb(0 0 0 / 0.1);
+   background-color: #222831;
 `;
 
 export const HeaderWrapper = styled.div`

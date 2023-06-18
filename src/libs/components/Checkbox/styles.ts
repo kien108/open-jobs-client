@@ -13,13 +13,13 @@ export const StyledCheckbox: StyledComponent<any, any> = styled(Checkbox)<Checkb
       }
 
       .ant-checkbox-inner {
-         background-color: ${(props) => props.theme.yellow};
+         background-color: ${(props) => props.theme.strongBlue};
          border-color: ${(props) => props.theme.deepGray};
       }
 
       .ant-checkbox-checked {
          .ant-checkbox-inner {
-            background-color: ${(props) => props.theme.yellow};
+            background-color: ${(props) => props.theme.strongBlue};
          }
       }
    }
@@ -29,7 +29,7 @@ export const StyledCheckbox: StyledComponent<any, any> = styled(Checkbox)<Checkb
       border-color: ${(props) => props.theme.deepGray};
 
       &::after {
-         border-color: ${(props) => props.theme.black};
+         border-color: ${(props) => props.theme.white};
       }
    }
 
@@ -47,7 +47,7 @@ export const StyledCheckbox: StyledComponent<any, any> = styled(Checkbox)<Checkb
          height: 14px;
          width: 8px;
          margin-bottom: 10px;
-         border-color: ${(props) => props.theme.black};
+         border-color: ${(props) => props.theme.white};
       }
    }
 
@@ -70,7 +70,7 @@ export const StyledCheckbox: StyledComponent<any, any> = styled(Checkbox)<Checkb
 
    .ant-checkbox-checked .ant-checkbox-inner {
       border: none;
-      background-color: ${(props) => props.theme.yellow};
+      background-color: ${(props) => props.theme.strongBlue};
    }
 
    .ant-checkbox-disabled .ant-checkbox-inner {

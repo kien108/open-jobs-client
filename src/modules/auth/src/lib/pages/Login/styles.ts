@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import loginBg from "../../assets/background.png";
+import loginBg from "../../assets/login-bg.svg";
 
 export const ContainerLogin = styled.div`
    position: relative;
@@ -44,12 +44,23 @@ export const LabelRemember = styled.label`
    cursor: pointer;
 `;
 export const Contact = styled.p`
-   margin-top: 15px;
+   margin-top: 30px;
    text-align: center;
+   font-size: 16px;
+
+   &.register {
+      margin-top: 10px;
+      margin-bottom: 0px;
+   }
 
    a {
       font-weight: 600;
-      color: ${(props) => props.theme.strongYellow};
+      color: ${(props) => props.theme.strongBlue};
+      transition: all 0.2s linear;
+
+      &:hover {
+         opacity: 0.9;
+      }
    }
 `;
 export const StyledButton = styled.div`

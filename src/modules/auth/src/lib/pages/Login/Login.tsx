@@ -138,6 +138,13 @@ const Login = () => {
                   </Button>
                </StyledButton>
 
+               <Contact>
+                  Bạn muốn hợp tác với chúng tôi?{" "}
+                  <Link className="redirect" to="/auth/register">
+                     Đăng ký ngay!
+                  </Link>
+               </Contact>
+
                {/* <Divider orientation="center">Or</Divider>
 
                <Input
@@ -165,12 +172,7 @@ const Login = () => {
                   />
                   <LabelRemember htmlFor="remember">{t("login.remember")}</LabelRemember>
                </StyledGroupRemembers>
-               <Contact>
-                  Do not have an account?{" "}
-                  <Link className="redirect" to="/auth/register">
-                     Sign up now!
-                  </Link>
-               </Contact>
+
                <StyledButton>
                   <Button loading={isLoading} onClick={() => form.handleSubmit(onSubmit)()}>
                      {t("login.btn")}

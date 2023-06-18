@@ -25,9 +25,14 @@ const Modal = ({ type = "default", ...props }: ModalProps) => {
       >
          {props.confirmIcon && type === "confirm" && (
             <>
-               <div className="modal-confirm__icon">
+               {typeof props.confirmIcon === "string" ? (
+                  <div className="modal-confirm__icon">
+                     <div>{props.confirmIcon}</div>
+                  </div>
+               ) : (
                   <div>{props.confirmIcon}</div>
-               </div>
+               )}
+
                <Title level={4} className="modal-confirm__title">
                   {props.title}
                </Title>

@@ -1,8 +1,8 @@
 export const navLinks = [
    {
-      path: "/overview/jobs",
+      path: "/overview/welcome/jobs",
       display: "findJobs",
-      key: "/overview/jobs",
+      key: "/overview/welcome/jobs",
       isLogin: false,
    },
    {
@@ -10,11 +10,5 @@ export const navLinks = [
       display: "findCompanies",
       key: "/overview/companies",
       isLogin: false,
-   },
-   {
-      path: "/overview/jobs-applied",
-      display: "jobApplied",
-      key: "/overview/jobs-applied",
-      isLogin: true,
    },
 ];
