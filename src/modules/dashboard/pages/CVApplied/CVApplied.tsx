@@ -47,6 +47,8 @@ import {
    useLazyDownloadExportQuery,
    useRejectCVMutation,
 } from "../../services";
+import { FilterCV } from "../../components/FilterCV";
+import { useFilterCV } from "../../hooks";
 const CVApply = () => {
    const { t } = useTranslation();
    const [selectedCV, setSelectedCV] = useState<any>(undefined);
@@ -87,6 +89,7 @@ const CVApply = () => {
       {
          id,
          ...tableInstance.params,
+         ...useFilterCV(),
       },
       {
          skip: !id,
@@ -275,42 +278,34 @@ const CVApply = () => {
             </Button>
          </StyledHeader>
 
-         <div className="items">
+         {/* <div className="items">
             <div className="item total">
                <span>Applied CV</span>
                <span className="value">{dataSource.length}</span>
-            </div>
-            <div className="item new">
-               <span>New CV</span>
                <span className="value">
                   {dataSource?.filter((item: any) => item?.status === "NEW").length}
                </span>
-            </div>
-
-            <div className="item accepted">
-               <span>Accepted CV</span>
                <span className="value">
                   {dataSource?.filter((item: any) => item?.status === "ACCEPTED").length}
                </span>
-            </div>
-            <div className="item rejected">
-               <span>Rejected CV</span>
                <span className="value">
                   {dataSource?.filter((item: any) => item?.status === "REJECTED").length}
                </span>
             </div>
-         </div>
+         </div> */}
+         <Button
+            className="btn-export"
+            disabled={dataSource.length === 0}
+            loading={loadingExport}
+            height={44}
+            icon={<DownloadIcon />}
+            onClick={handleExport}
+         >
+            {t("Export Accepted CVs")}
+         </Button>
          <ContainerTable>
-            <Button
-               className="btn-export"
-               disabled={dataSource.length === 0}
-               loading={loadingExport}
-               height={44}
-               icon={<DownloadIcon />}
-               onClick={handleExport}
-            >
-               {t("Export Accepted CVs")}
-            </Button>
+            <FilterCV />
+
             <Table
                columns={columns}
                dataSource={dataSource}

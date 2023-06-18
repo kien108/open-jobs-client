@@ -91,11 +91,11 @@ export const ContainerTable = styled.div`
       }
    }
 
-   .col,
+   /* .col,
    .ant-table-column-title {
       font-weight: 600;
       font-size: 17px;
-   }
+   } */
 `;
 
 export const BtnFunction = styled.div`

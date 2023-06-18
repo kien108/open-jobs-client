@@ -10,6 +10,7 @@ import { AiOutlineUser, AiOutlineSetting, AiOutlineHome } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ROLE_ENUM, useRole } from "../../../../libs/common";
+import "./styles.scss";
 
 type MenuItem = Required<MenuProps>["items"][number];
 

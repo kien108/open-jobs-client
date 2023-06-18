@@ -65,3 +65,15 @@ export enum EMemberTypes {
    DEFAULT = "DEFAULT",
    PREMIUM = "PREMIUM",
 }
+
+export enum ESalaryType {
+   NET = "NET",
+   GROSS = "GROSS",
+}
+
+export enum EJobStatus {
+   NEW = "NEW",
+   REJECTED = "REJECTED",
+   APPROVED = "APPROVED",
+   HIDDEN = "HIDDEN",
+}

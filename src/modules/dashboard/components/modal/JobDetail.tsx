@@ -45,6 +45,7 @@ import { EmailVariables } from "../EmailVariables";
 import { useGetJobByIdQuery } from "../../services";
 import { ColumnsType } from "antd/es/table";
 import Parser from "html-react-parser";
+import { convertPrice } from "../../utils";
 
 interface ICreateAndEditAdmin {
    handleClose: () => void;
@@ -83,38 +84,59 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
+         title: "Tên",
          dataIndex: "name",
          key: "name",
-         width: "45%",
-         render: (item) => item,
+         width: "23%",
+         render: (value) => (
+            <span className="value primary" style={{ fontSize: "16px" }}>
+               {value || "-"}
+            </span>
+         ),
       },
       {
-         title: t("EXP"),
-         dataIndex: "experience",
-         key: "experience",
-         width: "45%",
-         render: (item) => item,
+         title: "Năm kinh nghiệm",
+         dataIndex: "yoe",
+         key: "yoe",
+         width: "20%",
+         render: (value) => <>{value}</>,
+      },
+      {
+         title: "Độ ưu tiên / 100%",
+         dataIndex: "weight",
+         key: "weight",
+         width: "30%",
+         render: (value, record) => value,
+      },
+      {
+         title: "Bắt buộc",
+         dataIndex: "required",
+         key: "required",
+         width: "13%",
+         render: (value, record) => (value ? "Có" : "Không"),
       },
    ];
 
    useEffect(() => {
-      const data = (dataJob?.jobSkills ?? [])?.map((item: any) => ({
+      const data = (dataJob?.jobSkills ?? [])?.map((item) => ({
          key: item?.id,
          name: item?.skill?.name,
-         experience: item?.skill?.experience.replaceAll("_", " "),
+         required: item?.required,
+         weight: item?.weight,
+         yoe: item?.yoe,
       }));
 
       setDataSources(data);
    }, [dataJob]);
+
    return (
       <Spin spinning={loadingJob || fetchingJob}>
          <StyledCreateAndEditHr>
-            <Row gutter={[20, 20]}>
+            <Row gutter={[10, 30]}>
                <Col span={24}>
                   <div className="title-container">
-                     <span className="label">Job title:</span>
-                     <span className="value">{dataJob?.title}</span>
+                     <span className="label">Tiêu đề:</span>
+                     <span className="value primary">{dataJob?.title}</span>
                   </div>
                </Col>
                <Col span={24}>
@@ -122,20 +144,20 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                      <Row gutter={[10, 10]}>
                         <Col span={12}>
                            <div className="title-container">
-                              <span className="label">Major:</span>
+                              <span className="label">Chuyên ngành:</span>
                               <span className="value">{dataJob?.major?.name}</span>
                            </div>
                         </Col>
                         <Col span={12}>
                            <div className="title-container">
-                              <span className="label">Specialization:</span>
+                              <span className="label">Chuyên ngành hẹp:</span>
                               <span className="value">{dataJob?.specialization?.name}</span>
                            </div>
                         </Col>
                      </Row>
 
                      <span className="label" style={{ display: "block", marginTop: "20px" }}>
-                        Skills List:
+                        Kỹ năng
                      </span>
                      <Col span={24}>
                         <Table
@@ -153,33 +175,64 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
 
                <Col span={12}>
                   <div className="title-container">
-                     <span className="label">Quantity:</span>
+                     <span className="label">Vị trí:</span>
+                     <span className="value primary">{dataJob?.jobLevel}</span>
+                  </div>
+               </Col>
+               <Col span={12}>
+                  <div className="title-container">
+                     <span className="label">Loại công việc:</span>
+                     <span className="value">{dataJob?.jobType}</span>
+                  </div>
+               </Col>
+               <Col span={12}>
+                  <div className="title-container">
+                     <span className="label">Số lượng:</span>
                      <span className="value">{dataJob?.quantity}</span>
                   </div>
                </Col>
                <Col span={12}>
                   <div className="title-container">
-                     <span className="label">Work place:</span>
+                     <span className="label">Nơi làm việc:</span>
                      <span className="value">{dataJob?.workPlace}</span>
                   </div>
                </Col>
                <Col span={12}>
                   <div className="title-container">
-                     <span className="label">Salary:</span>
-                     <span className="value">{dataJob?.salary}</span>
+                     <span className="label">Lương:</span>
+                     <span className="value primary">
+                        {dataJob?.salaryInfo?.isSalaryNegotiable
+                           ? "Thỏa thuận"
+                           : `${convertPrice(
+                                dataJob?.salaryInfo?.minSalary || "0"
+                             )} - ${convertPrice(dataJob?.salaryInfo?.maxSalary || "0")} (${
+                                dataJob?.salaryInfo?.salaryType
+                             })`}
+                     </span>
                   </div>
                </Col>
                <Col span={12}>
                   <div className="title-container">
-                     <span className="label">Hours per week:</span>
+                     <span className="label">Thời gian làm việc / tuần:</span>
                      <span className="value"> {dataJob?.hoursPerWeek}</span>
                   </div>
                </Col>
                <Col span={24}>
-                  <span className="label">Description</span>
-                  {Parser(`${dataJob?.description}`)}
+                  <span className="label">Mô tả công việc</span>
+                  <p className="value">
+                     {dataJob?.description ? Parser(`${dataJob?.description}`) : "-"}
+                  </p>
                </Col>
             </Row>
+
+            {/* <span
+               className="go-to-cvs"
+               onClick={() => {
+                  navigate(`${searchParams.get("id")}/cv-matched`);
+               }}
+            >
+               View list CV
+            </span> */}
 
             <GroupButton>
                <Button
@@ -189,7 +242,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                      setSearchParams(searchParams);
                   }}
                >
-                  {t("Back")}
+                  Đóng
                </Button>
             </GroupButton>
          </StyledCreateAndEditHr>

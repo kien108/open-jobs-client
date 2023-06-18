@@ -17,7 +17,7 @@ const Header: FC<HeaderProps> = ({ handleOpenCreate, title }) => {
       <StyledHeader>
          <Title>{t(`${title}`)}</Title>
          <Button height={44} icon={<PlusIcon />} onClick={handleOpenCreate}>
-            {"Post job"}
+            Đăng tin
          </Button>
       </StyledHeader>
    );

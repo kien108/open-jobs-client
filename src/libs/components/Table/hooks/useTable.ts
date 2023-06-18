@@ -24,7 +24,7 @@ const useTable = () => {
    });
    const countRerender = useRef(0);
    const [params, setParams] = useState<IParams>({
-      sort: `${sortBy},${sortDirection}`,
+      sort: sortBy ? `${sortBy},${sortDirection}` : "",
       page: searchParams.get("page") ? parseInt(searchParams.get("page") as string) : 0,
       size: searchParams.get("size") ? parseInt(searchParams.get("size") as string) : 10,
    });

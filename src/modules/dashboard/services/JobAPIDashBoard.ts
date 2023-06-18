@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
+import { IJob, IResJobs } from "../types/JobModel";
 
 export const JobAPI = createApi({
    reducerPath: "JobAPIDashBoard",
@@ -13,7 +14,7 @@ export const JobAPI = createApi({
          }),
          providesTags: ["JOBS"],
       }),
-      getJobById: builder.query<any, string>({
+      getJobById: builder.query<IJob, string>({
          query: (id) => ({
             url: `/job/details/${id}`,
          }),
@@ -46,7 +47,7 @@ export const JobAPI = createApi({
             url: `/skill/by-specialization/${id}`,
          }),
       }),
-      getJobCompany: builder.query({
+      getJobCompany: builder.query<IResJobs, any>({
          query: ({ id, ...params }) => ({
             url: `/job/by-company/${id}`,
             params,
@@ -56,6 +57,14 @@ export const JobAPI = createApi({
       createJob: builder.mutation({
          query: (body) => ({
             url: "/job/create",
+            body,
+            method: "POST",
+         }),
+         invalidatesTags: ["COMPANY_JOBS"],
+      }),
+      updateJob: builder.mutation({
+         query: (body) => ({
+            url: "/job/update",
             body,
             method: "POST",
          }),
@@ -127,6 +136,11 @@ export const JobAPI = createApi({
          }),
          invalidatesTags: ["COMPANY_JOBS", "JOBS"],
       }),
+      getAllSkills: builder.query({
+         query: () => ({
+            url: `/skills`,
+         }),
+      }),
    }),
 });
 
@@ -150,4 +164,7 @@ export const {
    useExportCVsMutation,
    useLazyDownloadExportQuery,
    useRenewalJobMutation,
+   useGetAllSkillsQuery,
+
+   useUpdateJobMutation,
 } = JobAPI;

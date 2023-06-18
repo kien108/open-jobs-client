@@ -85,6 +85,17 @@ export const ContainerTable = styled.div`
    box-shadow: 0 0 #000, 0 0 #000, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 0 10px -6px rgb(0 0 0 / 0.1);
    background: ${(props) => props.theme.secondaryText};
    border-radius: 10px;
+
+   .name {
+      font-weight: 600;
+      color: ${(props) => props.theme.strongBlue};
+      text-transform: uppercase;
+   }
+
+   .salary {
+      color: ${(props) => props.theme.strongBlue};
+      font-weight: 700;
+   }
 `;
 
 export const StyledDetail = styled(Modal)`
@@ -92,5 +103,9 @@ export const StyledDetail = styled(Modal)`
       display: flex;
       align-items: center;
       justify-content: space-between;
+   }
+
+   .ant-modal-content {
+      padding: 32px !important;
    }
 `;

@@ -26,7 +26,6 @@ const DatePicker: FC<IDatePicker & DatePickerProps> = ({ label, message, ...prop
 
    const errorMessage: any = message || (errors && props.name ? errors[props.name]?.message : "");
 
-   console.log({ label });
    return (
       <div className="div">
          {label && (

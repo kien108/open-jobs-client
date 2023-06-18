@@ -15,6 +15,7 @@ import {
    SearchIcon,
    Status,
    Table,
+   TextEllipsis,
    Title,
 } from "../../../../libs/components";
 
@@ -31,7 +32,7 @@ import * as yup from "yup";
 import { debounce } from "lodash";
 import { GroupButton } from "../../components/modal/styles";
 import { MdOutlinePassword, MdOutlineUpdate } from "react-icons/md";
-import { CreateJob, JobPost } from "../../components/modal";
+import { CreateJob, EditJob, JobPost } from "../../components/modal";
 import {
    useGetJobsQuery,
    useGetMajorsQuery,
@@ -40,6 +41,10 @@ import {
 } from "../../services";
 import { useDeleteJobMutation, useGetJobCompanyQuery } from "../../services/JobAPIDashBoard";
 import ModalRenewal from "../../components/modal/ModalRenewal";
+import { convertPrice } from "../../utils";
+import { IJob } from "../../types/JobModel";
+import { FilterJobs } from "../../components";
+import { useFilter } from "../../hooks";
 
 type FormType = {
    listSkill: any;
@@ -70,7 +75,7 @@ const Jobs = () => {
       isLoading,
       isFetching,
    } = useGetJobCompanyQuery(
-      { id: user?.companyId, ...tableInstance.params },
+      { id: user?.companyId, ...tableInstance.params, ...useFilter() },
       {
          refetchOnMountOrArgChange: true,
          skip: !user?.companyId,
@@ -95,6 +100,12 @@ const Jobs = () => {
    } = useModal();
 
    const {
+      isOpen: isOpenEdit,
+      handleClose: handleCloseEdit,
+      handleOpen: handleOpenEdit,
+   } = useModal();
+
+   const {
       isOpen: isOpenDelete,
       handleClose: handleCloseDelete,
       handleOpen: handleOpenDeleteModal,
@@ -110,69 +121,58 @@ const Jobs = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Title"),
+         title: t("Tiêu đề"),
          dataIndex: "title",
          key: "title",
          sorter: true,
          width: "20%",
+         render: (item) => <TextEllipsis className="name" data={item} length={50} />,
       },
       {
-         title: t("WorkPlace"),
-         dataIndex: "workPlace",
-         key: "workPlace",
-         sorter: true,
+         title: t("Vị trí"),
+         dataIndex: "jobLevel",
+         key: "jobLevel",
+         width: "8%",
       },
       {
-         title: t("Salary"),
-         dataIndex: "salary",
-         key: "salary",
-         sorter: true,
-      },
-      {
-         title: t("Quantity"),
+         title: t("Số lượng"),
          dataIndex: "quantity",
          key: "quantity",
-         sorter: true,
       },
+
       {
-         title: t("Created At"),
+         title: t("Lương"),
+         dataIndex: "salary",
+         key: "salary",
+         render: (item) => <span className="salary">{item}</span>,
+      },
+
+      {
+         title: t("Ngày đăng"),
          dataIndex: "createdAt",
          key: "createdAt",
          sorter: true,
+
          render: (item) => <span>{moment(item).format("DD/MM/YYYY")}</span>,
       },
       {
-         title: t("Expired At"),
+         title: t("Ngày hết hạn"),
          dataIndex: "expiredAt",
          key: "expiredAt",
          sorter: true,
-         render: (item) => <span>{item ? moment(item).format("DD/MM/YYYY") : "N/A"}</span>,
+
+         render: (item) => <span>{item ? moment(item).format("DD/MM/YYYY") : "-"}</span>,
       },
       {
-         title: t("Status"),
-         dataIndex: "expiredAt",
-         key: "expiredAt",
-         sorter: true,
-         width: "10%",
-
-         render: (item) => (
-            <span>
-               {item ? (
-                  <Status
-                     isActive={moment(item).isAfter(moment())}
-                     activeMsg="In-progress"
-                     inactiveMsg="Expired"
-                  />
-               ) : (
-                  <Status isActive={true} activeMsg="In-progress" inactiveMsg="Expired" />
-               )}
-            </span>
-         ),
+         title: t("Trạng thái"),
+         dataIndex: "jobStatus",
+         key: "jobStatus",
       },
 
       {
          title: t("Action"),
          dataIndex: "id",
+         align: "center",
          render: (_: string, record: any) => (
             <StyledFunctions>
                <BtnFunction
@@ -184,6 +184,17 @@ const Jobs = () => {
                >
                   <EyeIcon />
                </BtnFunction>
+
+               <BtnFunction
+                  onClick={() => {
+                     searchParams.set("id", record?.id);
+                     setSearchParams(searchParams);
+                     handleOpenEdit();
+                  }}
+               >
+                  <EditIcon />
+               </BtnFunction>
+
                <BtnFunction onClick={() => handleOpenDelete(record.id)}>
                   <DeleteIcon />
                </BtnFunction>
@@ -247,18 +258,27 @@ const Jobs = () => {
    };
 
    useEffect(() => {
-      const dataSource = dataCompany?.listJob?.map((item: any) => ({
-         key: item.id,
-         ...item,
-      }));
+      const dataSource = (dataCompany?.listJob ?? [])
+         .filter((item: any) => !item?.expiredAt || moment(item?.expiredAt).isAfter(moment()))
+         ?.map((item: IJob) => ({
+            key: item.id,
+            ...item,
+            salary: item?.salaryInfo?.isSalaryNegotiable
+               ? "Thỏa thuận"
+               : `${convertPrice(item?.salaryInfo?.minSalary)} - ${convertPrice(
+                    item?.salaryInfo?.maxSalary
+                 )} (${item?.salaryInfo?.salaryType})`,
+         }));
 
-      setDataSource(dataSource || []);
+      setDataSource(dataSource);
    }, [dataCompany]);
 
    return (
       <>
          <Header handleOpenCreate={handleOpen} title="Quản lý tin tuyển dụng" />
          <ContainerTable>
+            <FilterJobs />
+
             <FormProvider {...form}>
                {/* <Input
                   icons={<SearchIcon />}
@@ -271,16 +291,17 @@ const Jobs = () => {
                /> */}
             </FormProvider>
             <Table
+               size="small"
                columns={columns}
                dataSource={dataSource}
                tableInstance={tableInstance}
                loading={isLoading || isFetching}
-               totalElements={dataCompany?.totalElements}
-               totalPages={dataCompany?.totalPages}
+               totalElements={dataCompany?.totalElements || 0}
+               totalPages={dataCompany?.totalPages || 0}
             />
          </ContainerTable>
          <StyledModal
-            title={"Create new job"}
+            title={"Đăng tin tuyển dụng"}
             destroyOnClose
             open={isOpen}
             onCancel={() => {
@@ -292,15 +313,16 @@ const Jobs = () => {
             <CreateJob handleClose={handleClose} />
          </StyledModal>
          <StyledDetail
+            width="1000px"
             title={
                <div className="job-detail-header">
-                  <span>Job Detail</span>
+                  <span>Tin tuyển dụng</span>
                   <Button
                      onClick={() => {
                         navigate(`${searchParams.get("id")}/cv-matched`);
                      }}
                   >
-                     View list CV
+                     Danh sách ứng tuyển
                   </Button>
                </div>
             }
@@ -350,6 +372,25 @@ const Jobs = () => {
                </Button>
             </GroupButton>
          </Modal>
+
+         <StyledModal
+            title={"Tin tuyển dụng"}
+            destroyOnClose
+            open={isOpenEdit}
+            onCancel={() => {
+               handleCloseEdit();
+               searchParams.delete("id");
+               setSearchParams(searchParams);
+            }}
+         >
+            <EditJob
+               handleClose={() => {
+                  handleCloseEdit();
+                  searchParams.delete("id");
+                  setSearchParams(searchParams);
+               }}
+            />
+         </StyledModal>
 
          <Modal
             destroyOnClose

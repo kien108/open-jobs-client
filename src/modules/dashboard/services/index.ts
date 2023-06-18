@@ -27,4 +27,6 @@ export {
    useExportCVsMutation,
    useLazyDownloadExportQuery,
    useRenewalJobMutation,
+   useGetAllSkillsQuery,
+   useUpdateJobMutation,
 } from "./JobAPIDashBoard";

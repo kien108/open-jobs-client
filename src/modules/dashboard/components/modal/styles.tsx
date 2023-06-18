@@ -6,6 +6,14 @@ export const StyledCreateAndEditHr = styled.div`
    gap: 20px;
    margin-top: 20px;
 
+   .waiting-review {
+      color: ${(props) => props.theme.strongBlue}
+      font-size: 15px;
+      font-weight: 500;
+      font-style: italic;
+      text-align: center;
+   }
+
    .not-found {
       color: #000;
       font-weight: 500;

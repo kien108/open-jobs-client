@@ -4,10 +4,12 @@ import { AdminAPI } from "../services";
 import { createDispatchHook, createSelectorHook } from "react-redux";
 import lang from "../redux/slices/langSlice";
 import { createContext } from "react";
+import sidebarSlice from "./slices/sidebarSlice";
 
 const rootReducer = combineReducers({
    user,
    lang,
+   sidebarSlice,
 });
 export const store = configureStore({
    reducer: rootReducer,

@@ -1,0 +1,120 @@
+.custom-popup-submenu {
+   position: fixed !important;
+   top: 57px !important;
+
+   .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+      background-color: inherit;
+   }
+
+   ul.ant-menu-sub {
+      max-height: calc(100vh - 57px);
+
+      &::-webkit-scrollbar {
+         width: 4px;
+      }
+
+      /* Track */
+      &::-webkit-scrollbar-track {
+         background: #fff;
+         border-radius: 100px;
+      }
+
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+         background: #d2d2d8;
+         border-radius: 100px;
+      }
+
+      &.scroll-menu-width {
+         &::-webkit-scrollbar {
+            width: 6px;
+         }
+      }
+   }
+
+   .ant-menu-item {
+      &:active {
+         background-color: inherit;
+         color: #074abd;
+      }
+
+      a {
+         color: #1b1f3b;
+         font-size: 14px;
+         transition: all 0.3s;
+
+         &:hover {
+            color: #074abd;
+         }
+      }
+   }
+
+   .ant-menu-item-selected a {
+      color: #074abd;
+   }
+
+   // .ant-menu-submenu-title {
+   //   background-color: red !important;
+   // }
+}
+
+.ant-menu-inline-collapsed-tooltip {
+   .ant-tooltip-inner {
+      box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+      border-radius: 6px !important;
+      font-size: 13px;
+      padding: 8px 10px;
+   }
+}
+
+.ant-menu-submenu.ant-menu-submenu-vertical {
+   .ant-menu-item-icon + .ant-menu-title-content {
+      width: 100% !important;
+      height: 100% !important;
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      .link-sidebar {
+         width: 100%;
+         height: 100%;
+         display: block;
+      }
+   }
+}
+
+.custom-tooltip.ant-tooltip.ant-tooltip {
+   .ant-tooltip-inner {
+      min-width: 30px;
+      min-height: 32px;
+      padding: 6px 8px;
+      color: #fff;
+      text-align: left;
+      text-decoration: none;
+      word-wrap: break-word;
+      background-color: rgba(0, 0, 0, 0.75);
+      border-radius: 6px;
+      font-size: 13px;
+      padding: 8px 10px;
+      box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
+         0 9px 28px 8px rgb(0 0 0 / 5%);
+   }
+   .ant-tooltip-arrow {
+      .ant-tooltip-arrow-content {
+         &:before {
+            background-color: rgba(0, 0, 0, 0.75) !important;
+         }
+      }
+   }
+}
+
+.custom-sidebar {
+   &.ant-layout-sider-collapsed {
+      header {
+         padding: 20px 0;
+         img {
+            width: 80px !important;
+         }
+      }
+   }
+}

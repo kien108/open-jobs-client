@@ -1,38 +1,48 @@
 import styled from "styled-components";
 
 export const StyledSidebar = styled.div`
+   background-color: red;
    height: 100vh;
    display: flex;
    flex-direction: column;
    border-right: 1px solid #ededed;
    .link-sidebar {
-      color: ${(props) => props.theme.primaryText};
-
+      color: ${(props) => props.theme.textDefault};
       &:hover {
          color: ${(props) => props.theme.textDefault};
       }
    }
 
    .custom-sidebar {
+      background: blue;
       border-right: 1px solid ${(props) => props.theme.baseGray};
+
+      img {
+         width: 80px !important;
+      }
    }
 
    .custom-menu {
-      overflow-x: hidden;
+      overflow: auto;
       height: inherit;
       padding: 8px 16px;
 
+      &:hover {
+         overflow: overlay;
+      }
       &::-webkit-scrollbar {
          width: 4px;
       }
 
+      /* Track */
       &::-webkit-scrollbar-track {
          background: #fff;
          border-radius: 100px;
       }
 
+      /* Handle */
       &::-webkit-scrollbar-thumb {
-         background: ${(props) => props.theme.scrollbar};
+         background: #d2d2d8;
          border-radius: 100px;
       }
 
@@ -73,16 +83,15 @@ export const StyledSidebar = styled.div`
          svg {
             width: 24px;
             height: 24px;
-            color: ${(props) => props.theme.secondaryText} !important;
-
             path {
-               stroke: ${(props) => props.theme.secondaryText};
+               stroke: ${(props) => props.theme.strongGray};
             }
          }
 
          &.ant-menu-item-selected {
+            transition: all 0.3s;
             background-color: ${(props) => props.theme.strongBlue};
-
+            color: ${(props) => props.theme.secondaryText};
             .link-sidebar {
                color: ${(props) => props.theme.secondaryText};
             }
@@ -90,6 +99,18 @@ export const StyledSidebar = styled.div`
             svg {
                path {
                   stroke: ${(props) => props.theme.secondaryText};
+               }
+            }
+
+            .point {
+               path {
+                  fill: ${(props) => props.theme.secondaryText};
+               }
+            }
+
+            .parking-log {
+               path {
+                  fill: ${(props) => props.theme.secondaryText};
                }
             }
          }
@@ -113,11 +134,28 @@ export const StyledSidebar = styled.div`
                color: unset;
             }
 
-            gap: 20px;
-
-            .ant-menu-title-content {
-               margin-left: 0;
+            .ant-menu-submenu-title {
+               padding: 0px !important;
             }
+
+            gap: 20px;
+         }
+
+         .ant-menu-submenu {
+            .ant-menu-submenu-title {
+               padding: 12px 0px 12px 16px !important;
+               .ant-menu-title-content {
+                  padding: 0px !important;
+                  font-weight: 500;
+                  font-size: 13px;
+                  margin-left: 0px;
+                  color: #1b1f3b;
+               }
+            }
+         }
+
+         .ant-menu-title-content {
+            margin: 0px;
          }
 
          &.ant-menu-submenu-active {
@@ -126,8 +164,9 @@ export const StyledSidebar = styled.div`
          .ant-menu-submenu-arrow {
             display: none;
          }
+
          &.ant-menu-submenu-selected {
-            .ant-menu-submenu-title {
+            & > .ant-menu-submenu-title {
                background-color: ${(props) => props.theme.strongBlue};
                .link-sidebar {
                   color: ${(props) => props.theme.secondaryText};
@@ -139,6 +178,11 @@ export const StyledSidebar = styled.div`
                }
             }
          }
+
+         /* .ant-menu-submenu-title:first-child {
+        background-color: red !important;
+      } */
+
          .ant-menu-sub {
             margin-left: 16px;
             margin-top: 16px;
@@ -156,22 +200,86 @@ export const StyledSidebar = styled.div`
 
                &:hover,
                &.ant-menu-item-selected {
+                  transition: all 0.3s;
                   background-color: unset;
+                  .link-sidebar {
+                     color: ${(props) => props.theme.strongBlue};
+                  }
                }
             }
          }
       }
    }
+
+   .ant-menu-inline-collapsed {
+      padding: 8px 0px;
+
+      .ant-menu-item,
+      .ant-menu-submenu .ant-menu-submenu-title {
+         padding: 6px 0 4px 0 !important;
+         margin: 8px 0;
+         text-align: center;
+         border-radius: 0;
+         min-height: unset !important;
+      }
+
+      .link-sidebar {
+         position: absolute;
+         inset: 0;
+      }
+
+      .ant-menu-item-icon {
+         display: inline;
+      }
+
+      .ant-menu-item.ant-menu-item-selected,
+      .ant-menu-submenu.ant-menu-submenu-selected .ant-menu-submenu-title {
+         background: inherit;
+         transition: all 0.3s;
+         svg {
+            width: 24px;
+            height: 24px;
+            fill: black;
+         }
+
+         .point {
+            path {
+               fill: ${(props) => props.theme.strongGray};
+            }
+         }
+
+         &::before {
+            position: absolute;
+            content: "";
+            height: 100%;
+            width: 4px;
+            border-radius: 5px;
+            background: #074abd;
+            top: 0;
+            left: 0;
+         }
+      }
+
+      /* .ant-menu-submenu-title {
+        background: inherit;
+        transition: all 0.3s;
+      } */
+   }
 `;
 
 export const StyledLogo = styled.header`
-   padding: 30px 0;
+   padding-top: 44px;
+   padding-bottom: 44px;
+   background-color: ${(props) => props.theme.secondaryText};
    z-index: 100;
+   transition: all 0.3s;
 `;
 
 export const StyledImage = styled.img`
-   margin: 0 auto;
-   width: 150px;
+   margin-left: auto;
+   margin-right: auto;
+   width: 160px;
    height: auto;
    display: block;
+   vertical-align: middle;
 `;

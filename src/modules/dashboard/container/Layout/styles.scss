@@ -1,25 +1,77 @@
 .site-layout-content {
-   overflow-y: overlay;
+   overflow-y: visible;
+}
 
-   &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-   }
+.ant-layout-sider-collapsed {
+   .custom-logo {
+      height: 56px;
+      padding: unset;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
-   &::-webkit-scrollbar-track {
-      background: #fff;
-      border-radius: 100px;
-   }
-
-   &::-webkit-scrollbar-thumb {
-      background: var(--scrollbar);
-      border-radius: 100px;
-   }
-
-   &.more-width {
-      &::-webkit-scrollbar {
-         width: 6px;
-         height: 6px;
+      a {
+         img {
+            width: 80%;
+         }
       }
    }
+}
+
+.thumb-vertical {
+   transition-duration: 0.15s;
+   transition-timing-function: ease-in-out;
+   border-radius: 6.25rem;
+   border: 0.25rem solid transparent;
+   cursor: pointer;
+   position: absolute !important;
+   right: 0;
+   background: #1b1f3b;
+   width: 0.75rem !important;
+   background-clip: content-box;
+   box-sizing: border-box;
+   transition-property: width, height;
+   opacity: 0.2;
+
+   &:hover {
+      width: 14px !important;
+   }
+}
+
+.track-vertical {
+   position: absolute;
+   right: 0;
+   bottom: 0;
+   pointer-events: auto;
+   width: 0.875rem;
+   top: 0;
+}
+
+.custom-sidebar {
+   .ant-layout-sider-trigger {
+      position: absolute;
+      z-index: 999;
+      width: 24px !important;
+      height: 24px !important;
+      box-shadow: rgb(9 30 66 / 8%) 0px 0px 0px 1px, rgb(9 30 66 / 8%) 0px 2px 4px 1px;
+      top: 100px;
+      right: 0;
+      line-height: 24px;
+      border-radius: 50%;
+      transform: translateX(50%);
+      font-size: 12px;
+      background: #fff;
+      transition: all 0.3s;
+
+      &:hover {
+         background: #074abd;
+         color: #fff;
+      }
+   }
+}
+
+.show-more-less-clickable {
+   text-decoration: none;
+   color: var(--blue);
 }

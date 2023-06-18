@@ -50,16 +50,17 @@ import { WorkPlace } from "../../types/JobModel";
 import { EmailVariables } from "../EmailVariables";
 import {
    useCreateJobMutation,
+   useGetJobByIdQuery,
    useGetMajorsQuery,
    useGetSkillsQuery,
    useGetSpecializationsQuery,
+   useUpdateJobMutation,
 } from "../../services";
 import { BsPlusLg } from "react-icons/bs";
 import { ColumnsType } from "antd/es/table";
 import moment from "moment";
 import { convertEnumToArrayWithoutNumber, convertPrice, revertPrice } from "../../utils";
-import { EJobLevels, EJobTypes, ESalaryType, EWorkPlace } from "../../../../types";
-import { useGetJobCompanyQuery } from "../../services/JobAPIDashBoard";
+import { EJobLevels, EJobStatus, EJobTypes, ESalaryType, EWorkPlace } from "../../../../types";
 
 interface ICreateAndEditAdmin {
    handleClose: () => void;
@@ -81,10 +82,9 @@ type FormType = {
    description: any;
    expiredAt: any;
    skills: any;
-   renewJobId: any;
 };
 
-const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
+const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const { t } = useTranslation();
    const [searchParams, setSearchParams] = useSearchParams();
    const tableInstance = Table.useTable();
@@ -98,7 +98,8 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const [searchSkill, setSearchSkill] = useState<string>("");
    const [isNego, setIsNego] = useState<boolean>(false);
    const [isRenew, setIsRenew] = useState<boolean>(true);
-   const [des, setDes] = useState<any>("");
+
+   const [checkedStatus, setCheckedStatus] = useState<boolean>(true);
 
    const { isOpen: openConfirmMajor, handleClose: closeMajor, handleOpen: openMajor } = useModal();
 
@@ -106,7 +107,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       mode: "all",
       defaultValues: {
          title: "",
-         quantity: "",
          workPlace: "",
          majorId: undefined,
          specializationId: undefined,
@@ -125,9 +125,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             expiredAt: yup.string().required(t("common:form.required")).nullable(),
             jobType: yup.string().required(t("common:form.required")).nullable(),
             jobLevel: yup.string().required(t("common:form.required")).nullable(),
-            salaryType: isNego
-               ? yup.string()
-               : yup.string().required(t("common:form.required")).nullable(),
+            salaryType: yup.string().required(t("common:form.required")).nullable(),
             minSalary: isNego
                ? yup.string()
                : yup.string().required(t("common:form.required")).nullable(),
@@ -168,18 +166,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    });
 
    const {
-      data: dataCompany,
-      isLoading,
-      isFetching,
-   } = useGetJobCompanyQuery(
-      { id: user?.companyId, page: 0, size: 999 },
-      {
-         refetchOnMountOrArgChange: true,
-         skip: !user?.companyId,
-      }
-   );
-
-   const {
       data: dataMajors,
       isLoading: loadingMajors,
       isFetching: fetchingMajors,
@@ -202,10 +188,19 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       refetchOnMountOrArgChange: true,
    });
 
-   const [createJob, { isLoading: loadingCreateJob }] = useCreateJobMutation();
+   const [updateJob, { isLoading: loadingCreateJob }] = useUpdateJobMutation();
    const { fields, append, remove, update } = useFieldArray({
       control: form.control,
       name: "skills",
+   });
+
+   const {
+      data: dataJob,
+      isLoading: loadingJob,
+      isFetching: fetchingJob,
+   } = useGetJobByIdQuery(searchParams.get("id")!, {
+      skip: !searchParams.get("id"),
+      refetchOnMountOrArgChange: true,
    });
 
    const columns: ColumnsType<any> = [
@@ -329,8 +324,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       },
    ];
 
-   console.log(form.formState.errors);
-
    const handleEnterWeight = (idx: any, value: any) => {
       const name = `skills.${idx}.weight` as any;
 
@@ -395,12 +388,19 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const onSubmit = (data: FormType) => {
       // createJob
       const payload = {
+         id: searchParams.get("id"),
          companyId: user?.companyId,
          description: data?.description,
          expiredAt: moment(data?.expiredAt).format("x"),
          hoursPerWeek: data?.hoursPerWeek,
          jobLevel: data?.jobLevel,
          jobType: data?.jobType,
+         jobStatus:
+            dataJob?.jobStatus === EJobStatus.NEW
+               ? dataJob?.jobStatus
+               : checkedStatus
+               ? EJobStatus.APPROVED
+               : EJobStatus.HIDDEN,
          listJobSkillDTO: data?.skills?.map((item: any) => ({
             isRequired: item?.required,
             skill: {
@@ -429,12 +429,12 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             message: "Kỹ năng không được để trống!",
          });
       } else {
-         createJob(payload)
+         updateJob(payload)
             .unwrap()
             .then(() => {
                openNotification({
                   type: "success",
-                  message: t("Đăng tin tuyển dụng thành công!!!"),
+                  message: t("Cập nhật tin tuyển dụng thành công!!!"),
                });
                handleClose();
             })
@@ -481,26 +481,23 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    }, [dataSkills]);
 
    useEffect(() => {
-      const { reset, getValues } = form;
-      const curJob = dataCompany?.listJob?.find((item) => item?.id === form.watch("renewJobId"));
-
-      if (!curJob) return;
+      const { reset } = form;
 
       const dataReset = {
-         title: curJob?.title,
-         quantity: curJob?.quantity,
-         workPlace: curJob?.workPlace,
-         majorId: curJob?.major?.id,
-         specializationId: curJob?.specialization?.id,
-         hoursPerWeek: curJob?.hoursPerWeek,
-         maxSalary: convertPrice(curJob?.salaryInfo?.maxSalary),
-         minSalary: convertPrice(curJob?.salaryInfo?.minSalary),
-         jobType: curJob?.jobType,
-         jobLevel: curJob?.jobLevel,
-         salaryType: curJob?.salaryInfo?.salaryType,
-         description: curJob?.description,
-         expiredAt: moment(curJob?.expiredAt),
-         skills: (curJob?.jobSkills ?? [])?.map((item) => ({
+         title: dataJob?.title,
+         quantity: dataJob?.quantity,
+         workPlace: dataJob?.workPlace,
+         majorId: dataJob?.major?.id,
+         specializationId: dataJob?.specialization?.id,
+         hoursPerWeek: dataJob?.hoursPerWeek,
+         maxSalary: dataJob?.salaryInfo?.maxSalary,
+         minSalary: dataJob?.salaryInfo?.minSalary,
+         jobType: dataJob?.jobType,
+         jobLevel: dataJob?.jobLevel,
+         salaryType: dataJob?.salaryInfo?.salaryType,
+         description: dataJob?.description,
+         expiredAt: moment(dataJob?.expiredAt),
+         skills: (dataJob?.jobSkills ?? [])?.map((item) => ({
             key: item?.id,
             name: item?.skill?.name,
             required: item?.required,
@@ -510,46 +507,20 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          })),
       };
 
-      setIsNego(!!curJob?.salaryInfo?.isSalaryNegotiable);
-      setDes(curJob?.description);
+      setIsNego(!!dataJob?.salaryInfo?.isSalaryNegotiable);
 
-      reset({
-         ...getValues(),
-         ...dataReset,
-      });
-   }, [form.watch("renewJobId")]);
+      setCheckedStatus(dataJob?.jobStatus === EJobStatus.APPROVED);
 
-   console.log(form.watch("skills"));
+      reset(dataReset);
+   }, [dataJob]);
+
+   console.log(form.watch("jobLevel"));
+
    return (
-      <Spin spinning={false}>
+      <Spin spinning={fetchingJob}>
          <StyledCreateAndEditHr>
             <FormProvider {...form}>
                <Row gutter={[20, 20]}>
-                  <Col span={12}>
-                     <Radio.Group onChange={(e) => setIsRenew(e.target.value)} value={isRenew}>
-                        <Radio value={true}>Tạo mới</Radio>
-                        <Radio value={false}>Sử dụng tin tuyển dụng cũ</Radio>
-                     </Radio.Group>
-                  </Col>
-
-                  {!isRenew && (
-                     <Col span={12}>
-                        <Select
-                           name="renewJobId"
-                           title="Tin tuyển dụng cũ"
-                           placeholder="Chọn tin tuyển dụng cũ"
-                           required
-                           options={(dataCompany?.listJob ?? [])?.map((item) => ({
-                              key: item?.id,
-                              label: item?.title,
-                              value: item?.id,
-                              render: () => <span>{item?.title}</span>,
-                           }))}
-                           loading={isFetching}
-                        />
-                     </Col>
-                  )}
-
                   <Col span={24}>
                      <Input
                         required
@@ -723,13 +694,27 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   </Col>
                   <Col span={24}>
                      <EmailVariables
-                        data={des}
+                        data={dataJob?.description}
                         editorRef={contentRef}
                         name="description"
                         label="Description"
                      />
                   </Col>
                </Row>
+               {dataJob?.jobStatus === EJobStatus.NEW ? (
+                  <span className="waiting-review">-- Đang trong quá trình kiểm duyệt --</span>
+               ) : (
+                  <Switch
+                     disabled={dataJob?.jobStatus === EJobStatus.NEW}
+                     label={"Trạng thái"}
+                     checked={checkedStatus}
+                     onChange={(checked) => {
+                        setCheckedStatus(checked);
+                     }}
+                     checkedLabel={"Đang tuyển"}
+                     unCheckedLabel={"Tạm ẩn"}
+                  />
+               )}
 
                <GroupButton>
                   <Button
@@ -740,7 +725,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         form.handleSubmit(onSubmit)();
                      }}
                   >
-                     {t("common:confirm.save")}
+                     Cập nhật
                   </Button>
                   <Button
                      onClick={() => {
@@ -796,4 +781,4 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    );
 };
 
-export default CreateJob;
+export default EditJob;
