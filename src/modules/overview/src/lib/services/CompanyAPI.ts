@@ -1,12 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
+import { IResCompanies } from "../types";
 
 export const CompanyAPI = createApi({
    reducerPath: "CompanyAPI",
    tagTypes: ["COMPANIES", "COMPANY_JOBS"],
    baseQuery,
    endpoints: (builder) => ({
-      getCompanies: builder.query({
+      getCompanies: builder.query<IResCompanies, any>({
          query: (params) => ({
             url: `/companies`,
             params,
@@ -29,5 +30,9 @@ export const CompanyAPI = createApi({
    }),
 });
 
-export const { useGetJobCompanyQuery, useLazyGetCompaniesQuery, useGetCompanyByIdQuery } =
-   CompanyAPI;
+export const {
+   useGetJobCompanyQuery,
+   useLazyGetCompaniesQuery,
+   useGetCompaniesQuery,
+   useGetCompanyByIdQuery,
+} = CompanyAPI;

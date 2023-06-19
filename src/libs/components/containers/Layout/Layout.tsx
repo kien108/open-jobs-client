@@ -74,11 +74,13 @@ const Layout = () => {
       dispatch(saveUser(data));
    }, [data]);
 
+   console.log("sadf");
+
    return (
       <AntLayout hasSider>
-         <AntLayout style={{ height: "100vh" }}>
+         <AntLayout style={{ background: "#fff" }}>
             <Header />
-            <Content className="site-layout-content" style={{ background: "#fff" }}>
+            <Content className="site-layout-content">
                <Outlet />
             </Content>
          </AntLayout>

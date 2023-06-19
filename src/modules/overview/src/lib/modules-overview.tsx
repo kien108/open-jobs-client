@@ -14,7 +14,7 @@ import { ContactInformation } from "./components/ContactInformation";
 import { CV } from "./components/CV";
 import { CompanyDetail } from "./pages/CompanyDetail";
 import { Companies } from "./pages/Companies";
-import { Home, JobsApplied } from "./pages";
+import { Home, HomeContent, JobsApplied } from "./pages";
 import { CVDetail } from "./components/CVDetail";
 
 export function ModuleOverview() {
@@ -31,7 +31,7 @@ export function ModuleOverview() {
                <Route path="/">
                   <Route index element={<Navigate to="welcome" />} />
                   <Route path="welcome/*" element={<Home />}>
-                     <Route index element={<>home page</>} />
+                     <Route index element={<HomeContent />} />
                      <Route path="jobs" element={<Jobs />} />
                   </Route>
 

@@ -49,6 +49,7 @@
       "react-to-print": "^2.14.10",
       "sass": "^1.55.0",
       "styled-components": "^5.3.5",
+      "swiper": "^9.4.1",
       "tsconfig-paths": "^4.1.0",
       "uuid": "^9.0.0",
       "uuidv4": "^6.2.13",

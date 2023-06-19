@@ -10,17 +10,17 @@ export const Container: StyledComponent<any, any> = styled.div`
    margin-bottom: 20px;
 
    .header {
-      border: 1px solid ${(props) => props.theme.strongBlue};
-      border-top-width: 2px;
+      border: 2px solid ${(props) => props.theme.strongBlue};
+      /* border-top-width: 2px; */
       padding: 10px 8px;
-      border-radius: 4px 4px 0 0;
+      border-radius: 8px 8px 0 0;
    }
 
    .filter {
-      border: 1px solid ${(props) => props.theme.strongBlue};
+      border: 2px solid ${(props) => props.theme.strongBlue};
       padding: 10px 8px;
 
-      border-radius: 0 0 4px 4px;
+      border-radius: 0 0 8px 8px;
    }
 
    label.sub-label {

@@ -84,38 +84,6 @@ const CV = () => {
    const { data: user, isLoading, isFetching } = useGetProfileQuery(id, { skip: !id });
 
    const [upload, { isLoading: loadingUpload }] = useUpdateCVMutation();
-   const experiences = [
-      {
-         key: ExperienceValue.LESS_THAN_ONE_YEAR,
-         label: ExperienceValue.LESS_THAN_ONE_YEAR,
-         value: ExperienceValue.LESS_THAN_ONE_YEAR.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.LESS_THAN_ONE_YEAR}</span>,
-      },
-      {
-         key: ExperienceValue.ONE_TO_THREE_YEARS,
-         label: ExperienceValue.ONE_TO_THREE_YEARS,
-         value: ExperienceValue.ONE_TO_THREE_YEARS.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.ONE_TO_THREE_YEARS}</span>,
-      },
-      {
-         key: ExperienceValue.THREE_TO_FIVE_YEARS,
-         label: ExperienceValue.THREE_TO_FIVE_YEARS,
-         value: ExperienceValue.THREE_TO_FIVE_YEARS.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.THREE_TO_FIVE_YEARS}</span>,
-      },
-      {
-         key: ExperienceValue.MORE_THAN_FIVE_YEARS,
-         label: ExperienceValue.MORE_THAN_FIVE_YEARS,
-         value: ExperienceValue.MORE_THAN_FIVE_YEARS.replaceAll(" ", "_"),
-         render: () => <span>{ExperienceValue.MORE_THAN_FIVE_YEARS}</span>,
-      },
-      {
-         key: ExperienceValue.ANY,
-         label: ExperienceValue.ANY,
-         value: ExperienceValue.ANY,
-         render: () => <span>{ExperienceValue.ANY}</span>,
-      },
-   ];
 
    const form = useForm<FormType>({
       defaultValues: {
@@ -239,16 +207,16 @@ const CV = () => {
          width: "45%",
 
          render: (_: string, record: any) => (
-            <Select
+            <Input
+               type="number"
                name={`listSkill.[${record.key}].experience`}
-               placeholder="Select experience"
-               onSelect={() => {
-                  form.trigger(`listSkill.[${record.key}].experience`);
-                  form.trigger(`listSkill.[${record.key}].name`);
-               }}
-               onClear={() => form.trigger(`listSkill.[${record.key}].name`)}
-               options={experiences || []}
-               loading={false}
+               placeholder="Enter experience"
+               // onChange={(e) => {
+               //    form.trigger(`listSkill.[${record.key}].experience`);
+               //    form.trigger(`listSkill.[${record.key}].name`);
+               // }}
+               // onClear={() => form.trigger(`listSkill.[${record.key}].name`)}
+               // options={experiences || []}
             />
          ),
       },
@@ -291,9 +259,12 @@ const CV = () => {
       const body = {
          ...data,
          listSkill: data?.listSkill.map((item: any) => ({
-            name: item?.name,
-            experience: item?.experience,
-            isVerified: item?.isVerified,
+            skill: {
+               name: item?.name,
+               isVerified: item?.isVerified,
+            },
+
+            yoe: item?.experience,
          })),
          id: user?.cv?.id,
          userId: id,

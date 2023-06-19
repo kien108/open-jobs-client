@@ -10,6 +10,7 @@ export {
    useGetSkillsQuery,
    useApplyJobMutation,
    useGetListDistrictsQuery,
+   useGetSuggestionJobsQuery,
 } from "./JobAPI";
 
 export {
@@ -27,4 +28,5 @@ export {
    useGetJobCompanyQuery,
    useLazyGetCompaniesQuery,
    useGetCompanyByIdQuery,
+   useGetCompaniesQuery,
 } from "./CompanyAPI";

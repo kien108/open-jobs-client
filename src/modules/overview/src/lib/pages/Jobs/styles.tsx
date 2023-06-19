@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Header = styled.div`
    margin: 0 auto;
-   max-width: 65.25rem;
+   max-width: 1250px;
    padding-top: 28px;
    padding-bottom: 10px;
 `;

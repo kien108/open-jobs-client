@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
+import { IResSuggesionJob } from "../types";
 
 export const JobAPI = createApi({
    reducerPath: "JobAPIOverview",
@@ -12,6 +13,13 @@ export const JobAPI = createApi({
             params,
          }),
       }),
+      getSuggestionJobs: builder.query<IResSuggesionJob, any>({
+         query: (params) => ({
+            url: "/job/suggestion",
+            params,
+         }),
+      }),
+
       getJobById: builder.query<any, string>({
          query: (id) => ({
             url: `/job/details/${id}`,
@@ -65,4 +73,5 @@ export const {
    useGetSpecializationsQuery,
    useGetSkillsQuery,
    useApplyJobMutation,
+   useGetSuggestionJobsQuery,
 } = JobAPI;
