@@ -8,7 +8,7 @@ interface IProps {
 }
 const CompanySlide: FC<IProps> = ({ data }) => {
    return (
-      <Container>
+      <Container className="left">
          <Row gutter={[25, 25]}>
             <Col span={12}>
                <div className="img">

@@ -1,7 +1,16 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-   max-width: 1250px;
-   width: 100%;
-   margin: 0 auto;
+   .jobs-container {
+      background: #efefef;
+   }
+
+   .company {
+      background: white;
+      padding: 33px 0;
+   }
+
+   .hr {
+      background: linear-gradient(269.85deg, #54151c 0%, #121212 54.89%);
+   }
 `;

@@ -1,16 +1,15 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-   background-color: #efefef;
-   margin-top: 30px;
    padding: 25px 0;
-   position: absolute;
-   left: 0;
-   right: 0;
+   max-width: 1250px;
+   width: 100%;
+   margin: 0 auto;
+   margin-top: 30px;
 
    .title {
-      color: #222;
-      font-size: 20px;
+      color: white;
+      font-size: 28px;
       font-weight: 700;
       display: block;
       margin-bottom: 20px;
@@ -46,6 +45,7 @@ export const Container = styled.div`
          margin-top: 10px;
          font-weight: 600;
          font-size: 16px;
+         color: white;
       }
    }
 `;

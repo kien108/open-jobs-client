@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "./styles";
 import { Filter, FilterJob } from "../../components";
-import { Outlet } from "react-router-dom";
+import { Outlet, useFetcher, useLocation } from "react-router-dom";
 import { Header } from "../Jobs/styles";
 
 const Home = () => {
    const [params, setParams] = useState();
+   const location = useLocation();
 
    console.log("home page");
+
+   const handleFilter = () => {};
+
    return (
       <Container>
          <Header>

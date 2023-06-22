@@ -18,7 +18,7 @@ import { Header } from "../../Header";
 import { access } from "fs";
 
 const { Content, Sider } = AntLayout;
-
+import { BackTop } from "antd";
 interface IToken {
    id: string;
 }
@@ -74,14 +74,14 @@ const Layout = () => {
       dispatch(saveUser(data));
    }, [data]);
 
-   console.log("sadf");
-
+   console.log("13");
    return (
       <AntLayout hasSider>
-         <AntLayout style={{ background: "#fff" }}>
+         <AntLayout style={{ background: "#f5f5f5" }}>
             <Header />
             <Content className="site-layout-content">
                <Outlet />
+               <BackTop />
             </Content>
          </AntLayout>
       </AntLayout>

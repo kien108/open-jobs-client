@@ -1,13 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
-import { IResSuggesionJob } from "../types";
+import { IResDetailJob, IResSuggesJob, IResSuggesionJob } from "../types";
 
 export const JobAPI = createApi({
    reducerPath: "JobAPIOverview",
    baseQuery,
    tagTypes: ["DETAIL"],
    endpoints: (builder) => ({
-      getJobs: builder.query({
+      getJobs: builder.query<IResSuggesionJob, any>({
          query: (params) => ({
             url: "/job/search",
             params,
@@ -20,7 +20,7 @@ export const JobAPI = createApi({
          }),
       }),
 
-      getJobById: builder.query<any, string>({
+      getJobById: builder.query<IResDetailJob, string>({
          query: (id) => ({
             url: `/job/details/${id}`,
          }),
@@ -66,6 +66,7 @@ export const JobAPI = createApi({
 
 export const {
    useLazyGetJobsQuery,
+   useGetJobsQuery,
    useGetJobByIdQuery,
    useGetProvincesQuery,
    useGetListDistrictsQuery,

@@ -7,9 +7,9 @@ import {
 } from "../../../../../../libs/components";
 import { Col, Row } from "antd";
 import { debounce } from "lodash";
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, memo, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Container, StyledOption } from "./styles";
 
 import { v4 as uuidv4 } from "uuid";
@@ -31,6 +31,8 @@ const formatDate = "DD/MM/YYYY";
 
 const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
    const { t } = useTranslation();
+   const location = useLocation();
+   const navigate = useNavigate();
 
    const [searchParams, setSearchParams] = useSearchParams();
    const [options, setOptions] = useState<any>([]);
@@ -43,8 +45,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
    const defaultValues = {
       keyword: searchParams.get("keyword"),
       company: searchParams.get("company"),
-      majorId: searchParams.get("majorId"),
-      specializationId: "",
+      skillId: searchParams.get("skillId"),
       dates: searchParams.get("dates"),
       address: searchParams.get("address"),
       jobLevel: searchParams.get("jobLevel"),
@@ -150,6 +151,33 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
       setSpecializations(options || []);
    }, [dataSpecializations]);
 
+   const handleFilter = () => {
+      const values = form.getValues();
+
+      Object.entries(values)?.forEach((item) => {
+         if (item[1]) {
+            if (item[0] !== "dates") {
+               setValueToSearchParams(item[0], item[1]);
+            } else {
+               handleChangeDate(item[0], item[1]);
+            }
+         }
+      });
+
+      // const isHomePage = location.pathname.includes("welcome");
+
+      // if (isHomePage)
+
+      navigate("/overview/welcome/jobs" + `?${searchParams.toString()}`);
+   };
+
+   const removeSearchParams = (name: any, value: any) => {
+      if (value) return;
+
+      searchParams.delete(name);
+      setSearchParams(searchParams);
+   };
+
    return (
       <FormProvider {...form}>
          <Container>
@@ -185,17 +213,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                   />
                </Col>
                <Col span={4}>
-                  <Button
-                     className="btn-find"
-                     height={46}
-                     onClick={() => {
-                        handleSearchJobs &&
-                           handleSearchJobs({
-                              keyword: form.watch("keyword") ?? "",
-                              location: form.watch("address") ?? "",
-                           });
-                     }}
-                  >
+                  <Button className="btn-find" height={46} onClick={handleFilter}>
                      {t("findJobs")}
                   </Button>
                </Col>
@@ -213,7 +231,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
             </Row>
             {expand && (
                <Row className="filter" gutter={[10, 10]}>
-                  <Col span={4}>
+                  <Col span={6}>
                      <DateRangePicker
                         className="search"
                         format={formatDate}
@@ -240,72 +258,72 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                      />
                   </Col>
 
-                  <Col span={4}>
+                  <Col span={6}>
                      <Select
                         name="jobLevel"
                         label="Vị trí"
                         required
                         options={jobLevels}
                         onChange={(value) => {
-                           setValueToSearchParams("jobLevel", value);
                            form.setValue("jobLevel", value);
+                           removeSearchParams("jobLevel", value);
                         }}
                      />
                   </Col>
 
-                  <Col span={4}>
+                  <Col span={6}>
                      <Select
                         name="jobType"
                         label="Loaị công việc"
                         required
                         options={jobTypes}
                         onChange={(value) => {
-                           setValueToSearchParams("jobType", value);
                            form.setValue("jobType", value);
+                           removeSearchParams("jobType", value);
                         }}
                      />
                   </Col>
 
-                  <Col span={4}>
+                  <Col span={6}>
                      <Select
                         name="workplace"
                         label="Nơi làm việc"
                         required
                         options={workPlaces}
                         onChange={(value) => {
-                           setValueToSearchParams("workplace", value);
                            form.setValue("workplace", value);
+                           removeSearchParams("workplace", value);
                         }}
                      />
                   </Col>
 
-                  <Col span={4}>
+                  <Col span={6}>
                      <Select
                         required
-                        name="specializationId"
-                        label="Chuyên ngành hẹp"
+                        name="skillId"
+                        label="Kỹ năng"
                         options={specializations || []}
                         loading={loadingSpecializations || fetchingSpecializations}
                         onChange={(value) => {
-                           form.setValue("specializationId", value);
-                           setValueToSearchParams("specializationId", value);
+                           form.setValue("skillId", value);
+                           removeSearchParams("skillId", value);
                         }}
                      />
                   </Col>
 
-                  <Col span={4}>
+                  <Col span={6}>
                      <Input
                         className="search"
-                        height="46px"
+                        height="66px"
                         subLabel={t("Lương tối thiểu")}
                         name="minSalary"
                         onChange={(e: any) => {
                            form.setValue("minSalary", convertPrice(e.target.value));
-                           handleOnChange("minSalary", convertPrice(e.target.value));
+                           removeSearchParams("maxSalary", e.target.value);
                         }}
                      />
                   </Col>
-                  <Col span={4}>
+                  <Col span={6}>
                      <Input
                         className="search"
                         height="46px"
@@ -313,7 +331,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         name="maxSalary"
                         onChange={(e: any) => {
                            form.setValue("maxSalary", convertPrice(e.target.value));
-                           handleOnChange("maxSalary", convertPrice(e.target.value));
+                           removeSearchParams("maxSalary", e.target.value);
                         }}
                      />
                   </Col>
@@ -324,4 +342,4 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
    );
 };
 
-export default FilterJob;
+export default memo(FilterJob);

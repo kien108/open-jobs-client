@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
 export const Header = styled.div`
-   margin: 0 auto;
-   max-width: 1250px;
    padding-top: 28px;
    padding-bottom: 10px;
+   background: linear-gradient(269.85deg, #54151c 0%, #121212 54.89%);
 `;
 
 export const Content = styled.div`

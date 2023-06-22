@@ -407,21 +407,21 @@ const Input: FC<IInput & TextAreaProps> = ({
                            on={subLabel}
                            placementicon={placementicon}
                            onChange={(e: any) => {
-                              let value = e.target.value.replace(".", ",");
+                              let value = e.target.value.replace(",", ".");
                               if (decimal) {
-                                 value = value.replace(/[^0-9,]/g, "");
-                                 if (value[0] === ",") {
+                                 value = value.replace(/[^0-9.]/g, "");
+                                 if (value[0] === ".") {
                                     value = "0" + value;
                                  }
                               } else {
                                  value = value.replace(/[^0-9]/g, "");
                               }
-                              if (value[0] === "0" && value.length > 1 && value[1] !== ",") {
+                              if (value[0] === "0" && value.length > 1 && value[1] !== ".") {
                                  value = value.substring(1);
                               }
 
-                              if (value.split(",").length < 3) {
-                                 const dec = value.split(",")[1];
+                              if (value.split(".").length < 3) {
+                                 const dec = value.split(".")[1];
                                  const float = decimal ? Math.pow(10, decimal) : 0;
                                  if (!dec || parseInt(dec) < float) {
                                     onChange(value);

@@ -32,16 +32,16 @@ const Slider = () => {
 
    function splitArray(array) {
       var result = [];
-      for (var i = 0; i < array.length; i += 3) {
-         result.push(array.slice(i, i + 3));
+      for (var i = 0; i < array?.length; i += 3) {
+         result.push(array?.slice(i, i + 3));
       }
       return result;
    }
 
    return (
       <Container>
-         <Row gutter={[50, 50]}>
-            <Col span={14}>
+         <Row justify="space-between">
+            <Col span={13}>
                <span className="title">
                   <span className="main">Công ty</span>
                   <span className="sub">Nổi bật</span>
@@ -83,7 +83,7 @@ const Slider = () => {
                   {fetchingJobs ? (
                      <Skeleton active />
                   ) : (
-                     splitArray(Array(11).fill(0))?.map((item) => (
+                     splitArray(dataJobs?.listJob)?.map((item) => (
                         <SwiperSlide key={item?.id} onClick={() => console.log({ item })}>
                            <JobSlide jobs={item} />
                         </SwiperSlide>

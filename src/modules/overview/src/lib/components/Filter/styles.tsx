@@ -7,17 +7,22 @@ export const StyledOption: StyledComponent<any, any> = styled.span`
 `;
 
 export const Container: StyledComponent<any, any> = styled.div`
+   margin: 0 auto;
    margin-bottom: 20px;
+   max-width: 1250px;
+   border: 1px solid ${(props) => props.theme.strongBlue};
+   border-radius: 8px;
+   padding: 12px;
 
    .header {
-      border: 2px solid ${(props) => props.theme.strongBlue};
+      /* border: 2px solid ${(props) => props.theme.strongBlue}; */
       /* border-top-width: 2px; */
       padding: 10px 8px;
       border-radius: 8px 8px 0 0;
    }
 
    .filter {
-      border: 2px solid ${(props) => props.theme.strongBlue};
+      /* border: 2px solid ${(props) => props.theme.strongBlue}; */
       padding: 10px 8px;
 
       border-radius: 0 0 8px 8px;
@@ -97,6 +102,7 @@ export const Container: StyledComponent<any, any> = styled.div`
       justify-content: center;
       height: 46px;
       font-weight: 500;
+      color: white;
 
       cursor: pointer;
       gap: 2px;

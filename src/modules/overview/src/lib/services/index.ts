@@ -11,6 +11,7 @@ export {
    useApplyJobMutation,
    useGetListDistrictsQuery,
    useGetSuggestionJobsQuery,
+   useGetJobsQuery,
 } from "./JobAPI";
 
 export {

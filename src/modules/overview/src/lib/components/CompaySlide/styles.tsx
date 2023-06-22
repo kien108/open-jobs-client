@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-   border: 2px solid #ccc;
-   border-radius: 10px;
+   /* border: 2px solid #ccc;
+   border-radius: 10px; */
    padding: 0px 4px;
    .img {
       width: 100%;

@@ -1,3 +1,6 @@
+import { extend } from "lodash";
+import { IResJobs } from "./../../../../dashboard/types/JobModel";
+
 export interface IResCompanies {
    companies: IResCompany[];
    totalElements: number;
@@ -176,4 +179,13 @@ export interface IResJob {
    };
    title: string;
    workPlace: string;
+}
+
+export interface IResSuggesJob extends IResJob {
+   company: IResCompany;
+}
+
+export interface IResDetailJob extends IResJob {
+   company: IResCompany;
+   relevantJobs: IResSuggesJob[];
 }

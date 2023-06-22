@@ -72,7 +72,7 @@ const RightHeader = ({ languages, accounts }: Props) => {
                </Popover>
             ) : (
                <Link className="sign-in" to={"/auth"}>
-                  Sign in
+                  Đăng nhập/Đăng ký
                </Link>
             )}
          </div>

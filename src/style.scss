@@ -1,9 +1,10 @@
 @import "antd/dist/antd.css";
 @import "./variable.scss";
 
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800&family=Rubik:ital,wght@0,300;1,300&display=swap");
+
 * {
-   font-family: "Inter", -apple-system, "BlinkMacSystemFont", system-ui, "Roboto", "Segoe UI",
-      "Helvetica Neue", sans-serif;
+   font-family: "Lexend", sans-serif;
 }
 
 body {

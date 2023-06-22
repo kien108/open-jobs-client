@@ -48,7 +48,7 @@ const Profile = () => {
                   </div>
                   <div className="item">
                      <FaCalendarCheck size={17} />
-                     <span>{moment(user?.dob).format("MM/DD/YYYY") || "--/--"}</span>
+                     <span>{user?.dob ? moment(user?.dob).format("MM/DD/YYYY") : "--/--"}</span>
                   </div>
                </div>
 

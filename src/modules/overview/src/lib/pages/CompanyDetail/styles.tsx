@@ -4,6 +4,7 @@ export const Container = styled.div`
    max-width: 1050px;
    margin: 0 auto;
    background-color: #fff;
+   margin-top: 70px;
 
    .company-header {
       padding: 20px;

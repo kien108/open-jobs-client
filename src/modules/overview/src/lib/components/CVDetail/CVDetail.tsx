@@ -71,18 +71,18 @@ const CVDetail = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
+         title: "Tên kỹ năng",
          dataIndex: "name",
          key: "name",
          width: "45%",
-         render: (item) => <span>{item.replaceAll("_", " ")}</span>,
+         render: (item) => <span>{item}</span>,
       },
       {
-         title: t("Exp"),
+         title: "Kinh nghiệm",
          dataIndex: "experience",
          key: "experience",
          width: "45%",
-         render: (item) => <span>{item.replaceAll("_", " ")}</span>,
+         render: (item) => <span>{item}</span>,
       },
    ];
 
@@ -90,7 +90,12 @@ const CVDetail = () => {
       if (!user) return;
       const { setValue } = form;
 
-      setValue("listSkill", user?.cv?.listSkill);
+      const listSkill = user?.cv?.skills?.map((item: any) => ({
+         name: item?.skill?.name,
+         experience: item?.yoe,
+      }));
+
+      setValue("listSkill", listSkill);
    }, [user]);
 
    const handlePrint = useReactToPrint({
@@ -98,12 +103,7 @@ const CVDetail = () => {
       documentTitle: "your-cv.pdf",
    });
 
-   useEffect(() => {
-      if (!user) return;
-      const { setValue } = form;
-
-      setValue("listSkill", user?.cv?.listSkill);
-   }, [user]);
+   console.log({ user });
 
    return (
       <Spin spinning={isLoading || isFetching}>

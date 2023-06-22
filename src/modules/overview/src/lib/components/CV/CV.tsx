@@ -162,10 +162,10 @@ const CV = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
+         title: "Tên kỹ năng",
          dataIndex: "name",
          key: "name",
-         width: "45%",
+         width: "43%",
          render: (_: string, record: any) => (
             <Select
                name={`listSkill.[${record.key}].name`}
@@ -201,14 +201,15 @@ const CV = () => {
          ),
       },
       {
-         title: t("EXP"),
+         title: "Kinh nghiêm (năm)",
          dataIndex: "experience",
          key: "experience",
-         width: "45%",
+         width: "43%",
 
          render: (_: string, record: any) => (
             <Input
-               type="number"
+               type="numberFloat"
+               decimal={1}
                name={`listSkill.[${record.key}].experience`}
                placeholder="Enter experience"
                // onChange={(e) => {
@@ -222,9 +223,9 @@ const CV = () => {
       },
 
       {
-         title: t("Action"),
+         title: "Thao tác",
          dataIndex: "id",
-         width: "10%",
+         width: "14%",
 
          render: (_: string, record: any) => (
             <BtnFunction
@@ -346,7 +347,12 @@ const CV = () => {
       if (!user) return;
       const { setValue } = form;
 
-      setValue("listSkill", user?.cv?.listSkill);
+      const listSkill = user?.cv?.skills?.map((item: any) => ({
+         name: item?.skill?.name,
+         experience: item?.yoe,
+      }));
+
+      setValue("listSkill", listSkill);
       setValue("title", user?.cv?.title);
       setValue("objective", user?.cv?.objective || "");
       setValue("education", user?.cv?.education || "");

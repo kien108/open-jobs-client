@@ -1,20 +1,20 @@
 import styled from "styled-components";
 
 export const StyledRightHeader = styled.div`
-   position: absolute;
+   /* position: absolute;
    right: 0;
    top: 0;
-   bottom: 0;
+   bottom: 0; */
    padding-left: 16px;
    padding-right: 16px;
    border-width: 0;
-   border-left-width: 1px;
+   /* border-left-width: 1px; */
    gap: 8px;
    display: flex;
    align-items: center;
    border-style: solid;
    border-color: #e5e7eb;
-   background-color: #222831;
+   /* background-color: #54151c; */
 
    .notification {
       position: relative;
@@ -37,14 +37,14 @@ export const StyledRightHeader = styled.div`
    }
 
    .sign-in {
-      font-size: 14px;
-      font-weight: 700;
-      color: ${(props) => props.theme.strongBlue};
+      font-size: 16px;
+      font-weight: 400;
+      color: white;
       cursor: pointer;
       transition: all 0.2s ease-in-out;
 
       &:hover {
-         opacity: 0.8;
+         color: ${(props) => props.theme.strongBlue};
       }
    }
 

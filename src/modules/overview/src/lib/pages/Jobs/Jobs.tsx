@@ -6,7 +6,7 @@ import { Filter } from "../../components";
 import { Job } from "../../components/Job";
 import { JobDetail } from "../../components/JobDetail";
 import { useFilterSearchJob } from "../../hooks";
-import { useLazyGetJobsQuery } from "../../services";
+import { useGetJobsQuery, useLazyGetJobsQuery } from "../../services";
 import { Container, Content, Header } from "./styles";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -16,25 +16,31 @@ const Jobs = () => {
    const tableInstance = Table.useTable();
    const { t } = useTranslation();
    const navigate = useNavigate();
-   const [searchJobs, { data: jobs, isLoading: loadingJobs, isFetching: fetchingJobs }] =
-      useLazyGetJobsQuery();
+   const {
+      data: jobs,
+      isLoading: loadingJobs,
+      isFetching: fetchingJobs,
+   } = useGetJobsQuery({
+      ...tableInstance.params,
+      ...useFilterSearchJob(),
+   });
    const [searchParams] = useSearchParams();
 
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
-   useEffect(() => {
-      searchParams.get("job-id")
-         ? setSelectedId(searchParams.get("job-id")!)
-         : setSelectedId(jobs?.listJob?.[0]?.id);
-   }, [jobs]);
+   // useEffect(() => {
+   //    searchParams.get("job-id")
+   //       ? setSelectedId(searchParams.get("job-id")!)
+   //       : setSelectedId(jobs?.listJob?.[0]?.id);
+   // }, [jobs]);
 
-   const handleSearchJobs = (params: any) => {
-      searchJobs({ ...tableInstance.params, ...params });
-   };
+   // const handleSearchJobs = (params: any) => {
+   //    searchJobs({ ...tableInstance.params, ...params });
+   // };
 
-   useEffect(() => {
-      searchJobs({ ...tableInstance.params, keyword: "", location: "" });
-   }, []);
+   // useEffect(() => {
+   //    searchJobs({ ...tableInstance.params, keyword: "", location: "" });
+   // }, []);
 
    function paramsToObject(entries: any) {
       const result: any = {};
@@ -44,13 +50,13 @@ const Jobs = () => {
       return result;
    }
 
-   useEffect(() => {
-      const entries = searchParams.entries();
-      const params = paramsToObject(entries);
-      searchJobs({ ...tableInstance.params, ...params });
-   }, [searchParams.get("page")]);
+   // useEffect(() => {
+   //    const entries = searchParams.entries();
+   //    const params = paramsToObject(entries);
+   //    searchJobs({ ...tableInstance.params, ...params });
+   // }, [searchParams.get("page")]);
 
-   console.log("job page");
+   console.log({ data: jobs });
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>
@@ -73,7 +79,7 @@ const Jobs = () => {
                </div>
             </Header>
             <Divider />
-            {jobs?.listJob?.length > 0 ? (
+            {jobs?.listJob && jobs?.listJob?.length > 0 ? (
                <Content>
                   <Row gutter={[24, 24]}>
                      <Col span={10}>

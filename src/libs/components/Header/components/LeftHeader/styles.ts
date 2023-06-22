@@ -11,6 +11,7 @@ export const StyledImage = styled.img`
    width: 95px;
    height: auto;
    display: block;
+   margin-right: 30px;
 `;
 
 export const StyledLeftHeader = styled.div`
@@ -60,10 +61,10 @@ export const StyledContainerLink = styled(Tabs)`
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       /* color: rgb(45, 45, 45); */
-      color: white;
+      color: #a6a6a6;
       font-family: "Noto Sans", sans-serif;
       text-shadow: none;
    }

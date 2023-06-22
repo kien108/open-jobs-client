@@ -6,29 +6,38 @@ export const Container = styled.div`
    height: 285px;
 
    .content {
-      border: 1px solid #ccc;
-      padding: 14px;
+      /* border: 1px solid #ccc; */
+      padding: 12px;
       height: 33.33%;
 
-      .company {
+      &.border {
+         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      }
+
+      .sug-company {
          color: #999;
          font-size: 12px;
-         font-weight: 500;
+         font-weight: 600;
       }
 
       .title {
          font-size: 17px;
          margin-bottom: 0px;
+
+         &:hover {
+            color: #2557a7;
+            cursor: pointer;
+         }
       }
 
       .salary {
          color: #2557a7;
-         font-size: 11px;
-         font-style: italic;
+         font-size: 12px;
+         font-weight: 500;
       }
    }
 
-   border-radius: 10px;
-   border: 1px solid #ccc;
+   border-radius: 2px;
+   border: 1px solid rgba(0, 0, 0, 0.15);
    overflow: hidden;
 `;
