@@ -8,6 +8,108 @@ export const GroupButton = styled.div`
    margin-top: 12px;
 `;
 
+export const Container = styled.div`
+   .pay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin-top: 80px;
+      font-size: 30px;
+      text-align: center;
+
+      .premium {
+         color: ${(props) => props.theme.strongBlue};
+         cursor: pointer;
+      }
+
+      .btn-upgrade {
+         margin-top: 20px;
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         svg {
+            margin-top: -8px;
+         }
+      }
+   }
+
+   .btn-export {
+      width: fit-content;
+      margin-left: auto;
+      margin-top: 20px;
+   }
+
+   .items {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      margin-top: 30px;
+
+      .item {
+         flex-basis: 33.33%;
+         height: 150px;
+         padding: 10px 20px;
+         border-radius: 20px;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         box-shadow: 0 0 #000, 0 0 #000, 0 20px 25px -5px rgb(0 0 0 / 0.1),
+            0 0 10px -6px rgb(0 0 0 / 0.1);
+
+         span {
+            display: block;
+            font-size: 30px;
+            font-weight: 700;
+            text-align: center;
+            color: black;
+
+            &.value {
+               font-size: 40px;
+            }
+         }
+
+         &.accepted {
+            background-color: green;
+         }
+
+         &.new {
+            background-color: #d1d103;
+         }
+
+         &.rejected {
+            background-color: red;
+         }
+
+         &.total {
+            background-color: white;
+         }
+      }
+   }
+
+   .badge-status {
+      border-radius: 8px;
+      text-align: center;
+      padding: 2px 4px;
+      font-size: 13px;
+
+      &.NEW {
+         background-color: yellow;
+      }
+
+      &.APPROVED {
+         background: ${(props) => props.theme.strongBlue};
+      }
+
+      &.REJECTED {
+         background: red;
+      }
+
+      &.HIDDEN {
+         background: #ccc;
+      }
+   }
+`;
 export const ContainerTable = styled.div`
    display: flex;
    flex-direction: column;
@@ -21,7 +123,7 @@ export const ContainerTable = styled.div`
 
    .status {
       display: block;
-      padding: 4px 0px;
+      padding: 4px 8px;
       border-radius: 10px;
       color: white;
       text-align: center;
@@ -38,18 +140,16 @@ export const ContainerTable = styled.div`
       }
    }
 
-   .match-cv {
-      font-weight: 700;
-      font-size: 17px;
-      color: green;
-      text-align: center;
+   .title {
+      color: ${(props) => props.theme.strongBlue};
+      font-weight: 500;
    }
 
-   .col,
+   /* .col,
    .ant-table-column-title {
       font-weight: 600;
       font-size: 17px;
-   }
+   } */
 `;
 
 export const BtnFunction = styled.div`
@@ -121,59 +221,6 @@ export const StyledHeader = styled.div`
       &:hover {
          background-color: #dfe3f3;
          color: #6c86e2;
-      }
-   }
-`;
-
-export const Container = styled.div`
-   .btn-export {
-      width: fit-content;
-      margin-left: auto;
-   }
-   .items {
-      display: flex;
-      align-items: center;
-      gap: 50px;
-      margin-top: 30px;
-
-      .item {
-         flex-basis: 33.33%;
-         height: 150px;
-         padding: 10px 20px;
-         border-radius: 20px;
-         display: flex;
-         flex-direction: column;
-         justify-content: center;
-         box-shadow: 0 0 #000, 0 0 #000, 0 20px 25px -5px rgb(0 0 0 / 0.1),
-            0 0 10px -6px rgb(0 0 0 / 0.1);
-
-         span {
-            display: block;
-            font-size: 30px;
-            font-weight: 700;
-            text-align: center;
-            color: black;
-
-            &.value {
-               font-size: 40px;
-            }
-         }
-
-         &.accepted {
-            background-color: green;
-         }
-
-         &.new {
-            background-color: #d1d103;
-         }
-
-         &.rejected {
-            background-color: red;
-         }
-
-         &.total {
-            background-color: white;
-         }
       }
    }
 `;

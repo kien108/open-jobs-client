@@ -31,7 +31,7 @@ export const ContainerDatePicker = styled.div`
 export const StyledDatePicker: StyledComponent<any, any> = styled(AntDatePicker)<
    IStyledDatePicker & DatePickerProps
 >`
-   height: 55px;
+   height: 52px;
    // min-width: 300px;
    width: 100%;
    border-radius: 10px;

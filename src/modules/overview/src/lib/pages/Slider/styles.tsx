@@ -27,4 +27,27 @@ export const Container = styled.div`
          color: ${(props) => props.theme.strongBlue};
       }
    }
+
+   .login-to-see {
+      box-shadow: 0px 6px 32px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      border: 1px solid #dee2e6;
+      background-color: rgba(0, 0, 0, 0.06);
+      position: relative;
+      padding: 15px;
+      height: 280px;
+
+      span {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         font-size: 18px;
+         transition: 0.2s linear all;
+         cursor: pointer;
+         &:hover {
+            color: ${(props) => props.theme.strongBlue};
+         }
+      }
+   }
 `;

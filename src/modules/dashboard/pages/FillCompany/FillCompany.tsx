@@ -40,9 +40,9 @@ import { FaUserCircle } from "react-icons/fa";
 import { ECompanyType, EMemberTypes } from "../../../../types";
 import moment from "moment";
 import { RootState } from "../../redux/store";
-interface ICreateAndEditAdmin {
-   handleClose: () => void;
-}
+// interface ICreateAndEditAdmin {
+//    handleClose: () => void;
+// }
 
 interface FormType {
    firstName: any;
@@ -63,7 +63,7 @@ interface FormType {
    extraAddress: any;
    imgs: any;
 }
-const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
+const CreateAndEditHr = () => {
    const { t } = useTranslation();
    const { id } = useCommonSelector((state: RootState) => state.user.user);
 
@@ -161,8 +161,20 @@ const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const onSubmit = (data: any) => {
       const { companyName, ...dataBody } = data;
 
-      const base64Imgs = imgs?.filter((item: any) => isBase64(item?.url || item?.thumbUrl));
-      const existImgs = imgs?.filter((item: any) => !isBase64(item?.url || item?.thumbUrl));
+      const base64Imgs = imgs?.filter(
+         (item: any) => item?.thumbUrl && isBase64(item?.url || item?.thumbUrl)
+      );
+
+      const existImgs = imgs?.filter((item: any) => {
+         console.log({ item });
+         return typeof item === "string" || !isBase64(item?.url || item?.thumbUrl);
+      });
+
+      console.log({
+         base64Imgs,
+         imgs,
+         existImgs,
+      });
       const payload = {
          ...dataAccount,
          company: {
@@ -171,7 +183,10 @@ const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             address: `${data?.extraAddress},${data?.district},${data?.province}`,
             base64Images: (base64Imgs ?? [])?.map((item: any) => item?.url || item?.thumbUrl),
             imageUrlsString: (existImgs ?? [])
-               ?.map((item: any) => item?.url || item?.thumbUrl)
+               ?.map((item: any) => {
+                  console.log({ exist: item });
+                  return typeof item === "string" ? item : item?.url || item?.thumbUrl;
+               })
                ?.join(", "),
             companyType: data?.company_type,
             description: data?.description,
@@ -179,6 +194,7 @@ const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             logoUrl: avatar?.[0]?.url || avatar?.[0]?.thumbUrl,
             memberType: data?.member_type,
             name: data?.companyName,
+
             phone: data?.companyPhone,
             scope: data?.scope,
          },
@@ -194,11 +210,10 @@ const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          .then(() => {
             openNotification({
                type: "success",
-               message: t("Update this account successfully!!!"),
+               message: t("Chỉnh sửa hồ sơ thành công!!!"),
             });
             searchParams.delete("id");
             setSearchParams(searchParams);
-            handleClose();
          })
          .catch((error) => {
             openNotification({
@@ -233,8 +248,12 @@ const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       district && setValue("district", district);
       extraAddress && setValue("extraAddress", extraAddress);
 
-      setImgs(company?.imageUrls);
-      setValue("imgs", company?.imageUrls ?? [], { shouldDirty: true });
+      setImgs(company?.imageUrlsString?.split(", ")?.filter((item) => item !== ""));
+
+      console.log({ fk: company?.imageUrlsString?.split(", ") });
+      setValue("imgs", company?.imageUrlsString?.split(", ")?.filter((item) => item !== "") ?? [], {
+         shouldDirty: true,
+      });
       setValue("description", company?.description);
 
       setValue("firstName", dataAccount?.firstName);
@@ -365,16 +384,6 @@ const CreateAndEditHr: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                               render: () => EMemberTypes.PREMIUM,
                            },
                         ]}
-                     />
-                  </Col>
-
-                  <Col span={12}>
-                     <Input
-                        disabled
-                        type="number"
-                        name="accountBalance"
-                        placeholder="Số dư tài khoản"
-                        label="Số dư tài khoản"
                      />
                   </Col>
 

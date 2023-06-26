@@ -11,6 +11,14 @@ export const Container = styled.div`
       display: flex;
       flex-direction: column;
       gap: 10px;
+      position: sticky;
+      top: 78px;
+      z-index: 99;
+      background-color: white;
+
+      &.hidden {
+         position: unset;
+      }
 
       .content {
          display: flex;
@@ -21,6 +29,12 @@ export const Container = styled.div`
          .job-title {
             font-size: 18px;
             font-weight: 700;
+            transition: all 0.2s linear;
+            cursor: pointer;
+
+            &:hover {
+               color: ${(props) => props.theme.strongBlue};
+            }
          }
 
          .company,
@@ -47,6 +61,7 @@ export const Container = styled.div`
             line-height: 24px;
             width: 100%;
             height: 44px;
+            font-weight: 500;
 
             &.applied {
                background-color: #ccc;
@@ -113,6 +128,7 @@ export const Container = styled.div`
          align-items: center;
          gap: 20px;
          margin-bottom: 10px;
+         background-color: #f5f5f5 !important;
 
          .right {
             display: flex;

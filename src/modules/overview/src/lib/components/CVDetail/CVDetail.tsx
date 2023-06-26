@@ -82,7 +82,7 @@ const CVDetail = () => {
          dataIndex: "experience",
          key: "experience",
          width: "45%",
-         render: (item) => <span>{item}</span>,
+         render: (item) => <span>{item ? `${item} năm` : "-"}</span>,
       },
    ];
 
@@ -113,10 +113,10 @@ const CVDetail = () => {
             </BtnFunction>
             <GroupButton>
                <Button height={44} icon={<DownloadIcon />} onClick={handlePrint}>
-                  {t("Export your CV")}
+                  {t("Xuất hồ sơ")}
                </Button>
                <Button height={44} icon={<EditIcon />} onClick={() => navigate("edit")}>
-                  {t("Edit CV")}
+                  {t("Chỉnh sửa hồ sơ")}
                </Button>
             </GroupButton>
          </StyledBtnsHeader>
@@ -136,7 +136,7 @@ const CVDetail = () => {
                               name={`${user?.firstName} ${user?.lastName}`}
                            />
                            <div className="cv-item">
-                              <span className="title">Title</span>
+                              <span className="title">Tiêu đề</span>
                               <span>{user?.cv?.title}</span>
                            </div>
 
@@ -157,13 +157,13 @@ const CVDetail = () => {
                         </div>
                         <div className="extraInformation">
                            <div className="cv-item">
-                              <span className="title">Objective</span>
+                              <span className="title">Giới thiệu bản thân</span>
                               {Parser(`${user?.cv?.objective}`)}
                            </div>
                         </div>
                         <div className="extraInformation">
                            <div className="cv-item">
-                              <span className="title">Education</span>
+                              <span className="title">Học vấn</span>
                               {Parser(`${user?.cv?.education}`)}
                            </div>
                         </div>
@@ -175,20 +175,20 @@ const CVDetail = () => {
                            <Row gutter={[10, 10]}>
                               <Col span={12}>
                                  <div className="cv-item">
-                                    <span className="title">Major</span>
+                                    <span className="title">Chuyên ngành</span>
                                     <span>{user?.cv?.major?.name}</span>
                                  </div>
                               </Col>
                               <Col span={12}>
                                  <div className="cv-item">
-                                    <span className="title">Specialization</span>
+                                    <span className="title">Chuyên ngành hẹp</span>
                                     <span>{user?.cv?.specialization?.name}</span>
                                  </div>
                               </Col>
                            </Row>
 
                            <div className="cv-item" style={{ marginTop: "20px" }}>
-                              <span className="title">SKILLS</span>
+                              <span className="title">Kỹ năng</span>
                            </div>
                            <Col span={24}>
                               <Table
@@ -211,13 +211,13 @@ const CVDetail = () => {
 
                         <div className="objective">
                            <div className="cv-item">
-                              <span className="title">Experience</span>
+                              <span className="title">Kinh nghiệm</span>
                               {Parser(`${user?.cv?.experience}`)}
                            </div>
                         </div>
                         <div className="objective">
                            <div className="cv-item">
-                              <span className="title">Certificate</span>
+                              <span className="title">Chứng chỉ</span>
                               {Parser(`${user?.cv?.certificate}`)}
                            </div>
                         </div>

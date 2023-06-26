@@ -16,6 +16,7 @@ import {
    openNotification,
    PlusIcon,
    Select,
+   Switch,
    Table,
    Title,
 } from "../../../../../../libs/components";
@@ -77,6 +78,7 @@ const CV = () => {
    const [majors, setMajors] = useState<any>([]);
    const [specializations, setSpecializations] = useState<any>([]);
    const [searchSkill, setSearchSkill] = useState<string>("");
+   const [statusCV, setStatusCV] = useState<boolean>(false);
 
    const [listSkill, setSkills] = useState<any>([]);
    const { isOpen: openConfirmMajor, handleClose: closeMajor, handleOpen: openMajor } = useModal();
@@ -259,6 +261,7 @@ const CV = () => {
       });
       const body = {
          ...data,
+         active: statusCV,
          listSkill: data?.listSkill.map((item: any) => ({
             skill: {
                name: item?.name,
@@ -361,13 +364,15 @@ const CV = () => {
 
       setValue("majorId", user?.cv?.major?.id);
       setValue("specializationId", user?.cv?.specialization?.id);
+
+      setStatusCV(user?.cv?.active);
    }, [user]);
    return (
       <Spin spinning={isLoading || isFetching}>
          <BtnFunction className="btn-back" onClick={() => navigate(-1)}>
             <BsArrowLeft size={23} />
          </BtnFunction>
-         <Title style={{ textAlign: "center" }}>Edit CV</Title>
+         <Title style={{ textAlign: "center" }}>Chỉnh sửa hồ sơ</Title>
          <Container>
             <FormProvider {...form}>
                <Row gutter={[30, 30]}>
@@ -383,7 +388,7 @@ const CV = () => {
                               maxInitials={2}
                               name={`${user?.firstName} ${user?.lastName}`}
                            />
-                           <Input name="title" label={t("title")} required className="title-cv" />
+                           <Input name="title" label={t("Tiêu đề")} required className="title-cv" />
 
                            <div className="right">
                               <div className="item">
@@ -406,7 +411,7 @@ const CV = () => {
                                  data={user?.cv?.objective}
                                  editorRef={objectRef}
                                  name="objective"
-                                 label={t("objective")}
+                                 label={t("Giới thiệu bản thân")}
                               />
                               {/* <EmailVariables /> */}
                            </div>
@@ -415,7 +420,7 @@ const CV = () => {
                                  data={user?.cv?.education}
                                  editorRef={educationRef}
                                  name="education"
-                                 label={t("education")}
+                                 label={t("Học vấn")}
                               />
 
                               {/* <EmailVariables
@@ -425,6 +430,14 @@ const CV = () => {
                                  label={t("education")}
                               /> */}
                            </div>
+
+                           <Switch
+                              checked={statusCV}
+                              onChange={(value) => setStatusCV(value)}
+                              label="Trạng thái hồ sơ"
+                              checkedLabel="Hiển thị"
+                              unCheckedLabel="Ẩn"
+                           />
                         </div>
                      </div>
                   </Col>
@@ -435,7 +448,7 @@ const CV = () => {
                               <Col span={12}>
                                  <Select
                                     name="majorId"
-                                    title={t("major")}
+                                    title={t("Chuyên ngành")}
                                     placeholder="Select major"
                                     required
                                     onSelect={() => {
@@ -451,7 +464,7 @@ const CV = () => {
                                        required
                                        disabled={!form.watch("majorId")}
                                        name="specializationId"
-                                       title={t("specialization")}
+                                       title={t("Chuyên ngành hẹp")}
                                        placeholder="Please choose major first!"
                                        options={specializations || []}
                                        loading={false}
@@ -465,7 +478,7 @@ const CV = () => {
                                  <Col span={24}>
                                     <GroupButton>
                                        <div className="cv-item" style={{ marginTop: "20px" }}>
-                                          <span className="title">SKILLS</span>
+                                          <span className="title">Kỹ năng</span>
                                        </div>
                                        <BtnFunction
                                           onClick={() => append({ name: "", experience: "" })}
@@ -499,7 +512,7 @@ const CV = () => {
                               data={user?.cv?.experience}
                               editorRef={experienceRef}
                               name="experience"
-                              label={t("experience")}
+                              label={t("Kinh nghiệm")}
                            />
                            {/* <EmailVariables
                               data={user?.cv?.experience}
@@ -513,7 +526,7 @@ const CV = () => {
                               data={user?.cv?.certificate}
                               editorRef={certificateRef}
                               name="certificate"
-                              label={t("certificate")}
+                              label={t("Chứng chỉ")}
                            />
                            {/* <EmailVariables
                               data={user?.cv?.certificate}

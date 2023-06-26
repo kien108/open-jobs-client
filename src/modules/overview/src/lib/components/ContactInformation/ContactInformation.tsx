@@ -102,14 +102,19 @@ const ContactInformation = () => {
             <FormProvider {...form}>
                <Input name="firstName" label={t("firstName")} required />
                <Input name="lastName" label={t("lastName")} required />
-               <Input name="phone" label={t("phone")} />
+               <Input
+                  type="number"
+                  name="phone"
+                  label={t("phone")}
+                  placeholder="Nhập số điện thoại"
+               />
                <Input name="email" label={t("email")} disabled />
                <Row gutter={[15, 15]}>
                   <Col span={12}>
-                     <Select name="gender" options={genders} title={t("gender")} />
+                     <Select name="gender" options={genders} title={t("Giới tính")} />
                   </Col>
-                  <Col span={12}>
-                     <DatePicker format={"MM/DD/YYYY"} name="dob" label={t("dob")} />
+                  <Col span={12} className="dob">
+                     <DatePicker format={"DD/MM/YYYY"} name="dob" label={t("Ngày sinh")} />
                   </Col>
                </Row>
                <Button

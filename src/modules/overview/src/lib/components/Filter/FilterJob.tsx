@@ -13,7 +13,12 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Container, StyledOption } from "./styles";
 
 import { v4 as uuidv4 } from "uuid";
-import { useGetProvincesQuery, useGetSpecializationsQuery } from "../../services";
+import {
+   useGetAllSkillsQuery,
+   useGetProvincesQuery,
+   useGetSkillsQuery,
+   useGetSpecializationsQuery,
+} from "../../services";
 import { useDebounce } from "../../../../../../libs/common";
 import moment from "moment";
 import { EJobLevels, EJobTypes, EWorkPlace } from "../../../../../../types";
@@ -75,7 +80,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
 
    const handleOnChange = debounce(setValueToSearchParams, 500);
 
-   const [specializations, setSpecializations] = useState<any>([]);
+   const [skills, setSkills] = useState<any>([]);
 
    useEffect(() => {
       const options = (dataProvinces ?? []).map((item: any) => ({
@@ -103,10 +108,10 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
    };
 
    const {
-      data: dataSpecializations,
-      isLoading: loadingSpecializations,
-      isFetching: fetchingSpecializations,
-   } = useGetSpecializationsQuery(
+      data: dataSkills,
+      isLoading: loadingSkills,
+      isFetching: fetchingSkills,
+   } = useGetAllSkillsQuery(
       {},
       {
          refetchOnMountOrArgChange: true,
@@ -141,15 +146,15 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
    }, []);
 
    useEffect(() => {
-      const options = dataSpecializations?.map((item: any) => ({
+      const options = (dataSkills ?? [])?.map((item: any) => ({
          key: +item.id,
          label: item.id,
          value: item.id,
          render: () => <span>{item?.name}</span>,
       }));
 
-      setSpecializations(options || []);
-   }, [dataSpecializations]);
+      setSkills(options || []);
+   }, [dataSkills]);
 
    const handleFilter = () => {
       const values = form.getValues();
@@ -302,8 +307,8 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         required
                         name="skillId"
                         label="Kỹ năng"
-                        options={specializations || []}
-                        loading={loadingSpecializations || fetchingSpecializations}
+                        options={skills || []}
+                        loading={fetchingSkills}
                         onChange={(value) => {
                            form.setValue("skillId", value);
                            removeSearchParams("skillId", value);

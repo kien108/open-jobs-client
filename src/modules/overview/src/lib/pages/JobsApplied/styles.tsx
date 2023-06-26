@@ -33,7 +33,32 @@ export const ContainerTable = styled.div`
 
 export const Container = styled.div`
    max-width: 1200px;
-   margin: 30px auto;
+   margin: 0 auto;
+   margin-top: 100px;
+
+   .badge-status {
+      border-radius: 8px;
+      text-align: center;
+      padding: 2px 4px;
+      font-size: 13px;
+      max-width: 100px;
+
+      &.NEW {
+         background-color: yellow;
+      }
+
+      &.APPROVED {
+         background: ${(props) => props.theme.strongBlue};
+      }
+
+      &.REJECTED {
+         background: red;
+      }
+
+      &.HIDDEN {
+         background: #ccc;
+      }
+   }
 `;
 
 export const BtnFunction: StyledComponent<any, any> = styled.div`

@@ -5,13 +5,14 @@ import { IResDetailJob, IResSuggesJob, IResSuggesionJob } from "../types";
 export const JobAPI = createApi({
    reducerPath: "JobAPIOverview",
    baseQuery,
-   tagTypes: ["DETAIL"],
+   tagTypes: ["DETAIL", "LIST"],
    endpoints: (builder) => ({
       getJobs: builder.query<IResSuggesionJob, any>({
          query: (params) => ({
             url: "/job/search",
             params,
          }),
+         providesTags: ["LIST"],
       }),
       getSuggestionJobs: builder.query<IResSuggesionJob, any>({
          query: (params) => ({
@@ -54,12 +55,18 @@ export const JobAPI = createApi({
             url: `/skill/by-specialization/${id}`,
          }),
       }),
+
+      getAllSkills: builder.query({
+         query: (id) => ({
+            url: `/skills`,
+         }),
+      }),
       applyJob: builder.mutation({
          query: ({ cvId, jobId }) => ({
             url: `/cv/${cvId}/apply/${jobId}`,
             method: "POST",
          }),
-         invalidatesTags: ["DETAIL"],
+         invalidatesTags: ["DETAIL", "LIST"],
       }),
    }),
 });
@@ -75,4 +82,5 @@ export const {
    useGetSkillsQuery,
    useApplyJobMutation,
    useGetSuggestionJobsQuery,
+   useGetAllSkillsQuery,
 } = JobAPI;

@@ -7,7 +7,7 @@ export const StyledCreateAndEditHr = styled.div`
    margin-top: 20px;
 
    .waiting-review {
-      color: ${(props) => props.theme.strongBlue}
+      color: ${(props) => props.theme.strongBlue};
       font-size: 15px;
       font-weight: 500;
       font-style: italic;

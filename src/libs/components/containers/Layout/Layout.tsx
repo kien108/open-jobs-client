@@ -74,7 +74,6 @@ const Layout = () => {
       dispatch(saveUser(data));
    }, [data]);
 
-   console.log("13");
    return (
       <AntLayout hasSider>
          <AntLayout style={{ background: "#f5f5f5" }}>

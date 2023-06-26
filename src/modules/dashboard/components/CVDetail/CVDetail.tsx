@@ -23,20 +23,24 @@ import Parser from "html-react-parser";
 import Avatar from "react-avatar";
 import {
    useAcceptCVMutation,
+   useChargeCVMutation,
+   useGetBusinessQuery,
    useGetCVQuery,
    useGetMajorsQuery,
    useGetProfileQuery,
    useGetSkillsQuery,
    useGetSpecializationsQuery,
+   useLazyGetBusinessQuery,
    useRejectJobCvMutation,
    useUpdateCVMutation,
+   useViewCVByCompanyQuery,
 } from "../../services";
 
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import { Col, Divider, Row, Spin } from "antd";
+import { Col, Divider, Row, Skeleton, Spin } from "antd";
 import { MdEmail, MdOutlineNavigateNext } from "react-icons/md";
 import { BsArrowLeft, BsFillPersonFill, BsPlusLg } from "react-icons/bs";
 
@@ -45,17 +49,44 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ExperienceValue } from "../../types/JobModel";
 import { JobDetail } from "../JobDetail";
+import { EJobStatus } from "../../../../types";
+import { spawn } from "child_process";
+import { Payment } from "../../container/Header/components";
 
 type FormType = {
    listSkill: any;
 };
 
 const CVDetail = () => {
-   const { id, userId } = useParams();
+   const { id } = useParams();
    const tableInstance = Table.useTable();
    const navigate = useNavigate();
+   const { user: accountData } = useCommonSelector((state: RootState) => state.user);
 
    const [searchParams] = useSearchParams();
+   const {
+      isOpen: openModalCharge,
+      handleOpen: handleOpenCharge,
+      handleClose: handleCloseCharge,
+   } = useModal();
+
+   const {
+      isOpen: openModalViewFree,
+      handleOpen: handleOpenViewFree,
+      handleClose: handleCloseViewFree,
+   } = useModal();
+
+   const {
+      isOpen: openModalPayConfirm,
+      handleOpen: handleOpenPayConfirm,
+      handleClose: handleClosePayConfirm,
+   } = useModal();
+
+   const {
+      isOpen: openModalPay,
+      handleOpen: handleOpenPay,
+      handleClose: handleClosePay,
+   } = useModal();
 
    const { t } = useTranslation();
 
@@ -63,11 +94,20 @@ const CVDetail = () => {
       data: user,
       isLoading,
       isFetching,
-   } = useGetProfileQuery(userId, { skip: !userId, refetchOnMountOrArgChange: true });
+   } = useViewCVByCompanyQuery(
+      {
+         cvId: id,
+         companyId: accountData?.companyId,
+      },
+      { skip: !id, refetchOnMountOrArgChange: true }
+   );
 
-   console.log(user);
+   const [getBusiness, { data: dataBusiness, isFetching: fetchingBusiness }] =
+      useLazyGetBusinessQuery();
+
    const [acceptCV, { isLoading: loadingAccept }] = useAcceptCVMutation();
    const [rejectCV, { isLoading: loadingReject }] = useRejectJobCvMutation();
+   const [chargeCV, { isLoading: loadingChargeCV }] = useChargeCVMutation();
 
    const form = useForm<FormType>({
       defaultValues: {},
@@ -89,19 +129,18 @@ const CVDetail = () => {
          dataIndex: "name",
          key: "name",
          width: "45%",
-         render: (item) => <span>{item.replaceAll("_", " ")}</span>,
       },
       {
          title: t("Exp"),
          dataIndex: "experience",
          key: "experience",
          width: "45%",
-         render: (item) => <span>{item.replaceAll("_", " ")}</span>,
+         render: (value) => (value ? <span>{`${value} năm`}</span> : "-"),
       },
    ];
 
    const onSubmit = (data: any) => {
-      acceptCV({ jobId: id, cvId: user?.cv?.id })
+      acceptCV({ jobId: id, cvId: id })
          .unwrap()
          .then(() => {
             openNotification({
@@ -120,7 +159,7 @@ const CVDetail = () => {
    };
 
    const handleRejectJobCv = () => {
-      rejectCV({ jobId: id, cvId: user?.cv?.id })
+      rejectCV({ jobId: id, cvId: id })
          .unwrap()
          .then(() => {
             openNotification({
@@ -142,8 +181,45 @@ const CVDetail = () => {
       if (!user) return;
       const { setValue } = form;
 
-      setValue("listSkill", user?.cv?.listSkill);
+      const listSkill = user?.user?.cv?.skills?.map((item: any) => ({
+         name: item?.skill?.name,
+         experience: item?.yoe,
+      }));
+
+      setValue("listSkill", listSkill);
    }, [user]);
+
+   const handleCharge = () => {
+      if (accountData?.company?.accountBalance >= (dataBusiness?.baseCvViewPrice ?? 0)) {
+         const payload = {
+            companyId: accountData?.companyId,
+            cvId: id,
+            isFree: accountData?.company?.amountOfFreeCvViews > 0,
+         };
+         chargeCV(payload)
+            .unwrap()
+            .then((res) => {
+               openNotification({
+                  type: "success",
+                  message: "Thanh toán thành công!",
+               });
+            })
+            .catch((err) => {
+               openNotification({
+                  type: "error",
+                  message: "Thanh toán thất bại!",
+               });
+            });
+
+         if (accountData?.company?.amountOfFreeCvViews > 0) {
+            handleCloseViewFree();
+         } else {
+            handleCloseCharge();
+         }
+      } else {
+         handleOpenPayConfirm();
+      }
+   };
 
    return (
       <Spin spinning={isLoading || isFetching}>
@@ -152,115 +228,118 @@ const CVDetail = () => {
          </BtnFunction>
          <Container>
             <FormProvider {...form}>
-               <Row gutter={[30, 30]}>
-                  <Col span={8} className="job-detail">
-                     <Title style={{ marginBottom: "30px", display: "block" }}>Job Post</Title>
-                     <JobDetail id={id} isCompany={true} isCompare={true} />
+               <Row gutter={[40, 40]}>
+                  <Col span={11}>
+                     <div className="container">
+                        <div className="general-information">
+                           <Avatar
+                              size="150"
+                              round={true}
+                              color={"rgb(66, 66, 66)"}
+                              src={user?.user?.avatarUrl}
+                              fgColor="white"
+                              maxInitials={2}
+                              name={`${user?.user?.firstName} ${user?.user?.lastName}`}
+                           />
+                           <div className="cv-item">
+                              <span className="title">Tiêu đề</span>
+                              <span>{user?.user?.cv?.title}</span>
+                           </div>
+
+                           <div
+                              className={`right ${user?.chargedToView ? "" : "hidden"}`}
+                              onClick={() => {
+                                 if (user?.chargedToView) return;
+
+                                 if (accountData?.company?.amountOfFreeCvViews > 0) {
+                                    handleOpenViewFree();
+                                 } else {
+                                    getBusiness();
+                                    handleOpenCharge();
+                                 }
+                              }}
+                           >
+                              <div className="item">
+                                 <BsFillPersonFill size={17} />
+                                 <span>{`${user?.user?.firstName.toUpperCase()} ${user?.user?.lastName.toUpperCase()}`}</span>
+                              </div>
+                              <div className="item">
+                                 <MdEmail size={17} />
+                                 <span>{user?.user?.email}</span>
+                              </div>
+                              <div className="item">
+                                 <AiFillPhone size={17} />
+                                 <span>{user?.user?.phone}</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div className="extraInformation">
+                           <div className="cv-item">
+                              <span className="title">Giới thiệu bản thân</span>
+                              {Parser(`${user?.user?.cv?.objective}`)}
+                           </div>
+                        </div>
+                     </div>
                   </Col>
-                  <Col span={16}>
-                     <Row gutter={[30, 30]}>
-                        <Col span={11}>
-                           <Title style={{ marginBottom: "30px", display: "block" }}>CV</Title>
-                           <div className="container">
-                              <div className="general-information">
-                                 <Avatar
-                                    size="150"
-                                    round={true}
-                                    color={"rgb(66, 66, 66)"}
-                                    src={user?.avatarUrl}
-                                    fgColor="white"
-                                    maxInitials={2}
-                                    name={`${user?.firstName} ${user?.lastName}`}
-                                 />
+                  <Col span={13}>
+                     <div className="container">
+                        <div className="listSkill">
+                           <Row gutter={[10, 10]}>
+                              <Col span={12}>
                                  <div className="cv-item">
-                                    <span className="title">Title</span>
-                                    <span>{user?.cv?.title}</span>
+                                    <span className="title">Chuyên ngành</span>
+                                    <span>{user?.user?.cv?.major?.name}</span>
                                  </div>
+                              </Col>
+                              <Col span={12}>
+                                 <div className="cv-item">
+                                    <span className="title">Chuyên ngành hẹp</span>
+                                    <span>{user?.user?.cv?.specialization?.name}</span>
+                                 </div>
+                              </Col>
+                           </Row>
 
-                                 <div className="right">
-                                    <div className="item">
-                                       <BsFillPersonFill size={17} />
-                                       <span>{`${user?.firstName.toUpperCase()} ${user?.lastName.toUpperCase()}`}</span>
-                                    </div>
-                                    <div className="item">
-                                       <MdEmail size={17} />
-                                       <span>{user?.email}</span>
-                                    </div>
-                                    <div className="item">
-                                       <AiFillPhone size={17} />
-                                       <span>{user?.phone}</span>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div className="extraInformation">
-                                 <div className="cv-item">
-                                    <span className="title">Objective</span>
-                                    {Parser(`${user?.cv?.objective}`)}
-                                 </div>
-                              </div>
+                           <div className="cv-item" style={{ marginTop: "20px" }}>
+                              <span className="title">Kỹ năng</span>
                            </div>
-                        </Col>
-                        <Col span={13}>
-                           <div className="container">
-                              <div className="listSkill">
-                                 <Row gutter={[10, 10]}>
-                                    <Col span={12}>
-                                       <div className="cv-item">
-                                          <span className="title">Major</span>
-                                          <span>{user?.cv?.major?.name}</span>
-                                       </div>
-                                    </Col>
-                                    <Col span={12}>
-                                       <div className="cv-item">
-                                          <span className="title">Specialization</span>
-                                          <span>{user?.cv?.specialization?.name}</span>
-                                       </div>
-                                    </Col>
-                                 </Row>
+                           <Col span={24}>
+                              <Table
+                                 dataSource={fields.map((item, index) => ({
+                                    key: index,
+                                    name: form.watch(`listSkill.[${index}].name`),
+                                    experience: form.watch(`listSkill.[${index}].experience`),
+                                    isVerified:
+                                       form.watch(`listSkill.[${index}].isVerified`) || false,
+                                 }))}
+                                 tableInstance={tableInstance}
+                                 columns={columns}
+                                 totalPages={0}
+                                 totalElements={0}
+                                 showPagination={false}
+                                 loading={false}
+                              />
+                           </Col>
+                        </div>
 
-                                 <div className="cv-item" style={{ marginTop: "20px" }}>
-                                    <span className="title">SKILLS</span>
-                                 </div>
-                                 <Col span={24}>
-                                    <Table
-                                       dataSource={fields.map((item, index) => ({
-                                          key: index,
-                                          name: form.watch(`listSkill.[${index}].name`),
-                                          experience: form.watch(`listSkill.[${index}].experience`),
-                                          isVerified:
-                                             form.watch(`listSkill.[${index}].isVerified`) || false,
-                                       }))}
-                                       tableInstance={tableInstance}
-                                       columns={columns}
-                                       totalPages={0}
-                                       totalElements={0}
-                                       showPagination={false}
-                                       loading={false}
-                                    />
-                                 </Col>
-                              </div>
-
-                              <div className="objective">
-                                 <div className="cv-item">
-                                    <span className="title">Experience</span>
-                                    {Parser(`${user?.cv?.experience}`)}
-                                 </div>
-                              </div>
-                              <div className="objective">
-                                 <div className="cv-item">
-                                    <span className="title">Certificate</span>
-                                    {Parser(`${user?.cv?.certificate}`)}
-                                 </div>
-                              </div>
+                        <div className="objective">
+                           <div className="cv-item">
+                              <span className="title">Kinh nghiệm</span>
+                              {Parser(`${user?.user?.cv?.experience}`)}
                            </div>
-                        </Col>
-                     </Row>
+                        </div>
+                        <div className="objective">
+                           <div className="cv-item">
+                              <span className="title">Chứng chỉ</span>
+                              {Parser(`${user?.user?.cv?.certificate}`)}
+                           </div>
+                        </div>
+                     </div>
                   </Col>
                </Row>
             </FormProvider>
 
-            <GroupButton>
-               {searchParams.get("status") !== "REJECTED" && (
+            {searchParams.get("status") === EJobStatus.NEW && (
+               <GroupButton>
                   <Button
                      height={50}
                      key="back"
@@ -270,9 +349,6 @@ const CVDetail = () => {
                   >
                      {t("Reject")}
                   </Button>
-               )}
-
-               {searchParams.get("status") !== "ACCEPTED" && (
                   <Button
                      height={50}
                      loading={loadingAccept}
@@ -284,8 +360,106 @@ const CVDetail = () => {
                   >
                      Accept
                   </Button>
-               )}
-            </GroupButton>
+               </GroupButton>
+            )}
+
+            <Modal
+               visible={openModalViewFree}
+               type="confirm"
+               confirmIcon="?"
+               title={
+                  <span>
+                     Bạn còn{" "}
+                     <span
+                        style={{ color: "#074ABD" }}
+                     >{` ${accountData?.company?.amountOfFreeCvViews} lượt`}</span>{" "}
+                     xem hồ sơ miễn phí ở tháng này. Bạn có muốn sủ dụng không ?
+                  </span>
+               }
+               onCancel={handleCloseViewFree}
+               destroyOnClose
+            >
+               <GroupButton>
+                  <Button height={50} onClick={handleCharge}>
+                     Đồng ý
+                  </Button>
+                  <Button border="outline" height={50} onClick={handleCloseViewFree}>
+                     Hủy
+                  </Button>
+               </GroupButton>
+            </Modal>
+
+            <Modal
+               visible={openModalCharge}
+               type="confirm"
+               confirmIcon="?"
+               title={
+                  fetchingBusiness ? (
+                     <Skeleton active />
+                  ) : (
+                     <span>
+                        Bạn có muốn sủ dụng{" "}
+                        <span
+                           style={{ color: "#074ABD" }}
+                        >{` ${dataBusiness?.baseCvViewPrice} coins `}</span>{" "}
+                        để xem thông tin hồ sơ này không ?
+                     </span>
+                  )
+               }
+               onCancel={handleCloseCharge}
+               destroyOnClose
+            >
+               <GroupButton>
+                  <Button height={50} onClick={handleCharge}>
+                     Đồng ý
+                  </Button>
+                  <Button border="outline" height={50} onClick={handleCloseCharge}>
+                     Hủy
+                  </Button>
+               </GroupButton>
+            </Modal>
+
+            <Modal
+               visible={openModalPayConfirm}
+               type="confirm"
+               confirmIcon="!"
+               title={
+                  "Số dư tài khoản không đủ để thực hiện giao dịch! Bạn có muốn nạp tiền không?"
+               }
+               onCancel={() => {
+                  handleCloseCharge();
+                  handleClosePayConfirm();
+               }}
+               destroyOnClose
+            >
+               <GroupButton>
+                  <Button height={50} onClick={handleOpenPay}>
+                     Nạp tiền ngay
+                  </Button>
+                  <Button
+                     border="outline"
+                     height={50}
+                     onClick={() => {
+                        handleCloseCharge();
+                        handleClosePayConfirm();
+                     }}
+                  >
+                     Hủy bỏ
+                  </Button>
+               </GroupButton>
+            </Modal>
+
+            <Modal
+               visible={openModalPay}
+               onCancel={() => {
+                  handleCloseCharge();
+                  handleClosePayConfirm();
+                  handleClosePay();
+               }}
+               width="1200px"
+            >
+               <Payment />
+            </Modal>
          </Container>
       </Spin>
    );

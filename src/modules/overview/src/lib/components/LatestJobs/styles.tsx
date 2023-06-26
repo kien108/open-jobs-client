@@ -4,7 +4,6 @@ export const Container = styled.div`
    padding: 25px 0;
    max-width: 1250px;
    margin: 0 auto;
-   margin-top: 30px;
 
    .title {
       color: #222;

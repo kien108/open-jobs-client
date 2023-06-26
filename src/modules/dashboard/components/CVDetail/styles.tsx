@@ -37,6 +37,7 @@ export const Container = styled.div`
          margin-bottom: 4px;
          color: #1b1f3b;
          text-align: left;
+         color: ${(props) => props.theme.strongBlue};
       }
    }
 
@@ -59,6 +60,28 @@ export const Container = styled.div`
          border-radius: 8px;
          padding: 10px;
          width: 100%;
+         position: relative;
+
+         &::before {
+            font-size: 15px;
+            color: ${(props) => props.theme.strongBlue};
+            content: "Trả phí để xem thông tin liên lạc";
+            position: absolute;
+            inset: 0;
+            background-color: #ccc;
+            border: 1px solid #d4d2d0;
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+         }
+
+         &.hidden {
+            &::before {
+               display: flex;
+            }
+         }
 
          .item {
             display: flex;

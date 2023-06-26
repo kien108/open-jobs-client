@@ -28,11 +28,11 @@ const Jobs = () => {
 
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
-   // useEffect(() => {
-   //    searchParams.get("job-id")
-   //       ? setSelectedId(searchParams.get("job-id")!)
-   //       : setSelectedId(jobs?.listJob?.[0]?.id);
-   // }, [jobs]);
+   useEffect(() => {
+      searchParams.get("job-id")
+         ? setSelectedId(searchParams.get("job-id")!)
+         : setSelectedId(jobs?.listJob?.[0]?.id);
+   }, [jobs]);
 
    // const handleSearchJobs = (params: any) => {
    //    searchJobs({ ...tableInstance.params, ...params });
@@ -83,8 +83,8 @@ const Jobs = () => {
                <Content>
                   <Row gutter={[24, 24]}>
                      <Col span={10}>
-                        <Row gutter={[15, 15]}>
-                           {jobs?.listJob?.map((item: any) => (
+                        <Row gutter={[15, 15]} className="jobs">
+                           {(jobs?.listJob ?? [])?.map((item) => (
                               <Col span={24} key={item?.id}>
                                  <Job
                                     item={item}

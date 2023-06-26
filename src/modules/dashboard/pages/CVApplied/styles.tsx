@@ -12,6 +12,7 @@ export const Container = styled.div`
    .btn-export {
       width: fit-content;
       margin-left: auto;
+      margin-top: 20px;
    }
 
    .items {
@@ -60,6 +61,29 @@ export const Container = styled.div`
          }
       }
    }
+
+   .badge-status {
+      border-radius: 8px;
+      text-align: center;
+      padding: 2px 4px;
+      font-size: 13px;
+
+      &.NEW {
+         background-color: yellow;
+      }
+
+      &.APPROVED {
+         background: ${(props) => props.theme.strongBlue};
+      }
+
+      &.REJECTED {
+         background: red;
+      }
+
+      &.HIDDEN {
+         background: #ccc;
+      }
+   }
 `;
 export const ContainerTable = styled.div`
    display: flex;
@@ -89,6 +113,11 @@ export const ContainerTable = styled.div`
       &.REJECTED {
          background-color: red;
       }
+   }
+
+   .title {
+      color: ${(props) => props.theme.strongBlue};
+      font-weight: 500;
    }
 
    /* .col,

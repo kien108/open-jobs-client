@@ -32,7 +32,7 @@ export const Container: StyledComponent<any, any> = styled.div`
       color: #2d2d2d;
       font-size: 0.875rem;
       letter-spacing: 0;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.125rem;
    }
 
@@ -42,7 +42,7 @@ export const Container: StyledComponent<any, any> = styled.div`
       height: 46px;
 
       & + label {
-         font-weight: 600;
+         font-weight: 500;
          color: black;
       }
    }
@@ -65,7 +65,7 @@ export const Container: StyledComponent<any, any> = styled.div`
       color: #2d2d2d;
       font-size: 0.875rem;
       letter-spacing: 0;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.125rem;
    }
 
@@ -75,7 +75,7 @@ export const Container: StyledComponent<any, any> = styled.div`
       font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
       font-size: 0.875rem;
       letter-spacing: 0;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.43;
       line-height: 1.125rem;
       padding: 0.75rem 1rem;
@@ -106,5 +106,61 @@ export const Container: StyledComponent<any, any> = styled.div`
 
       cursor: pointer;
       gap: 2px;
+   }
+`;
+
+export const ContainerFilterJob = styled.div`
+   margin-bottom: 20px;
+   border-radius: 8px;
+   padding: 12px;
+
+   label {
+      font-weight: 500 !important;
+      font-size: 14px;
+      color: #2d2d2d;
+   }
+
+   label.sub-label {
+      color: #2d2d2d;
+      font-size: 0.875rem;
+      letter-spacing: 0;
+      font-weight: 500;
+      line-height: 1.125rem;
+   }
+
+   .search {
+      border: 1px solid #a3a3a3;
+      border-radius: 0.5rem;
+      height: 46px;
+
+      & + label {
+         font-weight: 500;
+         color: black;
+      }
+   }
+
+   .ant-select-selector {
+      height: 48px !important;
+      min-height: unset !important;
+      border: 1px solid #a3a3a3 !important;
+
+      .ant-select-selection-item {
+         margin-top: 8px !important;
+      }
+
+      .ant-select-selection-search-input {
+         height: 100% !important;
+      }
+   }
+
+   .ant-picker.ant-picker-range {
+      height: 48px;
+   }
+   article {
+      color: #2d2d2d;
+      font-size: 0.875rem;
+      letter-spacing: 0;
+      font-weight: 500;
+      line-height: 1.125rem;
    }
 `;

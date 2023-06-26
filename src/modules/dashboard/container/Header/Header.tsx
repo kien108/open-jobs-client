@@ -19,12 +19,17 @@ const languages: LanguageType[] = [
 const accounts: AccountType[] = [
    {
       id: 1,
-      title: "Profile",
+      title: "Hồ sơ",
       path: "/dashboard/profile",
    },
    {
+      id: 1,
+      title: "Gói hội viên",
+      path: "/dashboard/premium",
+   },
+   {
       id: 2,
-      title: "Sign out",
+      title: "Đăng xuất",
       path: "/auth",
    },
 ];

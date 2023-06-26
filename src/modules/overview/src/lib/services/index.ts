@@ -12,6 +12,7 @@ export {
    useGetListDistrictsQuery,
    useGetSuggestionJobsQuery,
    useGetJobsQuery,
+   useGetAllSkillsQuery,
 } from "./JobAPI";
 
 export {

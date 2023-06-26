@@ -147,7 +147,7 @@ const useFilterSearchJob = () => {
       searchParams.get("jobStatus")
          ? setParams((prev) => ({
               ...prev,
-              jobStatus: revertPrice(searchParams.get("jobStatus")!.trim()) ?? "",
+              jobStatus: searchParams.get("jobStatus") ?? "",
            }))
          : setParams((prev) => {
               delete prev.jobStatus;

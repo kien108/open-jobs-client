@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import useModal from "./../../../../../../libs/common/hooks/useModal";
 import { JobDetail } from "../../components/JobDetail";
 import { GroupButton } from "../../components/CV/styles";
+import { FilterAppliedJob } from "../../components";
+import { useFilterAppliedJob } from "../../hooks";
 
 const JobsApplied = () => {
    const { t } = useTranslation();
@@ -40,7 +42,7 @@ const JobsApplied = () => {
       isLoading: loadingJobs,
       isFetching: fetchingJobs,
    } = useGetCVAppliedByUserIdQuery(
-      { id: user?.id, ...tableInstances.params },
+      { id: user?.id, ...tableInstances.params, ...useFilterAppliedJob() },
       { skip: !user?.id, refetchOnMountOrArgChange: true }
    );
 
@@ -51,14 +53,20 @@ const JobsApplied = () => {
          title: t("Title"),
          dataIndex: "title",
          key: "title",
-         width: "30%",
-         render: (value, record) => <span className="title">{value}</span>,
+         render: (value, record) => (
+            <span
+               className="title"
+               style={{ cursor: "pointer" }}
+               onClick={() => navigate(`/overview/job-detail/${record?.job?.id}`)}
+            >
+               {value}
+            </span>
+         ),
       },
       {
          title: t("jobPosition"),
          dataIndex: "jobPosition",
          key: "title",
-         width: "30%",
 
          render: (value) => <span className="position">{value}</span>,
       },
@@ -66,15 +74,28 @@ const JobsApplied = () => {
          title: t("companyName"),
          dataIndex: "companyName",
          key: "workPlace",
-         width: "20%",
+         render: (value, record) => (
+            <span
+               className="title"
+               style={{ cursor: "pointer" }}
+               onClick={() => navigate(`/overview/companies/${record?.job?.company?.id}`)}
+            >
+               {value}
+            </span>
+         ),
       },
 
       {
          title: t("appliedAt"),
          dataIndex: "applyDate",
          key: "applyDate",
-         width: "20%",
          render: (item) => <span>{moment(item).format("DD/MM/YYYY")}</span>,
+      },
+      {
+         title: "Trạng thái",
+         dataIndex: "status",
+         key: "status",
+         render: (value) => <div className={`badge-status ${value ? value : ""}`}>{value}</div>,
       },
       {
          title: t("Action"),
@@ -110,7 +131,7 @@ const JobsApplied = () => {
             .then(() => {
                openNotification({
                   type: "success",
-                  message: t("Remove application successfully!!!"),
+                  message: t("Hủy đơn ứng tuyển thành công!!!"),
                });
                setSelectedId(undefined);
                handleCloseDelete();
@@ -135,10 +156,13 @@ const JobsApplied = () => {
 
       setDataSources(dataSource);
    }, [dataJobs]);
+
+   console.log({ dataJobs });
    return (
       <Container>
          <Title>{t(`jobsApplied`)}</Title>
          <ContainerTable>
+            <FilterAppliedJob />
             <Table
                columns={columns}
                dataSource={dataSources}
@@ -155,6 +179,10 @@ const JobsApplied = () => {
                handleClose();
                setSelectedId(undefined);
             }}
+            destroyOnClose
+            title={
+               <span style={{ marginBottom: "20px", display: "block" }}>Chi tiết công việc</span>
+            }
          >
             <JobDetail
                isCompany={false}

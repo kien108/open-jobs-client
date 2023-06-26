@@ -96,6 +96,32 @@ export const ContainerTable = styled.div`
       color: ${(props) => props.theme.strongBlue};
       font-weight: 700;
    }
+
+   .badge-status {
+      border-radius: 8px;
+      text-align: center;
+      padding: 4px 4px;
+      font-size: 13px;
+      color: white;
+
+      &.NEW {
+         background-color: yellow;
+         color: black;
+      }
+
+      &.APPROVED {
+         background: ${(props) => props.theme.strongBlue};
+      }
+
+      &.REJECTED {
+         background: red;
+      }
+
+      &.HIDDEN {
+         background: #ccc;
+         color: black;
+      }
+   }
 `;
 
 export const StyledDetail = styled(Modal)`

@@ -8,7 +8,7 @@ import { MdOutlineWorkOutline } from "react-icons/md";
 import { BiTimeFive } from "react-icons/bi";
 
 import Parser from "html-react-parser";
-import { AiOutlineClockCircle, AiOutlineSetting } from "react-icons/ai";
+import { AiOutlinePhone, AiOutlineSetting } from "react-icons/ai";
 import { BsCalendarDay, BsPeople } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetJobByIdQuery } from "../../services";
@@ -51,7 +51,7 @@ const ViewJobDetail = () => {
                            // onClick={handelApplyJob}
                            // loading={loadingApplyJob}
                         >
-                           Apply
+                           {!jobDetail?.isApplied ? "Ứng tuyển" : "Đã ứng tuyển"}
                         </Button>
                      </div>
 
@@ -121,7 +121,7 @@ const ViewJobDetail = () => {
                         <div className="logo">
                            <img src={jobDetail?.company?.logoUrl} alt="" />
                         </div>
-                        <span className="name">{"12312"}</span>
+                        <span className="name">{jobDetail?.company?.name}</span>
                      </div>
                      <div className="content">
                         <Row gutter={[10, 10]}>
@@ -131,12 +131,8 @@ const ViewJobDetail = () => {
                                  <span>{jobDetail?.company?.companyType}</span>
                               </div>
                               <div className="item">
-                                 <BsCalendarDay size={17} />
-                                 <span>Thứ 2 - Thứ 6</span>
-                              </div>
-                              <div className="item">
-                                 <AiOutlineClockCircle size={17} />
-                                 <span>Không OT</span>
+                                 <AiOutlinePhone size={17} />
+                                 <span>{jobDetail?.company?.phone}</span>
                               </div>
                            </Col>
                            <Col span={12}>

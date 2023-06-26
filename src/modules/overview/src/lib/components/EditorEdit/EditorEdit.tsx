@@ -35,7 +35,7 @@ const EditorEdit: FC<IProps> = ({ name, label, data, editorRef }) => {
          ) : (
             <div className="render-content">
                <div className="header">
-                  <span className="label"> {name.toUpperCase()}</span>
+                  <span className="label"> {label?.toUpperCase()}</span>
                   <BtnFunction className="btn-back" onClick={() => setToggleEdit(true)}>
                      <EditIcon width={20} />
                   </BtnFunction>

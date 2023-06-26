@@ -13,6 +13,7 @@ export const Container = styled.div`
             color: #1b1f3b;
             font-size: 16px;
             text-transform: uppercase;
+            color: ${(props) => props.theme.strongBlue};
          }
       }
    }

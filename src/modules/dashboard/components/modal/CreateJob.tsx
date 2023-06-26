@@ -126,13 +126,13 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             jobType: yup.string().required(t("common:form.required")).nullable(),
             jobLevel: yup.string().required(t("common:form.required")).nullable(),
             salaryType: isNego
-               ? yup.string()
+               ? yup.string().nullable()
                : yup.string().required(t("common:form.required")).nullable(),
             minSalary: isNego
-               ? yup.string()
+               ? yup.string().nullable()
                : yup.string().required(t("common:form.required")).nullable(),
             maxSalary: isNego
-               ? yup.string()
+               ? yup.string().nullable()
                : yup.string().required(t("common:form.required")).nullable(),
             skills: yup.array().of(
                yup
@@ -259,7 +259,8 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             <Input
                parentName="skills"
                isFieldArray={true}
-               type="number"
+               type="numberFloat"
+               decimal={1}
                name={`skills.[${record.key}].yoe`}
                disabled={!Boolean(form.watch(`skills.[${record.key}].required`))}
                allowClear
@@ -519,7 +520,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       });
    }, [form.watch("renewJobId")]);
 
-   console.log(form.watch("skills"));
    return (
       <Spin spinning={false}>
          <StyledCreateAndEditHr>

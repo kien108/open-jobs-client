@@ -108,48 +108,41 @@ const CVApply = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("First Name"),
-         dataIndex: "firstName",
-         key: "firstName",
+         title: t("Tiêu đề"),
+         dataIndex: "title",
+         key: "title",
          sorter: true,
-         render: (item) => <span className="col">{item || "-"}</span>,
+         render: (item) => <span className="col title">{item || "-"}</span>,
       },
       {
-         title: t("Last Name"),
-         dataIndex: "lastName",
-         key: "lastName",
-         sorter: true,
-         render: (item) => <span className="col">{item}</span>,
-      },
-      {
-         title: t("Email"),
-         dataIndex: "email",
-         key: "email",
+         title: t("Chuyên ngành"),
+         dataIndex: "major",
+         key: "major",
          sorter: true,
          render: (item) => <span className="col">{item}</span>,
       },
       {
-         title: t("Phone"),
-         dataIndex: "phone",
-         key: "phone",
+         title: "Chuyên ngành hẹp",
+         dataIndex: "specialization",
+         key: "specialization",
          sorter: true,
-         render: (item) => <span className="col">{item || "-"}</span>,
+         render: (item) => <span className="col">{item}</span>,
       },
       {
-         title: t("Gender"),
-         dataIndex: "gender",
-         key: "gender",
+         title: "Kỹ năng",
+         dataIndex: "skill",
+         key: "skill",
          sorter: true,
          render: (item) => <span className="col">{item || "-"}</span>,
       },
 
       {
          title: t("Status"),
-         dataIndex: "cvStatus",
-         key: "cvStatus",
+         dataIndex: "status",
+         key: "status",
          sorter: true,
          render: (value: string) => (
-            <span className={`status ${value ?? "NEW"}`}>{value ?? "NEW"}</span>
+            <div className={`badge-status ${value ? value : ""}`}>{value}</div>
          ),
       },
       {
@@ -162,7 +155,7 @@ const CVApply = () => {
                      navigate({
                         pathname: `${record?.userId}`,
                         search: createSearchParams({
-                           status: record?.cvStatus,
+                           status: record?.status,
                         }).toString(),
                      });
                   }}
@@ -227,7 +220,7 @@ const CVApply = () => {
       if (appliedCVs.length === 0) {
          openNotification({
             type: "error",
-            message: "Don't have any accepted cvs to export!",
+            message: "Không có bất kỳ hồ sơ được chấp thuận nào!",
          });
          return;
       }
@@ -254,11 +247,12 @@ const CVApply = () => {
    };
 
    useEffect(() => {
-      const dataSource = dataCVs?.map((item: any) => ({
+      const dataSource = (dataCVs?.listCv ?? [])?.map((item: any) => ({
          ...item,
          key: item?.id,
          major: item?.major?.name,
          specialization: item?.specialization?.name,
+         skill: item?.skills?.map((item) => item?.skill?.name)?.join(" - "),
       }));
 
       setDataSource(dataSource || []);
@@ -267,7 +261,7 @@ const CVApply = () => {
    return (
       <Container>
          <StyledHeader>
-            <Title>Applied CV Management</Title>
+            <Title>Quản lý hồ sơ</Title>
             <Button
                className="btn-close"
                onClick={() => {
@@ -278,21 +272,6 @@ const CVApply = () => {
             </Button>
          </StyledHeader>
 
-         {/* <div className="items">
-            <div className="item total">
-               <span>Applied CV</span>
-               <span className="value">{dataSource.length}</span>
-               <span className="value">
-                  {dataSource?.filter((item: any) => item?.status === "NEW").length}
-               </span>
-               <span className="value">
-                  {dataSource?.filter((item: any) => item?.status === "ACCEPTED").length}
-               </span>
-               <span className="value">
-                  {dataSource?.filter((item: any) => item?.status === "REJECTED").length}
-               </span>
-            </div>
-         </div> */}
          <Button
             className="btn-export"
             disabled={dataSource.length === 0}
@@ -301,7 +280,7 @@ const CVApply = () => {
             icon={<DownloadIcon />}
             onClick={handleExport}
          >
-            {t("Export Accepted CVs")}
+            {t("Xuất danh sách hồ sơ")}
          </Button>
          <ContainerTable>
             <FilterCV />
@@ -313,7 +292,7 @@ const CVApply = () => {
                loading={loadingCVs || fetchingCVs}
                totalElements={dataCVs?.totalElements || 0}
                totalPages={dataCVs?.totalPages || 0}
-               locale={{ emptyText: "No CV Applied" }}
+               locale={{ emptyText: "Không có hồ sơ" }}
             />
          </ContainerTable>
 

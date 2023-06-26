@@ -16,6 +16,23 @@ export const StyledRightHeader = styled.div`
    border-color: #e5e7eb;
    background-color: #fff;
 
+   .dropdown {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+   }
+
+   .point {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      img {
+         width: 25px;
+         height: 25px;
+      }
+   }
+
    .notification {
       position: relative;
 

@@ -47,6 +47,8 @@ const UploadMultiple = ({
       setFileList(defaultFileList);
    }, [watch(name)]);
 
+   console.log({ data: watch(name) });
+
    return (
       <Container typeUpload="multiple" count={count}>
          {label && (

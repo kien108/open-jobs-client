@@ -7,6 +7,51 @@ export const Container = styled.div`
    border: 1px solid #ccc;
    background-color: #fff;
 
+   .badge {
+      position: relative;
+      top: -16px;
+      right: -20px;
+      margin-left: auto;
+
+      display: flex;
+      align-items: flex-end;
+      text-align: center;
+      width: fit-content;
+      padding: 4px 12px;
+      border-radius: 4px 4px 0 4px;
+      font-size: 14px;
+      color: #fff;
+      font-weight: 600;
+      background-color: green;
+
+      &.applied {
+         background-color: green;
+      }
+
+      &.hidden {
+         display: none;
+      }
+
+      &.new {
+         background-color: #ff9119;
+
+         &::after {
+            border-top: 8px solid #ff9119;
+         }
+      }
+
+      &::after {
+         border-top: 8px solid green;
+         content: "";
+         position: absolute;
+         top: 100%;
+         right: 0%;
+         width: 0;
+         height: 0;
+         border-left: 8px solid transparent;
+      }
+   }
+
    cursor: pointer;
 
    &.active {
@@ -36,6 +81,28 @@ export const Container = styled.div`
          .location {
             font-size: 17px;
          }
+
+         .salary {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            font-size: 15px;
+            color: #414042 !important;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #dedede;
+
+            svg {
+               path {
+                  color: ${(props) => props.theme.strongBlue};
+               }
+            }
+
+            .value {
+               color: ${(props) => props.theme.strongBlue};
+               display: inline-block;
+            }
+         }
       }
    }
 
@@ -64,6 +131,7 @@ export const Container = styled.div`
    .footer {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 4px;
       color: rgb(111, 111, 111);
       font-size: 13px;

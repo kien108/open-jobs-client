@@ -53,28 +53,18 @@ const CompanyDetail = () => {
                            <Col span={6}>
                               <div className="item">
                                  <AiOutlineSetting size={17} />
-                                 <span>Product</span>
+                                 <span>{dataCompany?.companyType}</span>
                               </div>
-                              <div className="item">
-                                 <BsCalendarDay size={17} />
-                                 <span>Thứ 2 - Thứ 6</span>
-                              </div>
-                              <div className="item">
-                                 <AiOutlineClockCircle size={17} />
-                                 <span>Không OT</span>
-                              </div>
-                           </Col>
-                           <Col span={6}>
                               <div className="item">
                                  <AiOutlinePhone size={17} />
                                  <span>{dataCompany?.phone}</span>
                               </div>
+                           </Col>
+                           <Col span={12}>
                               <div className="item">
                                  <BsPeople size={17} />
-                                 <span>{dataCompany?.totalEmployee}</span>
+                                 <span>{dataCompany?.scope}</span>
                               </div>
-                           </Col>
-                           <Col span={8}>
                               <div className="item">
                                  <GrLocation size={17} />
                                  <span>{dataCompany?.address}</span>

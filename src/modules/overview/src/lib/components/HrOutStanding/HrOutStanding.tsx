@@ -2,6 +2,7 @@ import React from "react";
 import { Container } from "./styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper";
+import { v4 as uuidv4 } from "uuid";
 
 // Import Swiper styles
 import "swiper/css";
@@ -38,7 +39,7 @@ const HrOutStanding = () => {
                   <Skeleton active />
                ) : (
                   (dataCompanies?.companies ?? [])?.map((item) => (
-                     <SwiperSlide key={item?.id} onClick={() => console.log({ item })}>
+                     <SwiperSlide key={uuidv4()} onClick={() => console.log({ item })}>
                         <div className="container">
                            <div className="img">
                               <img src={item?.logoUrl} alt="logo" />

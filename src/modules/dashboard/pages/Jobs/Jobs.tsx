@@ -167,6 +167,7 @@ const Jobs = () => {
          title: t("Trạng thái"),
          dataIndex: "jobStatus",
          key: "jobStatus",
+         render: (value) => <div className={`badge-status ${value ? value : ""}`}>{value}</div>,
       },
 
       {
@@ -198,11 +199,11 @@ const Jobs = () => {
                <BtnFunction onClick={() => handleOpenDelete(record.id)}>
                   <DeleteIcon />
                </BtnFunction>
-               {moment(record?.expiredAt).isBefore(moment()) && (
+               {/* {moment(record?.expiredAt).isBefore(moment()) && (
                   <BtnFunction onClick={() => handleOpenRenewal(record)}>
                      <MdOutlineUpdate size={24} className="icon-renewal" />
                   </BtnFunction>
-               )}
+               )} */}
             </StyledFunctions>
          ),
       },
@@ -258,17 +259,15 @@ const Jobs = () => {
    };
 
    useEffect(() => {
-      const dataSource = (dataCompany?.listJob ?? [])
-         .filter((item: any) => !item?.expiredAt || moment(item?.expiredAt).isAfter(moment()))
-         ?.map((item: IJob) => ({
-            key: item.id,
-            ...item,
-            salary: item?.salaryInfo?.isSalaryNegotiable
-               ? "Thỏa thuận"
-               : `${convertPrice(item?.salaryInfo?.minSalary)} - ${convertPrice(
-                    item?.salaryInfo?.maxSalary
-                 )} (${item?.salaryInfo?.salaryType})`,
-         }));
+      const dataSource = (dataCompany?.listJob ?? [])?.map((item: IJob) => ({
+         key: item.id,
+         ...item,
+         salary: item?.salaryInfo?.isSalaryNegotiable
+            ? "Thỏa thuận"
+            : `${convertPrice(item?.salaryInfo?.minSalary)} - ${convertPrice(
+                 item?.salaryInfo?.maxSalary
+              )} (${item?.salaryInfo?.salaryType})`,
+      }));
 
       setDataSource(dataSource);
    }, [dataCompany]);

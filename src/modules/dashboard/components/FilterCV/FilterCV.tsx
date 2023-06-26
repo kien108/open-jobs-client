@@ -33,15 +33,10 @@ const FilterCompany = () => {
    const { t } = useTranslation();
 
    const [searchParams, setSearchParams] = useSearchParams();
-   const [options, setOptions] = useState<any>([]);
-   const [provinces, setProvinces] = useState<any>([]);
-   const [majors, setMajors] = useState<any>([]);
-   const [specializations, setSpecializations] = useState<any>([]);
+
    const [searchLocation, setSearchLocation] = useState<any>("");
 
    const [checked, setChecked] = useState<boolean>(false);
-
-   const searchProvinceDebounce = useDebounce(searchLocation, 300);
 
    const defaultValues = {
       keyword: searchParams.get("keyword"),
@@ -51,23 +46,6 @@ const FilterCompany = () => {
    };
 
    const form = useForm({ defaultValues });
-
-   const {
-      data: dataMajors,
-      isLoading: loadingMajors,
-      isFetching: fetchingMajors,
-   } = useGetMajorsQuery({});
-
-   const {
-      data: dataSpecializations,
-      isLoading: loadingSpecializations,
-      isFetching: fetchingSpecializations,
-   } = useGetSpecializationsQuery(
-      {},
-      {
-         refetchOnMountOrArgChange: true,
-      }
-   );
 
    const {
       data: dataSkills,
@@ -91,28 +69,6 @@ const FilterCompany = () => {
    };
 
    const handleOnChange = debounce(setValueToSearchParams, 500);
-
-   useEffect(() => {
-      const options = dataMajors?.map((item: any) => ({
-         key: +item.id,
-         label: item.name,
-         value: item.id,
-         render: () => <span>{item?.name}</span>,
-      }));
-
-      setMajors(options || []);
-   }, [dataMajors]);
-
-   useEffect(() => {
-      const options = dataSpecializations?.map((item: any) => ({
-         key: +item.id,
-         label: item.id,
-         value: item.id,
-         render: () => <span>{item?.name}</span>,
-      }));
-
-      setSpecializations(options || []);
-   }, [dataSpecializations]);
 
    useEffect(() => {
       form.reset({
@@ -142,34 +98,6 @@ const FilterCompany = () => {
                      }}
                   />
                </Col>
-               {/* <Col span={12}>
-                  <Spin spinning={loadingMajors || fetchingMajors}>
-                     <Select
-                        name="majorId"
-                        label="Major"
-                        required
-                        options={majors || []}
-                        loading={loadingMajors || fetchingMajors}
-                        onChange={(value) => {
-                           setValueToSearchParams("majorId", value);
-                           form.setValue("majorId", value);
-                        }}
-                     />
-                  </Spin>
-               </Col>
-               <Col span={12}>
-                  <Select
-                     required
-                     name="specializationId"
-                     label="Chuyên ngành hẹp"
-                     options={specializations || []}
-                     loading={loadingSpecializations || fetchingSpecializations}
-                     onChange={(value) => {
-                        form.setValue("specializationId", value);
-                        setValueToSearchParams("specializationId", value);
-                     }}
-                  />
-               </Col> */}
 
                <Col span={10}>
                   <Select

@@ -97,7 +97,6 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const contentRef = useRef<any>(null);
    const [searchSkill, setSearchSkill] = useState<string>("");
    const [isNego, setIsNego] = useState<boolean>(false);
-   const [isRenew, setIsRenew] = useState<boolean>(true);
 
    const [checkedStatus, setCheckedStatus] = useState<boolean>(true);
 
@@ -125,12 +124,14 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             expiredAt: yup.string().required(t("common:form.required")).nullable(),
             jobType: yup.string().required(t("common:form.required")).nullable(),
             jobLevel: yup.string().required(t("common:form.required")).nullable(),
-            salaryType: yup.string().required(t("common:form.required")).nullable(),
+            salaryType: isNego
+               ? yup.string().nullable()
+               : yup.string().required(t("common:form.required")).nullable(),
             minSalary: isNego
-               ? yup.string()
+               ? yup.string().nullable()
                : yup.string().required(t("common:form.required")).nullable(),
             maxSalary: isNego
-               ? yup.string()
+               ? yup.string().nullable()
                : yup.string().required(t("common:form.required")).nullable(),
             skills: yup.array().of(
                yup
@@ -386,7 +387,6 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    }, []);
 
    const onSubmit = (data: FormType) => {
-      // createJob
       const payload = {
          id: searchParams.get("id"),
          companyId: user?.companyId,
@@ -513,8 +513,6 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
 
       reset(dataReset);
    }, [dataJob]);
-
-   console.log(form.watch("jobLevel"));
 
    return (
       <Spin spinning={fetchingJob}>

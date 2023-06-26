@@ -6,6 +6,12 @@ export {
    useUpdateProfileMutation,
    useUpdateCVMutation,
    useGetCVQuery,
+   useExecutePayMutation,
+   useGetBusinessQuery,
+   useLazyGetBusinessQuery,
+   useViewCVByCompanyQuery,
+   useChargeCVMutation,
+   useUpdatePremiumMutation,
 } from "./UserAPI";
 
 export {
@@ -30,3 +36,7 @@ export {
    useGetAllSkillsQuery,
    useUpdateJobMutation,
 } from "./JobAPIDashBoard";
+
+export { PayAPI, useLazyGetPayQuery } from "./PayAPI";
+
+export { CVAPI, useSearchCVQuery } from "./CVAPI";

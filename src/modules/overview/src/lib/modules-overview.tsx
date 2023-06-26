@@ -6,7 +6,7 @@ import { store } from "./redux/store";
 
 import i18n from "./i18n/config";
 import { RootState, useCommonSelector } from "../../../../libs/common";
-import { Filter } from "./components";
+import { CVTemplate1, Filter } from "./components";
 import Jobs from "./pages/Jobs/Jobs";
 // import FillCompany from "./pages/FillCompany/FillCompany";
 import { Profile } from "./pages/Profile";
@@ -41,7 +41,8 @@ export function ModuleOverview() {
                   {/* <Route path="validate" element={<FillCompany />} /> */}
                   <Route path="profile" element={<Profile />}></Route>
                   <Route path="profile/contact" element={<ContactInformation />} />
-                  <Route path="profile/cv" element={<CVDetail />} />
+                  {/* <Route path="profile/cv" element={<CVDetail />} /> */}
+                  <Route path="profile/cv" element={<CVTemplate1 />} />
                   <Route path="profile/cv/edit" element={<CV />} />
                   <Route path="jobs-applied" element={<JobsApplied />} />
                </Route>

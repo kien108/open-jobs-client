@@ -2,6 +2,7 @@ import React from "react";
 import { Container } from "./styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { v4 as uuidv4 } from "uuid";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -12,8 +13,13 @@ import { Navigation, Pagination, Autoplay } from "swiper";
 import { useGetCompaniesQuery, useGetSuggestionJobsQuery } from "../../services";
 import { Col, Row, Skeleton, Spin } from "antd";
 import { CompanySlide, JobSlide } from "../../components";
+import { getToken } from "../../../../../../libs/common";
+import { useNavigate } from "react-router-dom";
 
 const Slider = () => {
+   const isLogin = getToken();
+   const navigate = useNavigate();
+
    const { data: dataCompanies, isFetching: fetchingCompanies } = useGetCompaniesQuery(
       {
          page: 0,
@@ -60,7 +66,7 @@ const Slider = () => {
                      <Skeleton active />
                   ) : (
                      (dataCompanies?.companies ?? [])?.map((item) => (
-                        <SwiperSlide key={item?.id} onClick={() => console.log({ item })}>
+                        <SwiperSlide key={uuidv4()} onClick={() => console.log({ item })}>
                            <CompanySlide data={item} />
                         </SwiperSlide>
                      ))
@@ -73,23 +79,32 @@ const Slider = () => {
                   <span className="main">Công việc</span>
                   <span className="sub">Phù hợp</span>
                </span>
-               <Swiper
-                  modules={[Navigation, Pagination, Autoplay]}
-                  spaceBetween={50}
-                  slidesPerView={1}
-                  pagination={{ clickable: true }}
-                  loop
-               >
-                  {fetchingJobs ? (
+
+               {!isLogin ? (
+                  <div className="login-to-see">
                      <Skeleton active />
-                  ) : (
-                     splitArray(dataJobs?.listJob)?.map((item) => (
-                        <SwiperSlide key={item?.id} onClick={() => console.log({ item })}>
-                           <JobSlide jobs={item} />
-                        </SwiperSlide>
-                     ))
-                  )}
-               </Swiper>
+                     <Skeleton active />
+                     <span onClick={() => navigate("/auth/login")}>Đăng nhập để xem</span>
+                  </div>
+               ) : (
+                  <Swiper
+                     modules={[Navigation, Pagination, Autoplay]}
+                     spaceBetween={50}
+                     slidesPerView={1}
+                     pagination={{ clickable: true }}
+                     loop
+                  >
+                     {fetchingJobs ? (
+                        <Skeleton active />
+                     ) : (
+                        splitArray(dataJobs?.listJob)?.map((item) => (
+                           <SwiperSlide key={item?.id} onClick={() => console.log({ item })}>
+                              <JobSlide jobs={item} />
+                           </SwiperSlide>
+                        ))
+                     )}
+                  </Swiper>
+               )}
             </Col>
          </Row>
       </Container>

@@ -7,6 +7,7 @@ export const StyledBtnsHeader = styled.div`
    align-items: center;
    justify-content: space-between;
    margin-top: 30px;
+   margin-top: 70px;
 `;
 
 export const Container = styled.div`
@@ -43,9 +44,10 @@ export const Container = styled.div`
          font-size: 16px;
          text-transform: uppercase;
          font-weight: 600;
-         margin-bottom: 4px;
+         margin-bottom: 8px;
          color: #1b1f3b;
          text-align: left;
+         color: ${(props) => props.theme.strongBlue};
       }
    }
 

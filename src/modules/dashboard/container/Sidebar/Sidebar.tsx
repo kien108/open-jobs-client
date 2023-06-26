@@ -6,6 +6,7 @@ import ImageLogo from "../../../../assets/img/logo.png";
 import { RiAdminLine } from "react-icons/ri";
 import { MdWorkOutline } from "react-icons/md";
 import { AiOutlineUser, AiOutlineSetting, AiOutlineHome } from "react-icons/ai";
+import { FaUserCircle } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -43,7 +44,8 @@ const SideBar = () => {
    };
 
    const items: MenuItem[] = [
-      getItem(true, t("Jobs Management"), "/dashboard/jobs", "jobs", <AiOutlineHome />),
+      getItem(true, "Quản lý tin tuyển dụng", "/dashboard/jobs", "jobs", <AiOutlineHome />),
+      getItem(true, "Tìm kiếm ứng viên", "/dashboard/cvs", "cvs", <FaUserCircle />),
    ];
 
    const onOpenChange = (items: string[]) => {
@@ -88,7 +90,7 @@ const SideBar = () => {
    return (
       <StyledSidebar>
          <StyledLogo>
-            <Link to="/">
+            <Link to="/dashboard">
                <StyledImage src={ImageLogo} />
             </Link>
          </StyledLogo>

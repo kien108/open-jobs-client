@@ -23,7 +23,12 @@ const LeftHeader = () => {
 
    useEffect(() => {
       const paths = pathname.split("/");
-      setOpenKey(paths.slice(0, 3).join("/"));
+
+      if (pathname.includes("jobs")) {
+         setOpenKey(paths.slice(0, 4).join("/"));
+      } else {
+         setOpenKey(paths.slice(0, 3).join("/"));
+      }
    }, [pathname]);
 
    return (

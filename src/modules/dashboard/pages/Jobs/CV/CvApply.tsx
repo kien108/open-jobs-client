@@ -20,7 +20,7 @@ import {
    Title,
 } from "../../../../../libs/components";
 
-import { useModal } from "../../../../../libs/common";
+import { RootState, useCommonSelector, useModal } from "../../../../../libs/common";
 import { FormProvider, useForm } from "react-hook-form";
 
 import * as yup from "yup";
@@ -37,20 +37,27 @@ import {
 } from "./styles";
 import { Col, Row } from "antd";
 
+import FileSaver from "file-saver";
+
 import {
+   useAcceptCVMutation,
    useExportCVsMutation,
+   useGetCvAppliedQuery,
    useGetCvMatchedQuery,
    useLazyDownloadExportQuery,
    useRejectCVMutation,
 } from "../../../services";
-import FileSaver from "file-saver";
-const CVMatched = () => {
-   const { t } = useTranslation();
-   const [selectedSkill, setSelectedSkill] = useState<any>(undefined);
-   const [selectedCV, setSelectedCV] = useState<any>(undefined);
+import { FilterCV } from "../../../components/FilterCV";
+import { useFilterCV } from "../../../hooks";
+import { EMemberTypes } from "../../../../../types";
+import { MdUpgrade } from "react-icons/md";
 
+const CVApply = () => {
+   const { t } = useTranslation();
+   const [selectedCV, setSelectedCV] = useState<any>(undefined);
    const [searchParams, setSearchParams] = useSearchParams();
    const [dataSource, setDataSource] = useState<any>([]);
+   const { company } = useCommonSelector((state: RootState) => state.user.user);
    const navigate = useNavigate();
 
    const [options, setOptions] = useState<OptionType[]>([]);
@@ -73,6 +80,12 @@ const CVMatched = () => {
    });
 
    const {
+      isOpen: isOpenDelete,
+      handleClose: handleCloseDelete,
+      handleOpen: handleOpenDeleteModal,
+   } = useModal();
+
+   const {
       data: dataCVs,
       isLoading: loadingCVs,
       isFetching: fetchingCVs,
@@ -80,6 +93,7 @@ const CVMatched = () => {
       {
          id,
          ...tableInstance.params,
+         ...useFilterCV(),
       },
       {
          skip: !id,
@@ -88,59 +102,51 @@ const CVMatched = () => {
    );
 
    const [rejectCV, { isLoading: loadingReject }] = useRejectCVMutation();
-   const [exportCVs, { isLoading: loadingExport }] = useExportCVsMutation();
+   const [exportCVs, { isLoading: loadingExport, data: dataExport }] = useExportCVsMutation();
    const [download, { isLoading: loadingDownload }] = useLazyDownloadExportQuery();
+   const Status = {
+      ACCEPTED: "accept",
+      REJECTED: "reject",
+      NEW: "new",
+   };
 
    const columns: ColumnsType<any> = [
       {
-         title: t("First Name"),
-         dataIndex: "firstName",
-         key: "firstName",
+         title: t("Tiêu đề"),
+         dataIndex: "title",
+         key: "title",
+         sorter: true,
+         render: (item) => <span className="col title">{item || "-"}</span>,
+      },
+      {
+         title: t("Chuyên ngành"),
+         dataIndex: "major",
+         key: "major",
+         sorter: true,
+         render: (item) => <span className="col">{item}</span>,
+      },
+      {
+         title: "Chuyên ngành hẹp",
+         dataIndex: "specialization",
+         key: "specialization",
+         sorter: true,
+         render: (item) => <span className="col">{item}</span>,
+      },
+      {
+         title: "Kỹ năng",
+         dataIndex: "skill",
+         key: "skill",
          sorter: true,
          render: (item) => <span className="col">{item || "-"}</span>,
       },
-      {
-         title: t("Last Name"),
-         dataIndex: "lastName",
-         key: "lastName",
-         sorter: true,
-         render: (item) => <span className="col">{item}</span>,
-      },
-      {
-         title: t("Email"),
-         dataIndex: "email",
-         key: "email",
-         sorter: true,
-         render: (item) => <span className="col">{item}</span>,
-      },
-      {
-         title: t("Phone"),
-         dataIndex: "phone",
-         key: "phone",
-         sorter: true,
-         render: (item) => <span className="col">{item}</span>,
-      },
-      {
-         title: t("Gender"),
-         dataIndex: "gender",
-         key: "gender",
-         sorter: true,
-         render: (item) => <span className="col">{item}</span>,
-      },
-      {
-         title: t("Matched Skills"),
-         dataIndex: "point",
-         key: "point",
-         sorter: true,
-         render: (item) => <span className="match-cv">{item}</span>,
-      },
+
       {
          title: t("Status"),
-         dataIndex: "cvStatus",
-         key: "cvStatus",
+         dataIndex: "status",
+         key: "status",
          sorter: true,
          render: (value: string) => (
-            <span className={`status ${value ?? "NEW"}`}>{value ?? "NEW"}</span>
+            <div className={`badge-status ${value ? value : ""}`}>{value}</div>
          ),
       },
       {
@@ -153,7 +159,7 @@ const CVMatched = () => {
                      navigate({
                         pathname: `${record?.userId}`,
                         search: createSearchParams({
-                           status: record?.cvStatus,
+                           status: record?.status,
                         }).toString(),
                      });
                   }}
@@ -165,15 +171,10 @@ const CVMatched = () => {
       },
    ];
 
-   const handleOpenUpdate = (skill: any) => {
-      setSelectedSkill(skill);
-      handleOpen();
+   const handleOpenDelete = (cv: any) => {
+      setSelectedCV(cv);
+      handleOpenDeleteModal();
    };
-
-   // const handleOpenDelete = (cv: any) => {
-   //    setSelectedCV(cv);
-   //    handleOpenDeleteModal();
-   // };
    const setValueToSearchParams = (name: string, value: string) => {
       if (value) {
          searchParams.set(name, value);
@@ -185,48 +186,28 @@ const CVMatched = () => {
    };
    const handleOnChange = debounce(setValueToSearchParams, 500);
 
-   // const handleConfirmDelete = () => {
-   //    selectedSkill &&
-   //       deleteSpecialization(selectedSkill.id)
-   //          .unwrap()
-   //          .then(() => {
-   //             openNotification({
-   //                type: "success",
-   //                message: t("Delete this Specialization successfully!!!"),
-   //             });
-   //             setSelectedSkill(undefined);
-   //             handleCloseDelete();
-   //          })
-   //          .catch((error) => {
-   //             openNotification({
-   //                type: "error",
-   //                message: t("common:ERRORS.SERVER_ERROR"),
-   //             });
-   //          });
-   // };
-
-   // const handleConfirmDelete = () => {
-   //    selectedCV &&
-   //       rejectCV({ jobId: id, cvId: selectedCV?.cvId })
-   //          .unwrap()
-   //          .then(() => {
-   //             openNotification({
-   //                type: "success",
-   //                message: t("Delete CV successful!!!"),
-   //             });
-   //             setSelectedCV(undefined);
-   //             handleCloseDelete();
-   //          })
-   //          .catch((error) => {
-   //             openNotification({
-   //                type: "error",
-   //                message: t("common:ERRORS.SERVER_ERROR"),
-   //             });
-   //          });
-   // };
+   const handleConfirmDelete = () => {
+      selectedCV &&
+         rejectCV({ jobId: id, cvId: selectedCV.id })
+            .unwrap()
+            .then(() => {
+               openNotification({
+                  type: "success",
+                  message: t("Delete CV successful!!!"),
+               });
+               setSelectedCV(undefined);
+               handleCloseDelete();
+            })
+            .catch((error) => {
+               openNotification({
+                  type: "error",
+                  message: t("common:ERRORS.SERVER_ERROR"),
+               });
+            });
+   };
 
    const handleExport = () => {
-      const matchedCVs = dataSource
+      const appliedCVs = dataSource
          .filter((item: any) => item?.cvStatus === "ACCEPTED")
          .map((item: any) => ({
             firstName: item?.firstName,
@@ -236,19 +217,18 @@ const CVMatched = () => {
             gender: item?.gender,
             url: `http://localhost:5173/cv-review/${item?.userId}`,
          }));
-
-      if (matchedCVs.length === 0) {
+      const body = {
+         jobId: id,
+         appliedCVs,
+      };
+      if (appliedCVs.length === 0) {
          openNotification({
             type: "error",
-            message: "Don't have any accepted cvs to export!",
+            message: "Không có bất kỳ hồ sơ được chấp thuận nào!",
          });
          return;
       }
 
-      const body = {
-         jobId: id,
-         matchedCVs,
-      };
       exportCVs(body)
          .unwrap()
          .then((data) => {
@@ -271,9 +251,12 @@ const CVMatched = () => {
    };
 
    useEffect(() => {
-      const dataSource = dataCVs?.map((item: any) => ({
+      const dataSource = (dataCVs?.listCv ?? [])?.map((item: any) => ({
          ...item,
-         key: item?.cv?.id,
+         key: item?.id,
+         major: item?.major?.name,
+         specialization: item?.specialization?.name,
+         skill: item?.listSkill?.map((item) => item?.skill?.name)?.join(" - "),
       }));
 
       setDataSource(dataSource || []);
@@ -282,7 +265,7 @@ const CVMatched = () => {
    return (
       <Container>
          <StyledHeader>
-            <Title>Matched CV Management</Title>
+            <Title>Quản lý hồ sơ</Title>
             <Button
                className="btn-close"
                onClick={() => {
@@ -293,54 +276,81 @@ const CVMatched = () => {
             </Button>
          </StyledHeader>
 
-         <div className="items">
-            <div className="item total">
-               <span>Matched CV</span>
-               <span className="value">{dataSource.length}</span>
-            </div>
-            <div className="item new">
-               <span>New CV</span>
-               <span className="value">
-                  {dataSource?.filter((item: any) => item?.status === "NEW").length}
+         <Button
+            className="btn-export"
+            disabled={dataSource.length === 0}
+            loading={loadingExport}
+            height={44}
+            icon={<DownloadIcon />}
+            onClick={handleExport}
+         >
+            {t("Xuất danh sách hồ sơ")}
+         </Button>
+         {company?.memberType === EMemberTypes.DEFAULT ? (
+            <div className="pay">
+               <span>
+                  Nâng cấp tài khoản lên{" "}
+                  <span className="premium" onClick={() => navigate("/dashboard/premium")}>
+                     Premium
+                  </span>{" "}
+                  để sử dụng tính năng này
                </span>
-            </div>
 
-            <div className="item accepted">
-               <span>Accepted CV</span>
-               <span className="value">
-                  {dataSource?.filter((item: any) => item?.status === "ACCEPTED").length}
-               </span>
+               <Button className="btn-upgrade" onClick={() => navigate("/dashboard/premium")}>
+                  Nâng cấp ngay
+                  <MdUpgrade color="white" size={28} />
+               </Button>
             </div>
-            <div className="item rejected">
-               <span>Rejected CV</span>
-               <span className="value">
-                  {dataSource?.filter((item: any) => item?.status === "REJECTED").length}
-               </span>
-            </div>
-         </div>
-         <ContainerTable>
-            <Button
-               className="btn-export"
-               disabled={dataSource.length === 0}
-               loading={loadingExport}
-               height={44}
-               icon={<DownloadIcon />}
-               onClick={handleExport}
-            >
-               {t("Export Accepted CVs")}
-            </Button>
-            <Table
-               columns={columns}
-               dataSource={dataSource}
-               tableInstance={tableInstance}
-               loading={loadingCVs || fetchingCVs}
-               totalElements={0}
-               totalPages={0}
-               locale={{ emptyText: "No CV Matched" }}
-            />
-         </ContainerTable>
+         ) : (
+            <ContainerTable>
+               <FilterCV />
+
+               <Table
+                  columns={columns}
+                  dataSource={dataSource}
+                  tableInstance={tableInstance}
+                  loading={loadingCVs || fetchingCVs}
+                  totalElements={dataCVs?.totalElements || 0}
+                  totalPages={dataCVs?.totalPages || 0}
+                  locale={{ emptyText: "Không có hồ sơ" }}
+               />
+            </ContainerTable>
+         )}
+
+         <Modal
+            type="confirm"
+            open={isOpenDelete}
+            onCancel={() => {
+               handleCloseDelete();
+            }}
+            confirmIcon="?"
+            title={t("Do to want to delete this CV?")}
+         >
+            <GroupButton>
+               <Button
+                  height={44}
+                  style={{ padding: "0 24px" }}
+                  key="back"
+                  border="outline"
+                  onClick={() => {
+                     setSelectedCV(undefined);
+                     handleCloseDelete();
+                  }}
+               >
+                  {t("common:confirm.cancel")}
+               </Button>
+               <Button
+                  height={44}
+                  key="submit"
+                  loading={loadingReject}
+                  onClick={handleConfirmDelete}
+               >
+                  {t(t("common:confirm.ok"))}
+               </Button>
+            </GroupButton>
+         </Modal>
       </Container>
    );
 };
 
-export default CVMatched;
+export default CVApply;

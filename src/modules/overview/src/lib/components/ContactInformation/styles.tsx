@@ -35,7 +35,8 @@ export const Container = styled.div`
    padding: 24px 10px;
    display: flex;
    flex-direction: column;
-   gap: 10px;
+   gap: 15px;
+   margin-top: 70px;
 
    .title {
       color: rgb(45, 45, 45);
@@ -76,6 +77,16 @@ export const Container = styled.div`
 
    .btn-save {
       width: fit-content;
+      margin: 0 auto;
+      width: 200px;
       margin-top: 20px;
+   }
+
+   .dob {
+      margin-top: 10px;
+      label {
+         margin-bottom: -8px;
+         display: block;
+      }
    }
 `;

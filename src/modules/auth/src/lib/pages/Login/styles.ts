@@ -13,7 +13,7 @@ export const StyledForm = styled.form`
    padding: 20px 40px 40px 40px;
    background-color: rgb(255 255 255 / 1);
    border-radius: 10px;
-   width: 450px;
+   width: 550px;
    height: fit-content;
    margin: auto;
    position: absolute;
