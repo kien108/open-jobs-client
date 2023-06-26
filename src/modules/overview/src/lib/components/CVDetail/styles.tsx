@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Modal } from "../../../../../../libs/components";
 
 export const StyledBtnsHeader = styled.div`
    max-width: 1200px;
@@ -218,5 +219,26 @@ export const GroupButton = styled.div`
 
    svg path {
       color: white;
+   }
+`;
+
+export const StyledModalModal = styled(Modal)`
+   h1 {
+      margin-bottom: 30px !important;
+   }
+
+   .preview {
+      font-size: 18px;
+      display: block;
+      margin: 20px 0 -20px 0;
+      font-weight: 500;
+   }
+
+   .center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
    }
 `;

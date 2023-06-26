@@ -1,3 +1,4 @@
+import { Modal } from "../../../../../../libs/components";
 import styled from "styled-components";
 
 export const StyledBtnsHeader = styled.div`
@@ -6,7 +7,7 @@ export const StyledBtnsHeader = styled.div`
    display: flex;
    align-items: center;
    justify-content: space-between;
-   margin-top: 30px;
+   margin-top: 40px;
 `;
 export const Container = styled.div`
    background: white;
@@ -15,17 +16,120 @@ export const Container = styled.div`
    display: flex;
    flex-direction: column;
    gap: 10px;
-   padding: 30px 20px;
+   /* padding: 30px 20px; */
+   /* padding: 30px 0px; */
+   padding-bottom: 10px;
    border: 1px solid #d4d2d0;
    border-radius: 8px;
    box-shadow: none !important;
    margin-top: 20px;
+   overflow: hidden;
+
+   .general-container {
+      margin-top: 340px;
+   }
+
+   .svg-top-layout {
+      width: 300px;
+      height: 300px;
+      position: absolute;
+      top: 3px;
+      left: 0;
+
+      opacity: 0.2;
+   }
+   .svg-top {
+      position: absolute;
+      z-index: 1;
+      left: 20px;
+      top: 0;
+      width: 270px;
+      height: 270px;
+
+      svg path {
+         fill: #348879;
+      }
+   }
+
+   .cv-item {
+      padding: 0 30px;
+      display: block;
+
+      &.p-0 {
+         padding: 0px;
+      }
+   }
+
+   .avatar {
+      position: absolute;
+      z-index: 2;
+      width: 205px;
+      height: 205px;
+      border-radius: 1000px;
+      border: 3.5px solid #348879;
+      display: block;
+      left: 45%;
+      top: 20px;
+      transform: translate(-50%);
+      background-color: white;
+
+      .sb-avatar {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+      }
+   }
+
+   .header {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 100px;
+      margin-top: 50px;
+
+      .name {
+         font-size: 40px !important;
+         font-weight: 600 !important;
+         line-height: 52px;
+         color: #030504;
+         padding: 5px 0;
+         letter-spacing: 2px;
+      }
+
+      .job-title {
+         border-radius: 20px;
+         font-size: 15px;
+         font-weight: 400;
+         text-transform: uppercase;
+         text-align: center;
+         color: #348879 !important;
+         background-color: #eaf3f1;
+         padding: 5px 30px;
+      }
+   }
+
+   .skills {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0 30px 0;
+
+      .skill {
+         border: 1px solid #348879;
+         border-radius: 20px;
+         padding: 4px 8px;
+      }
+   }
 
    .general-information {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 30px;
+      padding-left: 15px;
 
       .container-input {
          width: 100%;
@@ -36,10 +140,10 @@ export const Container = styled.div`
          flex-direction: column;
          gap: 3px;
          align-self: flex-start;
-         border: 1px solid #d4d2d0;
          border-radius: 8px;
-         padding: 10px;
+         padding: 20px;
          width: 100%;
+         margin-bottom: 20px;
 
          .item {
             display: flex;
@@ -79,13 +183,35 @@ export const Container = styled.div`
    }
 
    .title {
-      font-size: 16px;
       text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: #1b1f3b;
-      text-align: left;
-      color: ${(props) => props.theme.strongBlue};
+      display: flex;
+      font-weight: 500;
+      color: #fff;
+      padding: 2px 20px 2px 0;
+      font-size: 18px;
+      position: relative;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+      min-width: 65%;
+      width: fit-content;
+      background-color: #348879 !important;
+      margin-bottom: 10px;
+
+      span {
+         display: block;
+         margin-left: 20px;
+      }
+
+      &::after {
+         content: "";
+         display: block;
+         position: absolute;
+         height: 100%;
+         width: 2px;
+         background: #fff;
+         left: 3px;
+         top: 0;
+      }
    }
 
    .skills {
@@ -148,7 +274,7 @@ export const BtnFunction = styled.div`
    transition: all 0.3s;
 
    &.btn-back {
-      margin-left: 140px;
+      margin-left: 0px;
       margin-top: 90px;
    }
 
@@ -203,4 +329,25 @@ export const GroupButton = styled.div`
    justify-content: center;
    gap: 20px;
    margin-top: 12px;
+`;
+
+export const StyledModalModal = styled(Modal)`
+   h1 {
+      margin-bottom: 30px !important;
+   }
+
+   .preview {
+      font-size: 18px;
+      display: block;
+      margin: 20px 0 -20px 0;
+      font-weight: 500;
+   }
+
+   .center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+   }
 `;

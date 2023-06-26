@@ -1,5 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BtnFunction, Container, GroupButton, StyledBtnsHeader, StyledListUnits } from "./styles";
+import React, { FC, useEffect, useRef, useState } from "react";
+import {
+   BtnFunction,
+   Container,
+   GroupButton,
+   StyledBtnsHeader,
+   StyledListUnits,
+   StyledModalModal,
+} from "./styles";
 import {
    useCommonSelector,
    RootState,
@@ -21,9 +28,11 @@ import {
    Title,
 } from "../../../../../../libs/components";
 
+import { AiFillFileMarkdown } from "react-icons/ai";
+
 import Parser from "html-react-parser";
 import Avatar from "react-avatar";
-import { useGetProfileQuery } from "../../services";
+import { useGetProfileQuery, useUpdateCVMutation } from "../../services";
 
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -38,12 +47,17 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { JobDetail } from "../JobDetail";
 import { useReactToPrint } from "react-to-print";
+import { CVTemplate1 } from "../CVTemplate1";
 
 type FormType = {
    listSkill: any;
+   mode?: any;
 };
 
-const CVDetail = () => {
+interface IProps {
+   headerHidden?: boolean;
+}
+const CVDetail: FC<IProps> = ({ headerHidden }) => {
    // const { id, userId } = useParams();
    const { id: userId } = useCommonSelector((state: RootState) => state.user.user);
    const tableInstance = Table.useTable();
@@ -96,6 +110,7 @@ const CVDetail = () => {
       }));
 
       setValue("listSkill", listSkill);
+      setValue("mode", 1);
    }, [user]);
 
    const handlePrint = useReactToPrint({
@@ -103,23 +118,54 @@ const CVDetail = () => {
       documentTitle: "your-cv.pdf",
    });
 
-   console.log({ user });
+   const { isOpen, handleOpen, handleClose } = useModal();
 
+   const [upload, { isLoading: loadingUpload }] = useUpdateCVMutation();
+
+   const handleChangeMode = () => {
+      const payload = {
+         ...user?.cv,
+         cvType: form.watch("mode"),
+      };
+
+      upload(payload)
+         .unwrap()
+         .then(() => {
+            openNotification({
+               type: "success",
+               message: t("Cập nhật mẫu hồ sơ thành công!!!"),
+            });
+            navigate(-1);
+         })
+         .catch((error) => {
+            openNotification({
+               type: "error",
+               message: "Cập nhật mẫu hồ sơ thất bại",
+            });
+         });
+   };
    return (
       <Spin spinning={isLoading || isFetching}>
-         <StyledBtnsHeader className="btns-header">
-            <BtnFunction className="btn-back" onClick={() => navigate(-1)}>
-               <BsArrowLeft size={23} />
-            </BtnFunction>
-            <GroupButton>
-               <Button height={44} icon={<DownloadIcon />} onClick={handlePrint}>
-                  {t("Xuất hồ sơ")}
-               </Button>
-               <Button height={44} icon={<EditIcon />} onClick={() => navigate("edit")}>
-                  {t("Chỉnh sửa hồ sơ")}
-               </Button>
-            </GroupButton>
-         </StyledBtnsHeader>
+         {!headerHidden && (
+            <StyledBtnsHeader className="btns-header">
+               <BtnFunction className="btn-back" onClick={() => navigate(-1)}>
+                  <BsArrowLeft size={23} />
+               </BtnFunction>
+               <GroupButton>
+                  <Button height={44} icon={<AiFillFileMarkdown size={23} />} onClick={handleOpen}>
+                     Đổi mẫu hồ sơ
+                  </Button>
+
+                  <Button height={44} icon={<DownloadIcon />} onClick={handlePrint}>
+                     {t("Xuất hồ sơ")}
+                  </Button>
+                  <Button height={44} icon={<EditIcon />} onClick={() => navigate("edit")}>
+                     {t("Chỉnh sửa hồ sơ")}
+                  </Button>
+               </GroupButton>
+            </StyledBtnsHeader>
+         )}
+
          <Container ref={cvRef}>
             <FormProvider {...form}>
                <Row gutter={[40, 40]}>
@@ -224,6 +270,49 @@ const CVDetail = () => {
                      </div>
                   </Col>
                </Row>
+               <StyledModalModal
+                  visible={isOpen}
+                  title="Đổi mẫu hồ sơ"
+                  onCancel={handleClose}
+                  destroyOnClose
+                  width="80%"
+               >
+                  <Select
+                     title="Mẫu hồ sơ"
+                     name="mode"
+                     options={[
+                        {
+                           key: 1,
+                           label: "1",
+                           value: 1,
+                           render: () => "Mẫu mặc định",
+                        },
+                        {
+                           key: 2,
+                           label: "2",
+                           value: 2,
+                           render: () => "Mẫu khác",
+                        },
+                     ]}
+                  />
+
+                  <span className="preview">Xem trước</span>
+
+                  {form.watch("mode") === 1 ? (
+                     <CVDetail headerHidden={true} />
+                  ) : (
+                     <CVTemplate1 headerHidden={true} />
+                  )}
+
+                  <div className="center">
+                     <Button onClick={handleChangeMode} loading={loadingUpload}>
+                        Cập nhật
+                     </Button>
+                     <Button border="outline" onClick={handleClose}>
+                        Đóng
+                     </Button>
+                  </div>
+               </StyledModalModal>
             </FormProvider>
          </Container>
       </Spin>
