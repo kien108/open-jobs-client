@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 
 import moment from "moment";
-import { RootState, useCommonSelector, useModal } from "../../../../libs/common";
+import { RootState, getToken, useCommonSelector, useModal } from "../../../../libs/common";
 import {
    Button,
    DeleteIcon,
@@ -45,7 +45,11 @@ import { convertPrice } from "../../utils";
 import { IJob } from "../../types/JobModel";
 import { FilterJobs } from "../../components";
 import { useFilter } from "../../hooks";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { BiHappyHeartEyes } from "react-icons/bi";
+import { AiFillHeart } from "react-icons/ai";
 
+import { Popover } from "../../../../libs/components";
 type FormType = {
    listSkill: any;
    objective: string;
@@ -171,39 +175,65 @@ const Jobs = () => {
       },
 
       {
-         title: t("Action"),
+         title: "Chức năng",
          dataIndex: "id",
          align: "center",
          render: (_: string, record: any) => (
             <StyledFunctions>
-               <BtnFunction
-                  onClick={() => {
-                     searchParams.set("id", record?.id);
-                     setSearchParams(searchParams);
-                     handleOpenDetailModal();
-                  }}
-               >
-                  <EyeIcon />
+               <BtnFunction>
+                  <Popover
+                     overlayClassName="styled-header-popover"
+                     trigger="click"
+                     visible={selectedId === record?.id}
+                     onVisibleChange={(value) => {
+                        return selectedId ? setSelectedId(undefined) : setSelectedId(record?.id);
+                     }}
+                     content={
+                        <div className="dropdown-group-btn">
+                           <span
+                              className="button-content"
+                              onClick={() => {
+                                 navigate(`/dashboard/jobs/${record?.id}/cv-applied`);
+                              }}
+                           >
+                              Danh sách ứng viên
+                           </span>
+                           <span
+                              className="button-content"
+                              onClick={() => {
+                                 searchParams.set("id", record?.id);
+                                 setSearchParams(searchParams);
+                                 handleOpenDetailModal();
+                              }}
+                           >
+                              Xem chi tiết
+                           </span>
+                           <span
+                              className="button-content"
+                              onClick={() => {
+                                 searchParams.set("id", record?.id);
+                                 setSearchParams(searchParams);
+                                 handleOpenEdit();
+                              }}
+                           >
+                              Chỉnh sửa
+                           </span>
+                           <span
+                              className="button-content"
+                              onClick={() => {
+                                 handleOpenDelete(record.id);
+                              }}
+                           >
+                              Xóa
+                           </span>
+                        </div>
+                     }
+                  >
+                     <button className="button-header hover">
+                        <BsThreeDotsVertical size={23} />
+                     </button>
+                  </Popover>
                </BtnFunction>
-
-               <BtnFunction
-                  onClick={() => {
-                     searchParams.set("id", record?.id);
-                     setSearchParams(searchParams);
-                     handleOpenEdit();
-                  }}
-               >
-                  <EditIcon />
-               </BtnFunction>
-
-               <BtnFunction onClick={() => handleOpenDelete(record.id)}>
-                  <DeleteIcon />
-               </BtnFunction>
-               {/* {moment(record?.expiredAt).isBefore(moment()) && (
-                  <BtnFunction onClick={() => handleOpenRenewal(record)}>
-                     <MdOutlineUpdate size={24} className="icon-renewal" />
-                  </BtnFunction>
-               )} */}
             </StyledFunctions>
          ),
       },
@@ -245,14 +275,14 @@ const Jobs = () => {
          .then(() => {
             openNotification({
                type: "success",
-               message: t("Delete job successfully!!!"),
+               message: "Xóa tin tuyển dụng thành công",
             });
             handleCloseDelete();
          })
          .catch((error: any) => {
             openNotification({
                type: "error",
-               message: t("Can't delete this job because it has any applied cv!!!"),
+               message: "Không thể xóa tin tuyển dụng vì tin này đang có hồ sơ của ứng viên",
             });
             handleCloseDelete();
          });
@@ -398,6 +428,27 @@ const Jobs = () => {
             onCancel={handleCloseRenewal}
          >
             <ModalRenewal handleClose={handleCloseRenewal} expiredAt={selectedExpired} />
+         </Modal>
+
+         <Modal
+            visible={!!user?.companyId && !user?.company?.companyType}
+            type="confirm"
+            confirmIcon={<BiHappyHeartEyes size={100} color="green" />}
+            title={
+               <span>
+                  Chào mừng nhà tuyển dụng mới đến với openjobs. Bạn vui lòng cập nhật hồ sơ trước
+                  khi đăng tin tuyển dụng nhé <AiFillHeart color="red" size={17} />
+               </span>
+            }
+            destroyOnClose
+         >
+            <Button
+               style={{ width: "fit-content", margin: "0 auto", marginTop: "30px" }}
+               className="btn-cv"
+               onClick={() => navigate(`/dashboard/profile`)}
+            >
+               Cập nhật ngay
+            </Button>
          </Modal>
       </>
    );

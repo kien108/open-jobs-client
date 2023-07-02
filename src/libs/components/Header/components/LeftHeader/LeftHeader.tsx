@@ -14,9 +14,11 @@ import {
 import ImageLogo from "../../../../../assets/img/logo.png";
 import { getToken } from "./../../../../common/utils/remember";
 import { openNotification } from "../../../../components";
+import { RootState, useCommonSelector } from "../../../../common";
 
 const LeftHeader = () => {
    const { pathname } = useLocation();
+   const { cv } = useCommonSelector((state: RootState) => state.user?.user);
    const { t } = useTranslation();
    const token = getToken();
    const [openKey, setOpenKey] = useState("/");
@@ -38,60 +40,62 @@ const LeftHeader = () => {
                <StyledImage src={ImageLogo} />
             </Link>
          </StyledLogo>
-         <StyledContainerLink tabBarGutter={24} activeKey={openKey}>
-            {navLinks.length > 0 &&
-               navLinks.map((item: LinkType) =>
-                  !item?.isLogin ? (
-                     <StyledLink
-                        key={item.key}
-                        tab={
-                           <Link
-                              className="custom-link-header"
-                              to={item.path}
-                              onClick={(e) => {
-                                 if (item.path.includes("applied")) {
-                                    if (!getToken()) {
-                                       e.preventDefault();
-                                       openNotification({
-                                          type: "warning",
-                                          message: "Please login firstly!",
-                                       });
+         {cv?.title && (
+            <StyledContainerLink tabBarGutter={24} activeKey={openKey}>
+               {navLinks.length > 0 &&
+                  navLinks.map((item: LinkType) =>
+                     !item?.isLogin ? (
+                        <StyledLink
+                           key={item.key}
+                           tab={
+                              <Link
+                                 className="custom-link-header"
+                                 to={item.path}
+                                 onClick={(e) => {
+                                    if (item.path.includes("applied")) {
+                                       if (!getToken()) {
+                                          e.preventDefault();
+                                          openNotification({
+                                             type: "warning",
+                                             message: "Please login firstly!",
+                                          });
+                                       }
                                     }
-                                 }
-                              }}
-                           >
-                              {t(`header.${item.display}`)}
-                           </Link>
-                        }
-                     />
-                  ) : token ? (
-                     <StyledLink
-                        key={item.key}
-                        tab={
-                           <Link
-                              className="custom-link-header"
-                              to={item.path}
-                              onClick={(e) => {
-                                 if (item.path.includes("applied")) {
-                                    if (!getToken()) {
-                                       e.preventDefault();
-                                       openNotification({
-                                          type: "warning",
-                                          message: "Please login firstly!",
-                                       });
+                                 }}
+                              >
+                                 {item.display}
+                              </Link>
+                           }
+                        />
+                     ) : token ? (
+                        <StyledLink
+                           key={item.key}
+                           tab={
+                              <Link
+                                 className="custom-link-header"
+                                 to={item.path}
+                                 onClick={(e) => {
+                                    if (item.path.includes("applied")) {
+                                       if (!getToken()) {
+                                          e.preventDefault();
+                                          openNotification({
+                                             type: "warning",
+                                             message: "Please login firstly!",
+                                          });
+                                       }
                                     }
-                                 }
-                              }}
-                           >
-                              {t(`header.${item.display}`)}
-                           </Link>
-                        }
-                     />
-                  ) : (
-                     <></>
-                  )
-               )}
-         </StyledContainerLink>
+                                 }}
+                              >
+                                 {t(`header.${item.display}`)}
+                              </Link>
+                           }
+                        />
+                     ) : (
+                        <></>
+                     )
+                  )}
+            </StyledContainerLink>
+         )}
       </StyledLeftHeader>
    );
 };

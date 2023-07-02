@@ -4,12 +4,12 @@ export const navLinks = (openLink: string) => {
          return [
             {
                path: "cv-matched",
-               display: "CV Matched",
+               display: "Hồ sơ phù hợp (VIP)",
                key: "cv-matched",
             },
             {
                path: "cv-applied",
-               display: "CV Applied",
+               display: "Hồ sơ ứng tuyển",
                key: "cv-applied",
             },
          ];

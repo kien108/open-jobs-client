@@ -35,7 +35,7 @@ import { useTranslation } from "react-i18next";
 import { Col, Row, Spin } from "antd";
 import { useCreateHeadHunterMutation } from "../../services";
 
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Avatar from "react-avatar";
 
 import { v4 as uuidv4 } from "uuid";
@@ -45,6 +45,7 @@ import { Contact } from "../Login/styles";
 
 const CreateAndEditHr = () => {
    const { t } = useTranslation();
+   const navigate = useNavigate();
    const [searchParams, setSearchParams] = useSearchParams();
 
    const [message, setMessage] = useState<string | undefined>(undefined);
@@ -595,7 +596,7 @@ const CreateAndEditHr = () => {
                <StyledContentConfirm>
                   <span className="title">Đăng ký thành công !</span>
                   <span className="sub-title">
-                     Chúng tôi sẽ xem sét đơn đăng ký của bạn và sẽ gửi thông báo thông qua email đã
+                     Chúng tôi sẽ xem xét đơn đăng ký của bạn và sẽ gửi thông báo thông qua email đã
                      đăng ký.
                   </span>
 
@@ -604,6 +605,7 @@ const CreateAndEditHr = () => {
                         handleClose();
                         form.reset({});
                         setChecked(false);
+                        navigate("/overview/welcome");
                      }}
                      className="btn-ok"
                   >

@@ -130,4 +130,26 @@ export const Container = styled.div`
       font-weight: 700;
       margin: 30px 0 20px 0;
    }
+
+   .skills {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      .skill {
+         color: #414042;
+         background-color: #fff;
+         border: 1px solid #dedede;
+         padding: 4px 10px;
+         font-size: 12px;
+         border-radius: 20px;
+         display: block;
+         border: 1px solid ${(props) => props.theme.strongBlue};
+
+         &.invalid {
+            background-color: #ccc;
+            border-color: transparent;
+         }
+      }
+   }
 `;

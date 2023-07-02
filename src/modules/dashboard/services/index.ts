@@ -35,6 +35,7 @@ export {
    useRenewalJobMutation,
    useGetAllSkillsQuery,
    useUpdateJobMutation,
+   useGetJobPriceMutation,
 } from "./JobAPIDashBoard";
 
 export { PayAPI, useLazyGetPayQuery } from "./PayAPI";

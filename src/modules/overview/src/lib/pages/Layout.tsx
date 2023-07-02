@@ -4,6 +4,7 @@ import { Layout as AntLayout } from "antd";
 import { Filter } from "../components/Filter";
 
 import { Content } from "antd/lib/layout/layout";
+import { Modal } from "../../../../../libs/components";
 
 const Layout = () => {
    return (

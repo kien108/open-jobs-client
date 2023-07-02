@@ -1,57 +1,57 @@
 {
    "form": {
-      "required": "This field should not be blank!",
-      "existing": "This value is already exists!",
-      "passwordLength": "Password must at least 8 characters",
-      "active": "Active",
-      "inActive": "Inactive",
-      "email": "This field must be type email"
+      "required": "Trường này không được để trống!",
+      "existing": "Giá trị này đã tồn tại!",
+      "passwordLength": "Mật khẩu phải ít nhất 8 ký tự",
+      "active": "Hoạt động",
+      "inActive": "Không hoạt động",
+      "email": "Trường này phải là email"
    },
    "confirm": {
-      "save": "Save",
-      "cancel": "Cancel",
+      "save": "Lưu",
+      "cancel": "Hủy bỏ",
       "ok": "OK"
    },
    "notification": {
-      "nothingFound": "Nothing found...",
-      "noResults": "No results",
-      "createSuccess": "Create {{name}} successfully!",
-      "updateSuccess": "Update {{name}} successfully!",
-      "deleteSuccess": "Delete {{name}} successfully!",
-      "title": "Notification",
-      "new": "New",
-      "requestSubmission": "Request Submission",
-      "onlyShowUnread": "Only show unread",
-      "markAllAsRead": "Mark all as read",
-      "requestManagement": "Request Management",
-      "markAsRead": "Mark as read",
-      "removeTheNotification": "Remove the notification"
+      "nothingFound": "Không tìm thấy...",
+      "noResults": "Không có kết quả",
+      "createSuccess": "Tạo mới {{name}} thành công!",
+      "updateSuccess": "Cập nhật {{name}} thành công!",
+      "deleteSuccess": "Xóa {{name}} thành công!",
+      "title": "Thông báo",
+      "new": "Mới",
+      "requestSubmission": "Yêu cầu đã gửi",
+      "onlyShowUnread": "Chỉ hiển thị chưa đọc",
+      "markAllAsRead": "Đánh dấu tất cả đã đọc",
+      "requestManagement": "Quản lý yêu cầu",
+      "markAsRead": "Đánh dấu đã đọc",
+      "removeTheNotification": "Xóa thông báo"
    },
    "table": {
-      "pages": "Pages",
-      "linesPerPage": "Lines per page",
-      "of": "of",
-      "noResults": "No results"
+      "pages": "Tổng số trang",
+      "linesPerPage": "Số dòng mỗi trang",
+      "of": "Trên",
+      "noResults": "Không có kết quả"
    },
    "ERRORS": {
-      "SERVER_ERROR": "Lỗi hệ thống!",
-      "INTERNAL_SERVER_ERROR": "500 - Internal server error!"
+      "SERVER_ERROR": "Server error!",
+      "INTERNAL_SERVER_ERROR": "500 - Lỗi máy chủ nội bộ."
    },
    "header": {
-      "profile": "Profile",
-      "signOut": "Sign Out",
-      "findJobs": "Find Jobs",
-      "findCompanies": "Find Companies",
-      "jobApplied": "Job Applied"
+      "profile": "Hồ sơ",
+      "signOut": "Đăng xuất",
+      "findJobs": "Tìm kiếm công việc",
+      "findCompanies": "Tìm kiếm công ty",
+      "jobApplied": "Việc đã ứng tuyển"
    },
    "sidebar": {
-      "overview": "Overview",
-      "adminManagement": "Admin Management",
-      "companyManagement": "Company Management",
-      "hrManagement": "HR Management",
-      "candidateManagement": "Candidate Management",
-      "roleManagement": "Role Management",
-      "settings": "Settings",
-      "jobs": "Jobs Management"
+      "overview": "Tổng quan",
+      "adminManagement": "Quản lý quản trị viên",
+      "companyManagement": "Quản lý công ty",
+      "hrManagement": "Quản lí nhà tuyển dụng",
+      "candidateManagement": "Quản lí ứng viên",
+      "roleManagement": "Quản lí vai trò",
+      "settings": "Cài đặt",
+      "jobs": "Quản lý công việc"
    }
 }

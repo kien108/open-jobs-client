@@ -8,7 +8,7 @@ export const UserAPI = createApi({
    tagTypes: ["USER", "VIEW_CV"],
    endpoints: (builder) => ({
       getProfile: builder.query({
-         query: (id) => ({
+         query: ({ id, ...params }) => ({
             url: `/userprofile/${id}`,
          }),
          providesTags: ["USER"],

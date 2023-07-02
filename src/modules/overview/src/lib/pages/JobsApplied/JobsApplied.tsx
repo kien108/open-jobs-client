@@ -124,6 +124,11 @@ const JobsApplied = () => {
       },
    ];
 
+   useEffect(() => {
+      if (user?.cv?.title) return;
+
+      navigate("/overview/welcome");
+   }, []);
    const handleConfirmCancel = () => {
       selectedId &&
          cancelAppliedCV({ cvId: user?.cv?.id, jobId: selectedId })

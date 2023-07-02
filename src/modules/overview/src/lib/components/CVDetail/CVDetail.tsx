@@ -227,7 +227,7 @@ const CVDetail: FC<IProps> = ({ headerHidden }) => {
                               </Col>
                               <Col span={12}>
                                  <div className="cv-item">
-                                    <span className="title">Chuyên ngành hẹp</span>
+                                    <span className="title">Chuyên môn</span>
                                     <span>{user?.cv?.specialization?.name}</span>
                                  </div>
                               </Col>

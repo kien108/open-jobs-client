@@ -128,7 +128,7 @@ export const StyledLabelSelect: StyledComponent<any, any> = styled(Typography)<{
       props.ismovetext === "true"
          ? css`
               transform: translateY(70%);
-              font-size: 15px !important;
+              font-size: 13px !important;
            `
          : css`
               transform: translateY(26%);

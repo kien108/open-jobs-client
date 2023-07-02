@@ -3,11 +3,14 @@ import { IResCompany } from "../../types";
 import { Container } from "./styles";
 import { Col, Row } from "antd";
 import Parser from "html-react-parser";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
    data?: IResCompany;
 }
 const CompanySlide: FC<IProps> = ({ data }) => {
+   const navigate = useNavigate();
+
    return (
       <Container className="left">
          <Row gutter={[25, 25]}>
@@ -18,7 +21,9 @@ const CompanySlide: FC<IProps> = ({ data }) => {
             </Col>
 
             <Col span={12} className="content">
-               <span className="title">{data?.name}</span>
+               <span className="title" onClick={() => navigate(`/overview/companies/${data?.id}`)}>
+                  {data?.name}
+               </span>
 
                <p className="des">{Parser(data?.description ?? "")}</p>
 

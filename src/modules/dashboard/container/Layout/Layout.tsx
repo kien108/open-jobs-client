@@ -7,7 +7,7 @@ import {
    useGetAdminByIdQuery,
    changeSidebar,
 } from "../../../../libs/common";
-import { Layout as AntLayout } from "antd";
+import { Layout as AntLayout, Spin } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import "./styles.scss";
@@ -30,7 +30,10 @@ const Layout = () => {
    const navigate = useNavigate();
    const accessToken = getToken();
    const { isOpen } = useCommonSelector((state: RootState) => state.sidebarSlice);
-   const { data, isLoading } = useGetProfileQuery(id, { skip: !id });
+   const { data, isFetching } = useGetProfileQuery(
+      { id, refetch: localStorage.getItem("refetch") },
+      { skip: !id, refetchOnMountOrArgChange: true }
+   );
 
    useEffect(() => {
       if (!data) return;
@@ -54,48 +57,50 @@ const Layout = () => {
    //    !accessToken && navigate("/login");
    // }, [accessToken]);
    return (
-      <AntLayout hasSider>
-         <Sider
-            width={272}
-            theme="light"
-            className="custom-sidebar"
-            style={{
-               height: "100vh",
-               position: "sticky",
-               left: 0,
-               top: 0,
-               bottom: 0,
-               transition: "all 0.3s",
-               zIndex: 999,
-            }}
-            collapsible
-            collapsed={isOpen}
-            onCollapse={() => {
-               dispatch(changeSidebar());
-            }}
-            breakpoint="xl"
-            collapsedWidth="80"
-         >
-            <Sidebar />
-         </Sider>
-         <AntLayout style={{ height: "100vh", background: "rgb(250 250 251)" }}>
-            <Header />
-            <Scrollbars
-               id="scroll-main"
-               renderTrackVertical={(props) => (
-                  <div {...props} className="track-vertical" id="track-vertical-main" />
-               )}
-               renderThumbVertical={(props) => <div {...props} className="thumb-vertical" />}
+      <Spin spinning={isFetching}>
+         <AntLayout hasSider>
+            <Sider
+               width={272}
+               theme="light"
+               className="custom-sidebar"
+               style={{
+                  height: "100vh",
+                  position: "sticky",
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  transition: "all 0.3s",
+                  zIndex: 999,
+               }}
+               collapsible
+               collapsed={isOpen}
+               onCollapse={() => {
+                  dispatch(changeSidebar());
+               }}
+               breakpoint="xl"
+               collapsedWidth="80"
             >
-               <Content
-                  className="site-layout-content"
-                  style={{ padding: 24, background: "rgb(250 250 251)" }}
+               <Sidebar />
+            </Sider>
+            <AntLayout style={{ height: "100vh", background: "rgb(250 250 251)" }}>
+               <Header />
+               <Scrollbars
+                  id="scroll-main"
+                  renderTrackVertical={(props) => (
+                     <div {...props} className="track-vertical" id="track-vertical-main" />
+                  )}
+                  renderThumbVertical={(props) => <div {...props} className="thumb-vertical" />}
                >
-                  <Outlet />
-               </Content>
-            </Scrollbars>
+                  <Content
+                     className="site-layout-content"
+                     style={{ padding: 24, background: "rgb(250 250 251)" }}
+                  >
+                     <Outlet />
+                  </Content>
+               </Scrollbars>
+            </AntLayout>
          </AntLayout>
-      </AntLayout>
+      </Spin>
    );
 };
 

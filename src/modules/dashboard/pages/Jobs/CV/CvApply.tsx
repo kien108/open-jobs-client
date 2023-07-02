@@ -126,7 +126,7 @@ const CVApply = () => {
          render: (item) => <span className="col">{item}</span>,
       },
       {
-         title: "Chuyên ngành hẹp",
+         title: "Chuyên môn",
          dataIndex: "specialization",
          key: "specialization",
          sorter: true,
@@ -157,7 +157,7 @@ const CVApply = () => {
                <BtnFunction
                   onClick={() => {
                      navigate({
-                        pathname: `${record?.userId}`,
+                        pathname: `${record?.id}`,
                         search: createSearchParams({
                            status: record?.status,
                         }).toString(),

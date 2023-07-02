@@ -57,7 +57,14 @@ const RightHeader = ({ languages, accounts }: Props) => {
                         <NavLink key={account.id} to={account.path}>
                            <button
                               className="button-content"
-                              onClick={() => setVisiblePopover(false)}
+                              onClick={() => {
+                                 setVisiblePopover(false);
+                                 if (account?.id === 3) {
+                                    localStorage.removeItem("access_token");
+                                    localStorage.removeItem("userId");
+                                    localStorage.removeItem("COMPANY_ID");
+                                 }
+                              }}
                            >
                               <Text>{t(account.title)}</Text>
                            </button>

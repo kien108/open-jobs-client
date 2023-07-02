@@ -5,11 +5,7 @@ import { revertPrice } from "../utils";
 
 interface Params {
    keyword?: string;
-   skill1?: string;
-   skill2?: string;
-   skill3?: string;
-   skill4?: string;
-   skill5?: string;
+   skillId?: string;
 }
 
 const useFilterSearchJob = () => {
@@ -17,10 +13,6 @@ const useFilterSearchJob = () => {
    const [params, setParams] = useState<Params>({});
 
    useEffect(() => {
-      const skills = searchParams.get("skillIds")?.split(",");
-
-      console.log({ skills });
-
       searchParams.get("keyword")
          ? setParams((prev) => ({
               ...prev,
@@ -30,53 +22,13 @@ const useFilterSearchJob = () => {
               delete prev.keyword;
               return { ...prev };
            });
-      skills?.[0]
+      searchParams.get("skillId")
          ? setParams((prev) => ({
               ...prev,
-              skill1: skills?.[0],
+              skillId: searchParams.get("skillId") || "",
            }))
          : setParams((prev) => {
-              delete prev.skill1;
-              return { ...prev };
-           });
-
-      skills?.[1]
-         ? setParams((prev) => ({
-              ...prev,
-              skill2: skills?.[1],
-           }))
-         : setParams((prev) => {
-              delete prev.skill2;
-              return { ...prev };
-           });
-
-      skills?.[2]
-         ? setParams((prev) => ({
-              ...prev,
-              skill3: skills?.[2],
-           }))
-         : setParams((prev) => {
-              delete prev.skill3;
-              return { ...prev };
-           });
-
-      skills?.[3]
-         ? setParams((prev) => ({
-              ...prev,
-              skill4: skills?.[3],
-           }))
-         : setParams((prev) => {
-              delete prev.skill4;
-              return { ...prev };
-           });
-
-      skills?.[4]
-         ? setParams((prev) => ({
-              ...prev,
-              skill5: skills?.[4],
-           }))
-         : setParams((prev) => {
-              delete prev.skill5;
+              delete prev.skillId;
               return { ...prev };
            });
    }, [searchParams.toString()]);

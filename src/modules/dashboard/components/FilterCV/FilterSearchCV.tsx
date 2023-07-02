@@ -44,7 +44,7 @@ const FilterSearchCV = () => {
       keyword: searchParams.get("keyword"),
       majorId: "",
       specializationId: "",
-      skillIds: [],
+      skillId: "",
    };
 
    const form = useForm({ defaultValues });
@@ -76,14 +76,13 @@ const FilterSearchCV = () => {
       form.reset({
          ...defaultValues,
          specializationId: form.getValues("specializationId"),
-         skillIds: form.getValues("skillIds"),
+         skillId: form.getValues("skillId"),
          majorId: form.getValues("majorId"),
       });
 
       setChecked(searchParams.get("isVerified") === "true");
    }, [searchParams.toString()]);
 
-   console.log(form.watch("skillIds"));
    return (
       <Container>
          <FormProvider {...form}>
@@ -99,38 +98,31 @@ const FilterSearchCV = () => {
                         form.setValue("keyword", e.target.value);
                         handleOnChange("keyword", e.target.value);
                      }}
+                     height="46px"
                   />
                </Col>
 
-               <Col span={10}>
-                  <Select
-                     className="select-skill"
-                     required
-                     mode="multiple"
-                     name="skillIds"
-                     label="Kỹ năng"
-                     maxTagCount={2}
-                     options={(dataSkills ?? [])?.map((item: any) => ({
-                        key: +item.id,
-                        label: item.id,
-                        value: item.id,
-                        render: () => <span>{item?.name}</span>,
-                     }))}
-                     onChange={(value) => {
-                        if (value?.length > skillCount) {
-                           setValueToSearchParams(
-                              "skillIds",
-                              value.slice(0, value.length - 1) as any
-                           );
-                           form.setValue("skillIds", value.slice(0, value.length - 1) as any);
-                           return;
-                        }
-                        setValueToSearchParams("skillIds", value);
-                        form.setValue("skillIds", value);
-                     }}
-                     loading={loadingSkills || fetchingSkills}
-                  />
-               </Col>
+               {user?.company?.memberType === EMemberTypes.PREMIUM && (
+                  <Col span={10}>
+                     <Select
+                        className="select-skill"
+                        required
+                        name="skillId"
+                        label="Kỹ năng"
+                        options={(dataSkills ?? [])?.map((item: any) => ({
+                           key: +item.id,
+                           label: item.id,
+                           value: item.id,
+                           render: () => <span>{item?.name}</span>,
+                        }))}
+                        onChange={(value) => {
+                           setValueToSearchParams("skillId", value);
+                           form.setValue("skillId", value);
+                        }}
+                        loading={loadingSkills || fetchingSkills}
+                     />
+                  </Col>
+               )}
             </Row>
          </FormProvider>
       </Container>

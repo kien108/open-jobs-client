@@ -32,9 +32,10 @@ export const Container = styled.div`
       text-align: center;
       width: 430px;
       cursor: pointer;
+      border: 2px solid transparent;
 
       &.active {
-         border: 2px solid ${(props) => props.theme.strongBlue};
+         border-color: ${(props) => props.theme.strongBlue};
       }
       position: relative;
    }

@@ -22,6 +22,19 @@ export const StyledForm = styled.form`
    bottom: 0px;
    left: 0px;
    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+
+   .btn-back {
+      padding: 0px 15px;
+      height: 30px;
+      font-weight: 400;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+
+      svg {
+         transform: translateY(-3px);
+      }
+   }
 `;
 export const StyledLogo = styled.img`
    margin-left: auto;

@@ -5,7 +5,7 @@ import styled, { StyledComponent } from "styled-components";
 export const StyledFunctions: StyledComponent<any, any> = styled.div`
    display: flex;
    align-items: center;
-   gap: 12px;
+   justify-content: center;
 `;
 
 export const BtnFunction: StyledComponent<any, any> = styled.div`

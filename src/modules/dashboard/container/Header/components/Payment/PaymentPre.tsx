@@ -29,12 +29,18 @@ const Payment = () => {
             openNotification({
                type: "success",
                message: "Thanh toán thành công!",
+               duration: 5,
             });
             navigate("/dashboard");
          })
          .catch((err) => {
             const ERROR_MSG = "không thành công";
             if (!err?.data?.includes(ERROR_MSG)) {
+               openNotification({
+                  type: "success",
+                  message: "Thanh toán thành công!",
+                  duration: 5,
+               });
                navigate("/dashboard");
                return;
             }

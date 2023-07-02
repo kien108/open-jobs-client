@@ -86,6 +86,7 @@ const CreateAndEditHr = () => {
    const searchDistrictDebounce = useDebounce(searchDistrict, 300);
 
    const form = useForm<FormType>({
+      mode: "all",
       defaultValues: {
          firstName: "",
          email: "",
@@ -116,6 +117,11 @@ const CreateAndEditHr = () => {
             email: isEdit
                ? yup.string()
                : yup.string().email(t("common:form.email")).required(t("common:form.required")),
+
+            company_type: yup.string().required(t("common:form.required")).nullable(),
+            province: yup.string().required(t("common:form.required")).nullable(),
+            companyPhone: yup.string().required(t("common:form.required")).nullable(),
+            district: yup.string().required(t("common:form.required")).nullable(),
             isActive: yup.boolean(),
          })
       ),
@@ -329,16 +335,19 @@ const CreateAndEditHr = () => {
                   </Col>
                   <Col span={12}>
                      <Input
+                        type="number"
                         required
                         name="companyPhone"
                         placeholder="Nhập số điện thoại"
                         label="Số điện thoại"
+                        allowClear
                      />
                   </Col>
 
                   <Col span={12}>
                      <Select
                         name="company_type"
+                        required
                         placeholder="Chọn loại công ty"
                         title="Loại công ty"
                         options={[
@@ -395,9 +404,11 @@ const CreateAndEditHr = () => {
                         required
                         showSearch
                         onSearch={(value) => setSearchProvince(value)}
-                        onSelect={(value: any) => {
-                           form.setValue("province", value);
-                           form.setValue("district", "");
+                        onChange={(value: any) => {
+                           form.setValue("province", value, { shouldValidate: true });
+
+                           console.log("123");
+                           form.setValue("district", "", { shouldValidate: true });
                         }}
                         options={provinces || []}
                         loading={false}

@@ -269,7 +269,7 @@ const CVTemplate1: FC<IProps> = ({ headerHidden }) => {
                               <Col span={13}>
                                  <div className="cv-item p-0" style={{ padding: 0 }}>
                                     <span className="title">
-                                       <span>Chuyên ngành hẹp</span>
+                                       <span>Chuyên môn</span>
                                     </span>
                                     <span>{user?.cv?.specialization?.name}</span>
                                  </div>

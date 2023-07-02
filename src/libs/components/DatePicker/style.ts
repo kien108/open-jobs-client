@@ -146,7 +146,7 @@ export const StyledRangePicker: StyledComponent<any, any> = styled(AntDatePicker
 export const Label = styled.label<IStyledRangePicker>`
    position: absolute;
    left: 12px;
-   font-size: ${(props) => (props.isFocus ? "13px" : "16px")};
+   font-size: ${(props) => (props.isFocus ? "13px" : "13px")};
    color: ${(props) => (props.isFocus ? props.theme.primaryText : props.theme.strongGray)};
    top: ${(props) => (props.isFocus ? "30%" : "50%")};
    transform: translateY(-50%);

@@ -191,8 +191,8 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                   <Input
                      className="search"
                      height="46px"
-                     subLabel={t("what")}
-                     placeholder={t("whatPlaceHolder")}
+                     subLabel="Tiêu đề, tên công ty"
+                     placeholder={"Nhập tiêu đề, tên công ty"}
                      icons={<SearchIcon width={20} />}
                      name="keyword"
                      onKeyDown={(event) => {
@@ -209,7 +209,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                <Col span={9}>
                   <Select
                      name="address"
-                     label={t("where")}
+                     label={"Địa chỉ"}
                      required
                      showSearch
                      options={provinces || []}
@@ -219,7 +219,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                </Col>
                <Col span={4}>
                   <Button className="btn-find" height={46} onClick={handleFilter}>
-                     {t("findJobs")}
+                     Tìm kiếm
                   </Button>
                </Col>
                <Col span={2}>

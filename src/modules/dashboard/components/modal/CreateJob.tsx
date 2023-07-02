@@ -25,6 +25,7 @@ import {
    StyledNotFound,
 } from "./styles";
 
+import { AiFillQuestionCircle } from "react-icons/ai";
 import yup from "../../utils/yupGlobal";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -32,7 +33,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, useFieldArray } from "react-hook-form";
 
 import { useTranslation } from "react-i18next";
-import { Col, Divider, Radio, Row, Spin } from "antd";
+import { Col, Divider, Radio, Row, Skeleton, Spin, Tooltip } from "antd";
 
 import {
    RootState,
@@ -59,7 +60,8 @@ import { ColumnsType } from "antd/es/table";
 import moment from "moment";
 import { convertEnumToArrayWithoutNumber, convertPrice, revertPrice } from "../../utils";
 import { EJobLevels, EJobTypes, ESalaryType, EWorkPlace } from "../../../../types";
-import { useGetJobCompanyQuery } from "../../services/JobAPIDashBoard";
+import { useGetJobCompanyQuery, useGetJobPriceMutation } from "../../services/JobAPIDashBoard";
+import { Payment } from "../../container/Header/components";
 
 interface ICreateAndEditAdmin {
    handleClose: () => void;
@@ -101,6 +103,17 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
    const [des, setDes] = useState<any>("");
 
    const { isOpen: openConfirmMajor, handleClose: closeMajor, handleOpen: openMajor } = useModal();
+   const { isOpen: openPay, handleClose: handleClosePay, handleOpen: handleOpenPay } = useModal();
+   const {
+      isOpen: openModalPay,
+      handleOpen: handleOpenModalPay,
+      handleClose: handleCloseModalPay,
+   } = useModal();
+   const {
+      isOpen: openModalPayConfirm,
+      handleOpen: handleOpenPayConfirm,
+      handleClose: handleClosePayConfirm,
+   } = useModal();
 
    const form = useForm<FormType>({
       mode: "all",
@@ -113,6 +126,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          hoursPerWeek: 40,
          minSalary: "",
          maxSalary: "",
+         salaryType: ESalaryType.GROSS,
       },
       resolver: yupResolver(
          yup.object({
@@ -192,6 +206,8 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       skip: !form.watch("majorId"),
       refetchOnMountOrArgChange: true,
    });
+
+   const [getPrice, { isLoading: loadingGetPrice, data: dataPrice }] = useGetJobPriceMutation();
 
    const {
       data: dataSkills,
@@ -430,6 +446,69 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             message: "Kỹ năng không được để trống!",
          });
       } else {
+         getPrice(payload)
+            .unwrap()
+            .then((res) => {
+               console.log({ res });
+               handleOpenPay();
+            })
+            .catch((error) => {
+               openNotification({
+                  type: "error",
+                  message: "Tính toán giá tiền thất bại",
+               });
+            });
+         // createJob(payload)
+         //    .unwrap()
+         //    .then(() => {
+         //       openNotification({
+         //          type: "success",
+         //          message: t("Đăng tin tuyển dụng thành công!!!"),
+         //       });
+         //       handleClose();
+         //    })
+         //    .catch((error) => {
+         //       openNotification({
+         //          type: "error",
+         //          message: t("common:ERRORS.SERVER_ERROR"),
+         //       });
+         //    });
+      }
+   };
+
+   const handleCharge = (data: FormType) => {
+      // createJob
+      const payload = {
+         jobPrice: dataPrice,
+         companyId: user?.companyId,
+         description: data?.description,
+         expiredAt: moment(data?.expiredAt).format("x"),
+         hoursPerWeek: data?.hoursPerWeek,
+         jobLevel: data?.jobLevel,
+         jobType: data?.jobType,
+         listJobSkillDTO: data?.skills?.map((item: any) => ({
+            isRequired: item?.required,
+            skill: {
+               isVerified: item?.isVerified,
+               name: item?.name,
+            },
+            weight: item?.weight,
+            yoe: item?.yoe,
+         })),
+
+         quantity: data?.quantity,
+         salaryInfo: {
+            isSalaryNegotiable: isNego,
+            maxSalary: revertPrice(data?.maxSalary),
+            minSalary: revertPrice(data?.minSalary),
+            salaryType: data?.salaryType,
+         },
+         specializationId: data?.specializationId,
+         title: data?.title,
+         workPlace: data?.workPlace,
+      };
+
+      if (user?.company?.accountBalance >= +dataPrice) {
          createJob(payload)
             .unwrap()
             .then(() => {
@@ -438,6 +517,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   message: t("Đăng tin tuyển dụng thành công!!!"),
                });
                handleClose();
+               localStorage.setItem("refetch", uuidv4());
             })
             .catch((error) => {
                openNotification({
@@ -445,6 +525,8 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   message: t("common:ERRORS.SERVER_ERROR"),
                });
             });
+      } else {
+         handleOpenPayConfirm();
       }
    };
 
@@ -597,6 +679,9 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                                  <GroupButton>
                                     <div className="cv-item" style={{ marginTop: "20px" }}>
                                        <span className="title">SKILLS</span>
+                                       <Tooltip title="Các kỹ năng bắt buộc sẽ phải nhập số năm kinh nghiệm">
+                                          <AiFillQuestionCircle className="question" size={23} />
+                                       </Tooltip>
                                     </div>
                                     <BtnFunction
                                        onClick={() =>
@@ -699,7 +784,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                               title="Loại lương"
                               required
                               options={salaryTypes}
-                              defaultValue={ESalaryType.GROSS}
                            />
                         </Col>
                      </>
@@ -733,7 +817,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
 
                <GroupButton>
                   <Button
-                     loading={loadingCreateJob}
+                     loading={loadingGetPrice}
                      onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -791,6 +875,78 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   {t(t("common:confirm.ok"))}
                </Button>
             </GroupButton>
+         </Modal>
+
+         <Modal
+            visible={openPay}
+            type="confirm"
+            confirmIcon="?"
+            title={
+               loadingGetPrice ? (
+                  <Skeleton active />
+               ) : (
+                  <span>
+                     Bạn có muốn sủ dụng{" "}
+                     <span style={{ color: "#074ABD" }}>{` ${dataPrice} coins `}</span> để đăng tin
+                     tuyển dụng này không ?
+                  </span>
+               )
+            }
+            onCancel={handleClosePay}
+            destroyOnClose
+         >
+            <GroupButton>
+               <Button
+                  height={50}
+                  onClick={() => form.handleSubmit(handleCharge)()}
+                  loading={loadingCreateJob}
+               >
+                  Đồng ý
+               </Button>
+               <Button border="outline" height={50} onClick={handleClosePay}>
+                  Hủy
+               </Button>
+            </GroupButton>
+         </Modal>
+
+         <Modal
+            visible={openModalPayConfirm}
+            type="confirm"
+            confirmIcon="!"
+            title={"Số dư tài khoản không đủ để thực hiện giao dịch! Bạn có muốn nạp tiền không?"}
+            onCancel={() => {
+               handleClosePay();
+               handleClosePayConfirm();
+            }}
+            destroyOnClose
+         >
+            <GroupButton>
+               <Button height={50} onClick={handleOpenModalPay}>
+                  Nạp tiền ngay
+               </Button>
+               <Button
+                  border="outline"
+                  height={50}
+                  onClick={() => {
+                     handleClosePay();
+                     handleClosePayConfirm();
+                  }}
+               >
+                  Hủy bỏ
+               </Button>
+            </GroupButton>
+         </Modal>
+
+         <Modal
+            visible={openModalPay}
+            onCancel={() => {
+               handleClosePay();
+               handleClosePayConfirm();
+               handleCloseModalPay();
+            }}
+            width="1200px"
+         >
+            <Payment />
          </Modal>
       </Spin>
    );

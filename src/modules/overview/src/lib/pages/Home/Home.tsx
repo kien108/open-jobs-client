@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "./styles";
 import { Filter, FilterJob } from "../../components";
-import { Outlet, useFetcher, useLocation } from "react-router-dom";
+import { Outlet, useFetcher, useLocation, useNavigate } from "react-router-dom";
 import { Header } from "../Jobs/styles";
+import { RootState, getToken, useCommonSelector, useModal } from "../../../../../../libs/common";
+import { Button, Modal, OverviewIcon } from "../../../../../../libs/components";
 
 const Home = () => {
    const [params, setParams] = useState();
-   const location = useLocation();
+   const { user } = useCommonSelector((state: RootState) => state.user);
+   const navigate = useNavigate();
 
-   console.log("home page");
+   const { isOpen, handleOpen, handleClose } = useModal();
 
    const handleFilter = () => {};
 
+   console.log({ user });
    return (
       <Container>
          <Header>

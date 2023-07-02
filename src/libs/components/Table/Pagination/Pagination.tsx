@@ -78,7 +78,7 @@ export default function Pagination({ tableInstance, ...props }: PaginationProps)
       <StyledPagination theme={theme}>
          <div className="total-page">
             <span className="total">
-               {t("common:table.pages")}
+               Số trang
                <span className="page-current"> {props.total}</span>
             </span>
          </div>
@@ -89,7 +89,7 @@ export default function Pagination({ tableInstance, ...props }: PaginationProps)
                showTotal={(total, range) => {
                   return (
                      <span className="text">
-                        {t("common:table.linesPerPage")}
+                        Số dòng mỗi trang
                         <Popover
                            overlayClassName="styled-popover"
                            content={content}
@@ -102,7 +102,7 @@ export default function Pagination({ tableInstance, ...props }: PaginationProps)
                               {range[0]}-{range[1]}{" "}
                            </span>
                         </Popover>
-                        {t("common:table.of")}
+                        của
                         <span className="page-total"> {props.totalElements}</span>
                      </span>
                   );

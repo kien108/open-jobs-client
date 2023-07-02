@@ -141,6 +141,14 @@ export const JobAPI = createApi({
             url: `/skills`,
          }),
       }),
+
+      getJobPrice: builder.mutation({
+         query: (body) => ({
+            url: `/job/price/${body?.companyId}`,
+            body,
+            method: "POST",
+         }),
+      }),
    }),
 });
 
@@ -167,4 +175,6 @@ export const {
    useGetAllSkillsQuery,
 
    useUpdateJobMutation,
+
+   useGetJobPriceMutation,
 } = JobAPI;

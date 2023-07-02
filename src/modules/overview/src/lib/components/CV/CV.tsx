@@ -63,7 +63,7 @@ import { useReactToPrint } from "react-to-print";
 import { EditorEdit } from "../EditorEdit";
 
 const CV = () => {
-   const { id } = useCommonSelector((state: RootState) => state.user.user);
+   const { id, cv } = useCommonSelector((state: RootState) => state.user.user);
    const tableInstance = Table.useTable();
    const navigate = useNavigate();
 
@@ -78,7 +78,7 @@ const CV = () => {
    const [majors, setMajors] = useState<any>([]);
    const [specializations, setSpecializations] = useState<any>([]);
    const [searchSkill, setSearchSkill] = useState<string>("");
-   const [statusCV, setStatusCV] = useState<boolean>(false);
+   const [statusCV, setStatusCV] = useState<boolean>(true);
 
    const [listSkill, setSkills] = useState<any>([]);
    const { isOpen: openConfirmMajor, handleClose: closeMajor, handleOpen: openMajor } = useModal();
@@ -369,10 +369,17 @@ const CV = () => {
    }, [user]);
    return (
       <Spin spinning={isLoading || isFetching}>
-         <BtnFunction className="btn-back" onClick={() => navigate(-1)}>
-            <BsArrowLeft size={23} />
-         </BtnFunction>
-         <Title style={{ textAlign: "center" }}>Chỉnh sửa hồ sơ</Title>
+         {cv?.title ? (
+            <BtnFunction className="btn-back" onClick={() => navigate(-1)}>
+               <BsArrowLeft size={23} />
+            </BtnFunction>
+         ) : (
+            <div className="" style={{ marginTop: "100px" }}></div>
+         )}
+
+         <Title style={{ textAlign: "center" }}>
+            {cv?.title ? "Chỉnh sửa hồ sơ" : "Bạn vui lòng tạo hồ sơ nhé"}
+         </Title>
          <Container>
             <FormProvider {...form}>
                <Row gutter={[30, 30]}>
@@ -388,7 +395,13 @@ const CV = () => {
                               maxInitials={2}
                               name={`${user?.firstName} ${user?.lastName}`}
                            />
-                           <Input name="title" label={t("Tiêu đề")} required className="title-cv" />
+                           <Input
+                              name="title"
+                              label={t("Tiêu đề")}
+                              required
+                              className="title-cv"
+                              placeholder="Nhập tiêu đề hồ sơ"
+                           />
 
                            <div className="right">
                               <div className="item">
@@ -401,7 +414,7 @@ const CV = () => {
                               </div>
                               <div className="item">
                                  <AiFillPhone size={17} />
-                                 <span>{user?.phone}</span>
+                                 <span>{user?.phone || "--"}</span>
                               </div>
                            </div>
                         </div>
@@ -464,7 +477,7 @@ const CV = () => {
                                        required
                                        disabled={!form.watch("majorId")}
                                        name="specializationId"
-                                       title={t("Chuyên ngành hẹp")}
+                                       title={t("Chuyên môn")}
                                        placeholder="Please choose major first!"
                                        options={specializations || []}
                                        loading={false}
@@ -548,7 +561,7 @@ const CV = () => {
                   form.handleSubmit(onSubmit)();
                }}
             >
-               {t("common:confirm.save")}
+               Lưu
             </Button>
             <Modal
                type="confirm"
@@ -569,7 +582,7 @@ const CV = () => {
                         closeMajor();
                      }}
                   >
-                     {t("common:confirm.cancel")}
+                     Hủy bỏ
                   </Button>
                   <Button
                      height={44}
@@ -580,7 +593,7 @@ const CV = () => {
                         closeMajor();
                      }}
                   >
-                     {t("common:confirm.ok")}
+                     Đồng ý
                   </Button>
                </GroupButton>
             </Modal>

@@ -15,11 +15,26 @@ interface IProps {
 const RelativeJobItem: FC<IProps> = ({ data }) => {
    const navigate = useNavigate();
 
+   const checkDiffTime = (time) => {
+      const now = moment();
+      const diffInMs = now.diff(moment(time));
+      const diffInDays = moment.duration(diffInMs).asDays();
+
+      return diffInDays <= 5;
+   };
+
    return (
       <Container>
          <span className="date">
             {data?.createdAt ? moment(data?.createdAt).format("HH:mm, DD/MM/YYYY") : "--"}
          </span>
+         <div
+            className={`badge ${
+               data?.isApplied ? "applied" : checkDiffTime(data?.createdAt) ? "new" : "hidden"
+            }`}
+         >
+            {data?.isApplied ? "Đã ứng tuyển" : checkDiffTime(data?.createdAt) ? "Mới" : "hidden"}
+         </div>
 
          <span
             className="relative-title"

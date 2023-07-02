@@ -22,3 +22,4 @@ export * from "./FullCalendar";
 export * from "./Status";
 export * from "./Upload";
 export * from "./TextEllipse";
+export * from "./Popover";

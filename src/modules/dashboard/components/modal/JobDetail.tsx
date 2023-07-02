@@ -150,7 +150,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         </Col>
                         <Col span={12}>
                            <div className="title-container">
-                              <span className="label">Chuyên ngành hẹp:</span>
+                              <span className="label">Chuyên môn:</span>
                               <span className="value">{dataJob?.specialization?.name}</span>
                            </div>
                         </Col>

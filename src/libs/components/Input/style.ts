@@ -43,7 +43,7 @@ export const Label = styled.label`
 `;
 
 export const SubLabel = styled.label<{ isShow?: any; icons?: any }>`
-   font-size: ${(props) => (props.isShow ? "13px" : "15px")};
+   font-size: ${(props) => (props.isShow ? "13px" : "13px")};
    margin-bottom: 4px;
    color: ${(props) => (props.isShow ? props.theme.colorInput : "rgba(27, 31, 59, 0.65)")};
    text-align: left;

@@ -42,7 +42,7 @@ const FilterCompany = () => {
       keyword: searchParams.get("keyword"),
       majorId: "",
       specializationId: "",
-      skillIds: [],
+      skillId: "",
    };
 
    const form = useForm({ defaultValues });
@@ -74,7 +74,7 @@ const FilterCompany = () => {
       form.reset({
          ...defaultValues,
          specializationId: form.getValues("specializationId"),
-         skillIds: form.getValues("skillIds"),
+         skillId: form.getValues("skillId"),
          majorId: form.getValues("majorId"),
       });
 
@@ -103,8 +103,7 @@ const FilterCompany = () => {
                   <Select
                      className="select-skill"
                      required
-                     mode="multiple"
-                     name="skillIds"
+                     name="skillId"
                      label="Kỹ năng"
                      options={(dataSkills ?? [])?.map((item: any) => ({
                         key: +item.id,
@@ -113,9 +112,8 @@ const FilterCompany = () => {
                         render: () => <span>{item?.name}</span>,
                      }))}
                      onChange={(value) => {
-                        setValueToSearchParams("skillIds", value);
-                        console.log({ value });
-                        form.setValue("skillIds", value);
+                        setValueToSearchParams("skillId", value);
+                        form.setValue("skillId", value);
                      }}
                      loading={loadingSkills || fetchingSkills}
                   />

@@ -7,6 +7,7 @@ export const Container = styled.div`
    border-radius: 8px;
    height: 325px;
 
+   position: relative;
    display: flex;
    flex-direction: column;
    justify-content: space-between;
@@ -96,6 +97,51 @@ export const Container = styled.div`
       }
    }
 
+   .badge {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      margin-left: auto;
+
+      display: flex;
+      align-items: flex-end;
+      text-align: center;
+      width: fit-content;
+      padding: 4px 12px;
+      border-radius: 4px 4px 0 4px;
+      font-size: 14px;
+      color: #fff;
+      font-weight: 600;
+      background-color: green;
+
+      &.applied {
+         background-color: green;
+      }
+
+      &.hidden {
+         display: none;
+      }
+
+      &.new {
+         background-color: #ff9119;
+
+         &::after {
+            border-top: 8px solid #ff9119;
+         }
+      }
+
+      &::after {
+         border-top: 8px solid green;
+         content: "";
+         position: absolute;
+         top: 100%;
+         right: 0%;
+         width: 0;
+         height: 0;
+         border-left: 8px solid transparent;
+      }
+   }
+
    .skills {
       display: flex;
       align-items: center;
@@ -109,6 +155,12 @@ export const Container = styled.div`
          font-size: 12px;
          border-radius: 20px;
          display: block;
+         border: 1px solid ${(props) => props.theme.strongBlue};
+
+         &.invalid {
+            background-color: #ccc;
+            border-color: transparent;
+         }
       }
    }
 `;

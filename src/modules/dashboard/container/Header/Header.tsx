@@ -23,12 +23,12 @@ const accounts: AccountType[] = [
       path: "/dashboard/profile",
    },
    {
-      id: 1,
+      id: 2,
       title: "Gói hội viên",
       path: "/dashboard/premium",
    },
    {
-      id: 2,
+      id: 3,
       title: "Đăng xuất",
       path: "/auth",
    },

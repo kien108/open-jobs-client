@@ -38,7 +38,7 @@ const CVSearching = () => {
          render: (item) => <span className="col">{item}</span>,
       },
       {
-         title: "Chuyên ngành hẹp",
+         title: "Chuyên môn",
          dataIndex: "specialization",
          key: "specialization",
 

@@ -75,6 +75,16 @@ export const StyledCreateAndEditHr = styled.div`
       font-size: 17px;
    }
 
+   .cv-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .title {
+         margin-bottom: 0px;
+      }
+   }
+
    .go-to-cvs {
       display: block;
       font-weight: 500;

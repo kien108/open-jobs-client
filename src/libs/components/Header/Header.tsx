@@ -19,18 +19,18 @@ const languages: LanguageType[] = [
 const accounts: AccountType[] = [
    {
       id: 1,
-      title: "header.profile",
+      title: "Hồ sơ",
       path: "/overview/profile",
    },
    {
       id: 2,
-      title: "header.jobApplied",
+      title: "Việc đã ứng tuyển",
       path: "/overview/jobs-applied",
    },
 
    {
       id: 3,
-      title: "header.signOut",
+      title: "Đăng xuất",
       path: "/overview",
    },
 ];

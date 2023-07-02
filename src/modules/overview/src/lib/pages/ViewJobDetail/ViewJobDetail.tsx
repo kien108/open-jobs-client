@@ -59,15 +59,12 @@ const ViewJobDetail = () => {
 
                      <div className="content">
                         <div className="skills">
-                           <Tag2 className={`skill`}>{"skill"}</Tag2>
-                           <Tag2 className={`skill`}>{"skill"}</Tag2>
-                           <Tag2 className={`skill`}>{"skill"}</Tag2>
                            {jobDetail?.jobSkills?.map((item: any) =>
                               item?.skill?.isVerified ? (
-                                 <Tag2 className={`skill`}>{item?.skill?.name}</Tag2>
+                                 <div className="skill">{item?.skill?.name}</div>
                               ) : (
-                                 <Tooltip title="Invalidate Skill" placement="bottom">
-                                    <Tag2 className="skill invalid">{item?.skill?.name}</Tag2>
+                                 <Tooltip title="Chưa kiểm duyệt" placement="bottom">
+                                    <div className="skill invalid">{item?.skill?.name}</div>
                                  </Tooltip>
                               )
                            )}

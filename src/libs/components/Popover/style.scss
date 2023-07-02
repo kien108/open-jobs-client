@@ -1,0 +1,52 @@
+.styled-header-popover {
+  .ant-popover-content {
+    z-index: 0;
+    box-shadow: 0 8px 16px rgb(0 0 0 / 16%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    min-width: calc(100% - 1px);
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #ededed;
+
+    .ant-popover-arrow {
+      display: none;
+    }
+
+    .ant-popover-inner-content {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      font-size: 15px;
+
+      .dropdown-group-btn {
+        padding: 8px 1px;
+
+        .button-content {
+          align-items: center;
+          color: #1b1f3b;
+          display: flex;
+          justify-content: space-between;
+          text-align: left;
+          min-height: 44px;
+          width: 100%;
+          padding: 6px 16px;
+          background-color: transparent;
+          outline: none;
+          border: none;
+          cursor: pointer;
+          white-space: nowrap;
+          text-decoration: none;
+          transition: background 300ms ease-in-out;
+
+          &:hover {
+            background-color: #f6f6f6;
+          }
+        }
+      }
+    }
+  }
+}

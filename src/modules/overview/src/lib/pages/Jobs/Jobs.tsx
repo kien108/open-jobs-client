@@ -73,16 +73,16 @@ const Jobs = () => {
                         }
                      }}
                   >
-                     {t("createCV")}
+                     {t("Tạo hồ sơ")}
                   </span>
-                  <span className="content">- {t("takeTime")}</span>
+                  <span className="content">- {t("Điều đó chỉ tốn một ít thời gian")}</span>
                </div>
             </Header>
             <Divider />
             {jobs?.listJob && jobs?.listJob?.length > 0 ? (
                <Content>
                   <Row gutter={[24, 24]}>
-                     <Col span={10}>
+                     <Col span={10} className="left">
                         <Row gutter={[15, 15]} className="jobs">
                            {(jobs?.listJob ?? [])?.map((item) => (
                               <Col span={24} key={item?.id}>
@@ -95,6 +95,7 @@ const Jobs = () => {
                            ))}
                         </Row>
                         <Pagination
+                           className="pagi"
                            totalElements={jobs?.totalElements}
                            tableInstance={tableInstance}
                            total={jobs?.totalPages}

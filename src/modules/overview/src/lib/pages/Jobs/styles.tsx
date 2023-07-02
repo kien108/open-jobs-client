@@ -12,7 +12,7 @@ export const Content = styled.div`
 `;
 
 export const Container = styled.div`
-   .jobs {
+   .left {
       position: sticky;
       top: 75px;
    }
@@ -24,18 +24,19 @@ export const Container = styled.div`
       justify-content: center;
 
       .title {
-         color: #2557a7 !important;
-         font-weight: 700;
+         color: #3270d4 !important;
+         font-weight: 500;
          line-height: 26.27px;
          font-size: 17px;
          cursor: pointer;
       }
 
       .content {
-         color: #4b4b4b;
+         color: white;
          font-size: 17px;
          line-height: 1.67;
          margin-left: 3px;
+         font-weight: 200;
       }
    }
 

@@ -28,6 +28,7 @@ import {
    StyledGroupRemembers,
    StyledLogo,
 } from "./styles";
+import { HiOutlineArrowNarrowLeft } from "react-icons/hi";
 import { useEffect, useState } from "react";
 
 const Login = () => {
@@ -115,7 +116,7 @@ const Login = () => {
       if (localStorage.getItem("loginErr")) {
          openNotification({
             type: "error",
-            message: localStorage.getItem("loginErr") ?? "INTERNAL SERVER ERROR",
+            message: localStorage.getItem("loginErr") ?? "Lỗi máy chủ",
             duration: 30,
          });
       }
@@ -124,6 +125,10 @@ const Login = () => {
       <ContainerLogin>
          <FormProvider {...form}>
             <StyledForm>
+               <Button className="btn-back" onClick={() => navigate("/overview/welcome")}>
+                  <HiOutlineArrowNarrowLeft size={18} />
+                  Về trang chủ
+               </Button>
                <StyledLogo src={logo} />
                <StyledButton className="btn-google">
                   <Button
