@@ -58,7 +58,8 @@ type FormType = {
 };
 
 const CVDetail = () => {
-   const { id } = useParams();
+   const { id, cvId } = useParams();
+
    const tableInstance = Table.useTable();
    const navigate = useNavigate();
    const { user: accountData } = useCommonSelector((state: RootState) => state.user);
@@ -96,10 +97,10 @@ const CVDetail = () => {
       isFetching,
    } = useViewCVByCompanyQuery(
       {
-         cvId: id,
-         companyId: accountData?.companyId,
+         cvId: cvId,
+         companyId: accountData?.company?.id,
       },
-      { skip: !id, refetchOnMountOrArgChange: true }
+      { skip: !cvId || !accountData?.company?.id, refetchOnMountOrArgChange: true }
    );
 
    const [getBusiness, { data: dataBusiness, isFetching: fetchingBusiness }] =
@@ -140,7 +141,7 @@ const CVDetail = () => {
    ];
 
    const onSubmit = (data: any) => {
-      acceptCV({ jobId: id, cvId: id })
+      acceptCV({ jobId: id, cvId: cvId })
          .unwrap()
          .then(() => {
             openNotification({
@@ -247,7 +248,7 @@ const CVDetail = () => {
                            </div>
 
                            <div
-                              className={`right ${user?.chargedToView ? "" : "hidden"}`}
+                              className={`right ${user?.chargedToView ? "" : "not-charged"}`}
                               onClick={() => {
                                  if (user?.chargedToView) return;
 
@@ -347,7 +348,7 @@ const CVDetail = () => {
                      onClick={handleRejectJobCv}
                      loading={loadingReject}
                   >
-                     {t("Reject")}
+                     Từ chối
                   </Button>
                   <Button
                      height={50}
@@ -358,7 +359,7 @@ const CVDetail = () => {
                         form.handleSubmit(onSubmit)();
                      }}
                   >
-                     Accept
+                     Đồng ý
                   </Button>
                </GroupButton>
             )}

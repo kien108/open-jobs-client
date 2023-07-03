@@ -8,6 +8,31 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
+   .pay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin-top: 80px;
+      font-size: 30px;
+      text-align: center;
+
+      .premium {
+         color: ${(props) => props.theme.strongBlue};
+         cursor: pointer;
+      }
+
+      .btn-upgrade {
+         margin-top: 20px;
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         svg {
+            margin-top: -8px;
+         }
+      }
+   }
+
    display: flex;
    flex-direction: column;
    gap: 20px;

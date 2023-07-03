@@ -27,7 +27,12 @@ import {
    useUpdateProfileMutation,
 } from "../../services";
 
-import { useCommonSelector, useDebounce, useGetAdminByIdQuery } from "../../../../libs/common";
+import {
+   RootState,
+   useCommonSelector,
+   useDebounce,
+   useGetAdminByIdQuery,
+} from "../../../../libs/common";
 import { useSearchParams } from "react-router-dom";
 import Avatar from "react-avatar";
 import { randomColor } from "../../../../utils";
@@ -39,7 +44,6 @@ import { HiInformationCircle } from "react-icons/hi";
 import { FaUserCircle } from "react-icons/fa";
 import { ECompanyType, EMemberTypes } from "../../../../types";
 import moment from "moment";
-import { RootState } from "../../redux/store";
 // interface ICreateAndEditAdmin {
 //    handleClose: () => void;
 // }
@@ -154,10 +158,13 @@ const CreateAndEditHr = () => {
 
    const [updateHr, { isLoading: loadingUpdate }] = useUpdateProfileMutation();
 
-   const { data: dataAccount, isFetching: loadingAccount } = useGetProfileQuery(id, {
-      skip: !id,
-      refetchOnMountOrArgChange: true,
-   });
+   const { data: dataAccount, isFetching: loadingAccount } = useGetProfileQuery(
+      { id },
+      {
+         skip: !id,
+         refetchOnMountOrArgChange: true,
+      }
+   );
 
    function isBase64(str: any) {
       const base64Regex = /^(data:image\/[a-z]+;base64,)?[A-Za-z0-9+/=]+$/;
@@ -172,15 +179,9 @@ const CreateAndEditHr = () => {
       );
 
       const existImgs = imgs?.filter((item: any) => {
-         console.log({ item });
          return typeof item === "string" || !isBase64(item?.url || item?.thumbUrl);
       });
 
-      console.log({
-         base64Imgs,
-         imgs,
-         existImgs,
-      });
       const payload = {
          ...dataAccount,
          company: {
@@ -256,7 +257,6 @@ const CreateAndEditHr = () => {
 
       setImgs(company?.imageUrlsString?.split(", ")?.filter((item) => item !== ""));
 
-      console.log({ fk: company?.imageUrlsString?.split(", ") });
       setValue("imgs", company?.imageUrlsString?.split(", ")?.filter((item) => item !== "") ?? [], {
          shouldDirty: true,
       });

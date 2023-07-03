@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { BtnFunction, Container, Content, StyledFunctions } from "./styles";
-import { EyeIcon, Table } from "../../../../libs/components";
+import { Button, EyeIcon, Table } from "../../../../libs/components";
 import { ColumnsType } from "antd/es/table";
 import { useSearchCVQuery } from "../../services";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FilterSearchCV } from "../../components/FilterCV";
 import { useFilterCV } from "../../hooks";
+import { EMemberTypes } from "../../../../types";
+import { useCommonSelector, RootState } from "../../../../libs/common";
+
+import { MdUpgrade } from "react-icons/md";
 
 const CVSearching = () => {
    const tableInstance = Table.useTable();
    const navigate = useNavigate();
+   const [searchParams] = useSearchParams();
+   const { user } = useCommonSelector((state: RootState) => state.user);
 
    const [dataSource, setDataSource] = useState<any>([]);
 
@@ -19,6 +25,7 @@ const CVSearching = () => {
          ...useFilterCV(),
       },
       {
+         skip: !searchParams.get("keyword"),
          refetchOnMountOrArgChange: true,
       }
    );
@@ -53,15 +60,6 @@ const CVSearching = () => {
       },
 
       {
-         title: "Status",
-         dataIndex: "active",
-         key: "active",
-
-         render: (value: string) => (
-            <div className={`active ${value ? "true" : "false"}`}>{value ? "Hiện" : "Ẩn"}</div>
-         ),
-      },
-      {
          title: "Actions",
          dataIndex: "id",
          render: (_: string, record: any) => (
@@ -73,6 +71,12 @@ const CVSearching = () => {
          ),
       },
    ];
+
+   useEffect(() => {
+      if (!searchParams.get("keyword")) {
+         setDataSource([]);
+      }
+   }, [searchParams.get("keyword")]);
 
    useEffect(() => {
       const dataSource = (dataCVs?.listCv ?? [])?.map((item: any) => ({
@@ -90,16 +94,35 @@ const CVSearching = () => {
          <h1 className="title">Tìm kiếm ứng viên</h1>
 
          <Content>
-            <FilterSearchCV />
-            <Table
-               columns={columns}
-               dataSource={dataSource}
-               tableInstance={tableInstance}
-               loading={fetchingCVs}
-               totalElements={dataCVs?.totalElements || 0}
-               totalPages={dataCVs?.totalPages || 0}
-               locale={{ emptyText: "Không có hồ sơ" }}
-            />
+            {user?.company?.memberType === EMemberTypes.DEFAULT ? (
+               <div className="pay">
+                  <span>
+                     Nâng cấp tài khoản lên{" "}
+                     <span className="premium" onClick={() => navigate("/dashboard/premium")}>
+                        Premium
+                     </span>{" "}
+                     để sử dụng tính năng này
+                  </span>
+
+                  <Button className="btn-upgrade" onClick={() => navigate("/dashboard/premium")}>
+                     Nâng cấp ngay
+                     <MdUpgrade color="white" size={28} />
+                  </Button>
+               </div>
+            ) : (
+               <>
+                  <FilterSearchCV />
+                  <Table
+                     columns={columns}
+                     dataSource={dataSource}
+                     tableInstance={tableInstance}
+                     loading={fetchingCVs}
+                     totalElements={dataCVs?.totalElements || 0}
+                     totalPages={dataCVs?.totalPages || 0}
+                     locale={{ emptyText: "Tìm kiếm ứng viên ngay" }}
+                  />
+               </>
+            )}
          </Content>
       </Container>
    );

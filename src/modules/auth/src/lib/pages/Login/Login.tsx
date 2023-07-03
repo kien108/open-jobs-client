@@ -117,8 +117,10 @@ const Login = () => {
          openNotification({
             type: "error",
             message: localStorage.getItem("loginErr") ?? "Lỗi máy chủ",
-            duration: 30,
+            duration: 5,
          });
+
+         localStorage.removeItem("loginErr");
       }
    }, []);
    return (

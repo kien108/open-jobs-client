@@ -77,7 +77,7 @@ export const Container = styled.div`
             cursor: pointer;
          }
 
-         &.hidden {
+         &.not-charged {
             &::before {
                display: flex;
             }

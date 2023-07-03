@@ -208,24 +208,29 @@ const Jobs = () => {
                            >
                               Xem chi tiết
                            </span>
-                           <span
-                              className="button-content"
-                              onClick={() => {
-                                 searchParams.set("id", record?.id);
-                                 setSearchParams(searchParams);
-                                 handleOpenEdit();
-                              }}
-                           >
-                              Chỉnh sửa
-                           </span>
-                           <span
-                              className="button-content"
-                              onClick={() => {
-                                 handleOpenDelete(record.id);
-                              }}
-                           >
-                              Xóa
-                           </span>
+                           {record?.jobStatus === "NEW" && (
+                              <span
+                                 className="button-content"
+                                 onClick={() => {
+                                    searchParams.set("id", record?.id);
+                                    setSearchParams(searchParams);
+                                    handleOpenEdit();
+                                 }}
+                              >
+                                 Chỉnh sửa
+                              </span>
+                           )}
+
+                           {record?.jobStatus === "NEW" && (
+                              <span
+                                 className="button-content"
+                                 onClick={() => {
+                                    handleOpenDelete(record.id);
+                                 }}
+                              >
+                                 Xóa
+                              </span>
+                           )}
                         </div>
                      }
                   >

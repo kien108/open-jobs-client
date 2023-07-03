@@ -44,15 +44,15 @@ export const Container = styled.div`
             }
          }
 
-         &.accepted {
+         &.ACCEPTED {
             background-color: green;
          }
 
-         &.new {
+         &.NEW {
             background-color: #d1d103;
          }
 
-         &.rejected {
+         &.REJECTED {
             background-color: red;
          }
 
@@ -67,12 +67,13 @@ export const Container = styled.div`
       text-align: center;
       padding: 2px 4px;
       font-size: 13px;
+      color: white;
 
       &.NEW {
          background-color: yellow;
       }
 
-      &.APPROVED {
+      &.ACCEPTED {
          background: ${(props) => props.theme.strongBlue};
       }
 

@@ -9,7 +9,7 @@ import {
    useGetAdminByIdQuery,
 } from "../../../common";
 import { Layout as AntLayout, Spin } from "antd";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import "./styles.scss";
 import { decodeToken } from "react-jwt";
@@ -29,6 +29,7 @@ import { AiFillHeart } from "react-icons/ai";
 const Layout = () => {
    const dispatch = useCommonDispatch();
    const navigate = useNavigate();
+   const [searchParams] = useSearchParams();
    const { id: userId, companyId } = useCommonSelector((state: RootState) => state.user.user);
 
    const location = useLocation();
@@ -39,8 +40,9 @@ const Layout = () => {
 
          const role = new URLSearchParams(search).get("role");
          const id = new URLSearchParams(search).get("id");
-         const error = new URLSearchParams(search).get("error");
+         const error = searchParams.get("error");
 
+         console.log({ error });
          const accessToken = new URLSearchParams(search).get("access-token");
 
          accessToken && setToken(accessToken);
@@ -52,7 +54,12 @@ const Layout = () => {
          }
 
          if (!role || !id || !accessToken) {
-            localStorage.setItem("loginErr", error ? error : "INTERNAL SERVER ERROR");
+            localStorage.setItem(
+               "loginErr",
+               error
+                  ? "Tài khoản của bạn đã bị vô hiệu hoá! Liên hệ quản trị viên của OpenJob để biết thêm chi tiết!"
+                  : "INTERNAL SERVER ERROR"
+            );
             navigate("/auth");
          }
 

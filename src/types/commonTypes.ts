@@ -41,7 +41,6 @@ export enum EJobLevels {
    JUNIOR = "Junior",
    MIDDLE = "Middle",
    SENIOR = "Senior",
-   LEADER = "Trưởng nhóm",
    HIGH_LEVEL_EXECUTIVE = "Vị trí cao cấp",
 }
 

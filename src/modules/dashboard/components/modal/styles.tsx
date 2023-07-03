@@ -114,7 +114,7 @@ export const GroupButton = styled.div`
    align-items: center;
    justify-content: center;
    gap: 20px;
-   margin-top: 12px;
+   margin-top: 20px;
 
    .title {
       font-size: 13px;

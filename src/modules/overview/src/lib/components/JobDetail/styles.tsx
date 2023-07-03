@@ -16,7 +16,7 @@ export const Container = styled.div`
       z-index: 99;
       background-color: white;
 
-      &.hidden {
+      &.hide {
          position: unset;
       }
 

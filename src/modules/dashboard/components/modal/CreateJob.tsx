@@ -51,6 +51,7 @@ import { WorkPlace } from "../../types/JobModel";
 import { EmailVariables } from "../EmailVariables";
 import {
    useCreateJobMutation,
+   useGetBusinessQuery,
    useGetMajorsQuery,
    useGetSkillsQuery,
    useGetSpecializationsQuery,
@@ -104,6 +105,8 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
 
    const { isOpen: openConfirmMajor, handleClose: closeMajor, handleOpen: openMajor } = useModal();
    const { isOpen: openPay, handleClose: handleClosePay, handleOpen: handleOpenPay } = useModal();
+
+   const { data: dataBusiness } = useGetBusinessQuery();
    const {
       isOpen: openModalPay,
       handleOpen: handleOpenModalPay,
@@ -409,6 +412,30 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       }));
    }, []);
 
+   const bindingJobLevelToWeight = (jobLevel: string) => {
+      console.log({ jobLevel, dataBusiness: dataBusiness?.seniorWeight });
+
+      switch (jobLevel) {
+         case "FRESHER":
+            return dataBusiness?.fresherWeight;
+
+         case "INTERNSHIP":
+            return dataBusiness?.internWeight;
+
+         case "JUNIOR":
+            return dataBusiness?.juniorWeight;
+         case "MIDDLE":
+            return dataBusiness?.middleWeight;
+         case "SENIOR":
+            return dataBusiness?.seniorWeight;
+
+         case "HIGH_LEVEL_EXECUTIVE":
+            return dataBusiness?.highPositionWeight;
+         default:
+            return 0;
+      }
+   };
+
    const onSubmit = (data: FormType) => {
       // createJob
       const payload = {
@@ -602,6 +629,14 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       });
    }, [form.watch("renewJobId")]);
 
+   const checkDiffTime = (time) => {
+      const now = moment();
+      const diffInMs = moment(time).diff(now);
+      const diffInDays = parseInt(moment.duration(diffInMs).asDays());
+
+      return diffInDays;
+   };
+
    return (
       <Spin spinning={false}>
          <StyledCreateAndEditHr>
@@ -616,19 +651,21 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
 
                   {!isRenew && (
                      <Col span={12}>
-                        <Select
-                           name="renewJobId"
-                           title="Tin tuyển dụng cũ"
-                           placeholder="Chọn tin tuyển dụng cũ"
-                           required
-                           options={(dataCompany?.listJob ?? [])?.map((item) => ({
-                              key: item?.id,
-                              label: item?.title,
-                              value: item?.id,
-                              render: () => <span>{item?.title}</span>,
-                           }))}
-                           loading={isFetching}
-                        />
+                        <Spin spinning={isFetching}>
+                           <Select
+                              name="renewJobId"
+                              title="Tin tuyển dụng cũ"
+                              placeholder="Chọn tin tuyển dụng cũ"
+                              required
+                              options={(dataCompany?.listJob ?? [])?.map((item) => ({
+                                 key: item?.id,
+                                 label: item?.title,
+                                 value: item?.id,
+                                 render: () => <span>{item?.title}</span>,
+                              }))}
+                              loading={isFetching}
+                           />
+                        </Spin>
                      </Col>
                   )}
 
@@ -895,6 +932,15 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             onCancel={handleClosePay}
             destroyOnClose
          >
+            <span style={{ marginTop: "4px", display: "block" }}>
+               Giá tiền đăng tin được tính theo công thức sau: giá tin 1 ngày x trọng số level x (số
+               ngày tin tồn tại - 1) ={" "}
+               <span style={{ color: "rgb(7, 74, 189)" }} className="price">{`${
+                  dataBusiness?.baseJobPricePerDay
+               } x ${bindingJobLevelToWeight(form.getValues("jobLevel"))} x (${checkDiffTime(
+                  form.getValues("expiredAt")
+               )} - 1)`}</span>
+            </span>
             <GroupButton>
                <Button
                   height={50}

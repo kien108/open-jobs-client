@@ -96,7 +96,7 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                </>
             ) : (
                <>
-                  <div className={`header ${!isCompany ? "hidden" : ""}`}>
+                  <div className={`header ${!isCompany ? "hide" : ""}`}>
                      <div className="content">
                         <span
                            className="job-title"
