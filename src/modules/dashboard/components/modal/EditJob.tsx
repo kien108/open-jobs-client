@@ -32,7 +32,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, useFieldArray } from "react-hook-form";
 
 import { useTranslation } from "react-i18next";
-import { Col, Divider, Radio, Row, Spin } from "antd";
+import { Col, Divider, Radio, Row, Skeleton, Spin } from "antd";
 
 import {
    RootState,
@@ -50,7 +50,9 @@ import { WorkPlace } from "../../types/JobModel";
 import { EmailVariables } from "../EmailVariables";
 import {
    useCreateJobMutation,
+   useGetBusinessQuery,
    useGetJobByIdQuery,
+   useGetJobPriceMutation,
    useGetMajorsQuery,
    useGetSkillsQuery,
    useGetSpecializationsQuery,
@@ -61,6 +63,7 @@ import { ColumnsType } from "antd/es/table";
 import moment from "moment";
 import { convertEnumToArrayWithoutNumber, convertPrice, revertPrice } from "../../utils";
 import { EJobLevels, EJobStatus, EJobTypes, ESalaryType, EWorkPlace } from "../../../../types";
+import { Payment } from "../../container/Header/components";
 
 interface ICreateAndEditAdmin {
    handleClose: () => void;
@@ -189,6 +192,22 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       refetchOnMountOrArgChange: true,
    });
 
+   const { isOpen: openPay, handleClose: handleClosePay, handleOpen: handleOpenPay } = useModal();
+
+   const { data: dataBusiness } = useGetBusinessQuery();
+   const {
+      isOpen: openModalPay,
+      handleOpen: handleOpenModalPay,
+      handleClose: handleCloseModalPay,
+   } = useModal();
+   const {
+      isOpen: openModalPayConfirm,
+      handleOpen: handleOpenPayConfirm,
+      handleClose: handleClosePayConfirm,
+   } = useModal();
+
+   const [getPrice, { isLoading: loadingGetPrice, data: dataPrice }] = useGetJobPriceMutation();
+
    const [updateJob, { isLoading: loadingCreateJob }] = useUpdateJobMutation();
    const { fields, append, remove, update } = useFieldArray({
       control: form.control,
@@ -204,14 +223,17 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       refetchOnMountOrArgChange: true,
    });
 
+   const isReadonly = dataJob?.jobStatus !== "NEW";
+
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
+         title: "Tên",
          dataIndex: "name",
          key: "name",
          width: "23%",
          render: (_: string, record: any) => (
             <Select
+               disabled={isReadonly}
                name={`skills.[${record.key}].name`}
                placeholder="Select skill"
                options={listSkill || []}
@@ -257,7 +279,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                isFieldArray={true}
                type="number"
                name={`skills.[${record.key}].yoe`}
-               disabled={!Boolean(form.watch(`skills.[${record.key}].required`))}
+               disabled={!Boolean(form.watch(`skills.[${record.key}].required`)) || isReadonly}
                allowClear
             />
          ),
@@ -273,6 +295,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                name={`skills.[${record.key}].weight`}
                onChange={(value) => handleEnterWeight(record?.key, value)}
                allowClear
+               disabled={isReadonly}
             />
          ),
       },
@@ -283,6 +306,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          width: "13%",
          render: (value, record) => (
             <Checkbox
+               disabled={isReadonly}
                name={`skills.[${record.key}].required`}
                checked={value}
                onChange={(e) => {
@@ -309,6 +333,8 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             <BtnFunction
                className="btn-remove"
                onClick={() => {
+                  if (isReadonly) return;
+
                   if (form.watch("skills").length > 1) {
                      remove(record?.key);
                   } else {
@@ -429,21 +455,36 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             message: "Kỹ năng không được để trống!",
          });
       } else {
-         updateJob(payload)
-            .unwrap()
-            .then(() => {
-               openNotification({
-                  type: "success",
-                  message: t("Cập nhật tin tuyển dụng thành công!!!"),
+         if (!isReadonly) {
+            getPrice(payload)
+               .unwrap()
+               .then((res) => {
+                  console.log({ res });
+                  handleOpenPay();
+               })
+               .catch((error) => {
+                  openNotification({
+                     type: "error",
+                     message: "Tính toán giá tiền thất bại",
+                  });
                });
-               handleClose();
-            })
-            .catch((error) => {
-               openNotification({
-                  type: "error",
-                  message: t("common:ERRORS.SERVER_ERROR"),
+         } else {
+            updateJob(payload)
+               .unwrap()
+               .then(() => {
+                  openNotification({
+                     type: "success",
+                     message: t("Cập nhật tin tuyển dụng thành công!!!"),
+                  });
+                  handleClose();
+               })
+               .catch((error) => {
+                  openNotification({
+                     type: "error",
+                     message: t("common:ERRORS.SERVER_ERROR"),
+                  });
                });
-            });
+         }
       }
    };
 
@@ -514,6 +555,100 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       reset(dataReset);
    }, [dataJob]);
 
+   const handleCharge = (data: FormType) => {
+      // createJob
+      const payload = {
+         id: searchParams.get("id"),
+         jobPrice: dataPrice,
+         companyId: user?.companyId,
+         description: data?.description,
+         expiredAt: moment(data?.expiredAt).format("x"),
+         hoursPerWeek: data?.hoursPerWeek,
+         jobLevel: data?.jobLevel,
+         jobType: data?.jobType,
+         jobStatus:
+            dataJob?.jobStatus === EJobStatus.NEW
+               ? dataJob?.jobStatus
+               : checkedStatus
+               ? EJobStatus.APPROVED
+               : EJobStatus.HIDDEN,
+         listJobSkillDTO: data?.skills?.map((item: any) => ({
+            isRequired: item?.required,
+            skill: {
+               isVerified: item?.isVerified,
+               name: item?.name,
+            },
+            weight: item?.weight,
+            yoe: item?.yoe,
+         })),
+
+         quantity: data?.quantity,
+         salaryInfo: {
+            isSalaryNegotiable: isNego,
+            maxSalary: revertPrice(data?.maxSalary),
+            minSalary: revertPrice(data?.minSalary),
+            salaryType: data?.salaryType,
+         },
+         specializationId: data?.specializationId,
+         title: data?.title,
+         workPlace: data?.workPlace,
+      };
+
+      console.log({ price: user?.company?.accountBalance + Number(dataJob?.price) });
+      if (user?.company?.accountBalance + Number(dataJob?.price) >= +dataPrice) {
+         updateJob(payload)
+            .unwrap()
+            .then(() => {
+               openNotification({
+                  type: "success",
+                  message: t("Cập nhật tin tuyển dụng thành công!!!"),
+               });
+
+               searchParams.set("refetch", uuidv4());
+               setSearchParams(searchParams);
+               handleClose();
+            })
+            .catch((error) => {
+               openNotification({
+                  type: "error",
+                  message: t("common:ERRORS.SERVER_ERROR"),
+               });
+            });
+      } else {
+         handleOpenPayConfirm();
+      }
+   };
+
+   const bindingJobLevelToWeight = (jobLevel: string) => {
+      switch (jobLevel) {
+         case "FRESHER":
+            return dataBusiness?.fresherWeight;
+
+         case "INTERNSHIP":
+            return dataBusiness?.internWeight;
+
+         case "JUNIOR":
+            return dataBusiness?.juniorWeight;
+         case "MIDDLE":
+            return dataBusiness?.middleWeight;
+         case "SENIOR":
+            return dataBusiness?.seniorWeight;
+
+         case "HIGH_LEVEL_EXECUTIVE":
+            return dataBusiness?.highPositionWeight;
+         default:
+            return 0;
+      }
+   };
+
+   const checkDiffTime = (time) => {
+      const now = moment();
+      const diffInMs = moment(time).diff(now);
+      const diffInDays = parseInt(moment.duration(diffInMs).asDays());
+
+      return diffInDays;
+   };
+
    return (
       <Spin spinning={fetchingJob}>
          <StyledCreateAndEditHr>
@@ -522,9 +657,10 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   <Col span={24}>
                      <Input
                         required
-                        label={t("Job Title")}
+                        label="Tiêu đề công việc"
                         name="title"
                         placeholder={t("Enter job title")}
+                        disabled={isReadonly}
                      />
                   </Col>
                   <Col span={24}>
@@ -533,7 +669,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                            <Col span={12}>
                               <Select
                                  name="majorId"
-                                 title="Major"
+                                 title="Chuyên ngành"
                                  placeholder="Select major"
                                  required
                                  onSelect={() => {
@@ -543,15 +679,16 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                                  }}
                                  options={majors || []}
                                  loading={false}
+                                 disabled={isReadonly}
                               />
                            </Col>
                            <Col span={12}>
                               <Spin spinning={loadingSpecializations || fetchingSpecializations}>
                                  <Select
                                     required
-                                    disabled={!form.watch("majorId")}
+                                    disabled={!form.watch("majorId") || isReadonly}
                                     name="specializationId"
-                                    title="Specialization"
+                                    title="Chuyên môn"
                                     placeholder="Please choose major first!"
                                     options={specializations || []}
                                     loading={false}
@@ -565,15 +702,16 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                               <Col span={24}>
                                  <GroupButton>
                                     <div className="cv-item" style={{ marginTop: "20px" }}>
-                                       <span className="title">SKILLS</span>
+                                       <span className="title">Kỹ năng</span>
                                     </div>
                                     <BtnFunction
-                                       onClick={() =>
+                                       onClick={() => {
+                                          if (isReadonly) return;
                                           append(
                                              { name: "", required: false, weight: 0 },
                                              { shouldFocus: true }
-                                          )
-                                       }
+                                          );
+                                       }}
                                     >
                                        <BsPlusLg />
                                     </BtnFunction>
@@ -604,28 +742,51 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   <Col span={12}>
                      <Input
                         type="number"
-                        label={t("Quantity")}
+                        label="Số lượng"
                         name="quantity"
                         placeholder={t("Enter quantity")}
+                        disabled={isReadonly}
                      />
                   </Col>
                   <Col span={12}>
                      <Spin spinning={false}>
-                        <Select name="jobLevel" title="Vị trí" required options={jobLevels} />
+                        <Select
+                           name="jobLevel"
+                           title="Vị trí"
+                           required
+                           options={jobLevels}
+                           disabled={isReadonly}
+                        />
                      </Spin>
                   </Col>
 
                   <Col span={12}>
                      <Spin spinning={false}>
-                        <Select name="jobType" title="Loaị công việc" required options={jobTypes} />
+                        <Select
+                           name="jobType"
+                           title="Loaị công việc"
+                           required
+                           options={jobTypes}
+                           disabled={isReadonly}
+                        />
                      </Spin>
                   </Col>
                   <Col span={12}>
-                     <Select name={"workPlace"} options={workplaces} title="WorkPlace" required />
+                     <Select
+                        name={"workPlace"}
+                        options={workplaces}
+                        title="Nơi làm việc"
+                        required
+                        disabled={isReadonly}
+                     />
                   </Col>
 
                   <Col span={12}>
-                     <Radio.Group onChange={(e) => setIsNego(e.target.value)} value={isNego}>
+                     <Radio.Group
+                        onChange={(e) => setIsNego(e.target.value)}
+                        value={isNego}
+                        disabled={isReadonly}
+                     >
                         <Radio value={true}>Lương thỏa thuận</Radio>
                         <Radio value={false}>Mức lương</Radio>
                      </Radio.Group>
@@ -645,6 +806,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                                     shouldValidate: true,
                                  });
                               }}
+                              disabled={isReadonly}
                            />
                         </Col>
                         <Col span={6}>
@@ -660,6 +822,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                                     shouldValidate: true,
                                  });
                               }}
+                              disabled={isReadonly}
                            />
                         </Col>
                         <Col span={12}>
@@ -669,6 +832,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                               required
                               options={salaryTypes}
                               defaultValue={ESalaryType.GROSS}
+                              disabled={isReadonly}
                            />
                         </Col>
                      </>
@@ -676,9 +840,10 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   <Col span={12}>
                      <Input
                         type="number"
-                        label={t("Hours per week")}
+                        label="Giờ làm việc"
                         name="hoursPerWeek"
                         placeholder={t("Enter hoursPerWeek per week")}
+                        disabled={isReadonly}
                      />
                   </Col>
                   <Col span={12}>
@@ -688,6 +853,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         required
                         format={"DD/MM/YYYY"}
                         disabledDate={(value) => moment(value).isBefore(moment())}
+                        disabled={isReadonly}
                      />
                   </Col>
                   <Col span={24}>
@@ -695,7 +861,8 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         data={dataJob?.description}
                         editorRef={contentRef}
                         name="description"
-                        label="Description"
+                        label="Mô tả"
+                        disabled={isReadonly}
                      />
                   </Col>
                </Row>
@@ -716,7 +883,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
 
                <GroupButton>
                   <Button
-                     loading={loadingCreateJob}
+                     loading={isReadonly ? loadingCreateJob : loadingGetPrice}
                      onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -774,6 +941,87 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   {t(t("common:confirm.ok"))}
                </Button>
             </GroupButton>
+         </Modal>
+
+         <Modal
+            visible={openPay}
+            type="confirm"
+            confirmIcon="?"
+            title={
+               loadingGetPrice ? (
+                  <Skeleton active />
+               ) : (
+                  <span>
+                     Bạn có muốn sủ dụng{" "}
+                     <span style={{ color: "#074ABD" }}>{` ${dataPrice} coins `}</span> để đăng tin
+                     tuyển dụng này không ?
+                  </span>
+               )
+            }
+            onCancel={handleClosePay}
+            destroyOnClose
+         >
+            <span style={{ marginTop: "4px", display: "block" }}>
+               Giá tiền đăng tin được tính theo công thức sau: giá tin 1 ngày x trọng số level x (số
+               ngày tin tồn tại - 1) ={" "}
+               <span style={{ color: "rgb(7, 74, 189)" }} className="price">{`${
+                  dataBusiness?.baseJobPricePerDay
+               } x ${bindingJobLevelToWeight(form.getValues("jobLevel"))} x (${checkDiffTime(
+                  form.getValues("expiredAt")
+               )} - 1)`}</span>
+            </span>
+            <GroupButton>
+               <Button
+                  height={50}
+                  onClick={() => form.handleSubmit(handleCharge)()}
+                  loading={loadingCreateJob}
+               >
+                  Đồng ý
+               </Button>
+               <Button border="outline" height={50} onClick={handleClosePay}>
+                  Hủy
+               </Button>
+            </GroupButton>
+         </Modal>
+
+         <Modal
+            visible={openModalPayConfirm}
+            type="confirm"
+            confirmIcon="!"
+            title={"Số dư tài khoản không đủ để thực hiện giao dịch! Bạn có muốn nạp tiền không?"}
+            onCancel={() => {
+               handleClosePay();
+               handleClosePayConfirm();
+            }}
+            destroyOnClose
+         >
+            <GroupButton>
+               <Button height={50} onClick={handleOpenModalPay}>
+                  Nạp tiền ngay
+               </Button>
+               <Button
+                  border="outline"
+                  height={50}
+                  onClick={() => {
+                     handleClosePay();
+                     handleClosePayConfirm();
+                  }}
+               >
+                  Hủy bỏ
+               </Button>
+            </GroupButton>
+         </Modal>
+
+         <Modal
+            visible={openModalPay}
+            onCancel={() => {
+               handleClosePay();
+               handleClosePayConfirm();
+               handleCloseModalPay();
+            }}
+            width="1200px"
+         >
+            <Payment />
          </Modal>
       </Spin>
    );

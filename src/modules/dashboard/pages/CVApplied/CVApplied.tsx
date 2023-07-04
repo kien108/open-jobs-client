@@ -275,7 +275,7 @@ const CVApply = () => {
 
          <Button
             className="btn-export"
-            disabled={dataSource.length === 0}
+            disabled={dataSource?.every((item) => item?.status !== "ACCEPTED")}
             loading={loadingExport}
             height={44}
             icon={<DownloadIcon />}

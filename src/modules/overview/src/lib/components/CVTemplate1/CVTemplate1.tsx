@@ -114,7 +114,7 @@ const CVTemplate1: FC<IProps> = ({ headerHidden }) => {
 
       setValue("listSkill", listSkill);
 
-      setValue("mode", 1);
+      setValue("mode", +user?.cv?.cvType);
    }, [user]);
 
    const handlePrint = useReactToPrint({
@@ -125,7 +125,11 @@ const CVTemplate1: FC<IProps> = ({ headerHidden }) => {
    const handleChangeMode = () => {
       const payload = {
          ...user?.cv,
+         userId: user?.id,
          cvType: form.watch("mode"),
+         listSkill: user?.cv?.skills,
+         specializationId: user?.cv?.specialization?.id,
+         majorId: user?.cv?.major?.id,
       };
 
       upload(payload)
@@ -159,7 +163,11 @@ const CVTemplate1: FC<IProps> = ({ headerHidden }) => {
                   <Button height={44} icon={<DownloadIcon />} onClick={handlePrint}>
                      {t("Xuất hồ sơ")}
                   </Button>
-                  <Button height={44} icon={<EditIcon />} onClick={() => navigate("edit")}>
+                  <Button
+                     height={44}
+                     icon={<EditIcon />}
+                     onClick={() => navigate("/overview/profile/cv/edit")}
+                  >
                      {t("Chỉnh sửa hồ sơ")}
                   </Button>
                </GroupButton>

@@ -50,7 +50,7 @@ const JobsApplied = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Title"),
+         title: "Tiêu đề",
          dataIndex: "title",
          key: "title",
          render: (value, record) => (
@@ -64,14 +64,14 @@ const JobsApplied = () => {
          ),
       },
       {
-         title: t("jobPosition"),
+         title: "Vị trí ứng tuyển",
          dataIndex: "jobPosition",
          key: "title",
 
          render: (value) => <span className="position">{value}</span>,
       },
       {
-         title: t("companyName"),
+         title: "Tên công ty",
          dataIndex: "companyName",
          key: "workPlace",
          render: (value, record) => (
@@ -86,19 +86,19 @@ const JobsApplied = () => {
       },
 
       {
-         title: t("appliedAt"),
+         title: "Ứng tuyển vào",
          dataIndex: "applyDate",
          key: "applyDate",
          render: (item) => <span>{moment(item).format("DD/MM/YYYY")}</span>,
       },
       {
-         title: "Trạng thái",
+         title: "Trạng thái tin",
          dataIndex: "status",
          key: "status",
          render: (value) => <div className={`badge-status ${value ? value : ""}`}>{value}</div>,
       },
       {
-         title: t("Action"),
+         title: "Thao tác",
          dataIndex: "id",
          align: "center",
          render: (_: string, record: any) => (
@@ -151,21 +151,22 @@ const JobsApplied = () => {
 
    useEffect(() => {
       const dataSource = (dataJobs?.listJobCv ?? []).map((item: any) => ({
+         ...item,
+
          key: item?.id,
          title: item?.job?.title,
          companyName: item?.job?.company?.name,
          jobPosition: item?.job?.specialization?.name,
          createAt: item?.createdAt,
-         ...item,
+         status: item?.status === "HIDDEN" ? "Đã đóng" : "Đang tuyển",
       }));
 
       setDataSources(dataSource);
    }, [dataJobs]);
 
-   console.log({ dataJobs });
    return (
       <Container>
-         <Title>{t(`jobsApplied`)}</Title>
+         <Title>Việc đã ứng tuyển</Title>
          <ContainerTable>
             <FilterAppliedJob />
             <Table
@@ -206,7 +207,7 @@ const JobsApplied = () => {
                handleCloseDelete();
             }}
             confirmIcon="?"
-            title={t("Are you sure to want to cancel apply CV in this job?")}
+            title={t("Bạn có muốn hủy ứng tuyển không?")}
          >
             <GroupButton>
                <Button

@@ -7,6 +7,7 @@ import { RiAdminLine } from "react-icons/ri";
 import { MdWorkOutline } from "react-icons/md";
 import { AiOutlineUser, AiOutlineSetting, AiOutlineHome } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
+import { BiCoinStack } from "react-icons/bi";
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -46,6 +47,7 @@ const SideBar = () => {
    const items: MenuItem[] = [
       getItem(true, "Quản lý tin tuyển dụng", "/dashboard/jobs", "jobs", <AiOutlineHome />),
       getItem(true, "Tìm kiếm ứng viên", "/dashboard/cvs", "cvs", <FaUserCircle />),
+      getItem(true, "Quản lý giao dịch", "/dashboard/invoice", "invoice", <BiCoinStack />),
    ];
 
    const onOpenChange = (items: string[]) => {

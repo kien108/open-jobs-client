@@ -76,6 +76,13 @@ export const UserAPI = createApi({
 
          invalidatesTags: ["USER"],
       }),
+
+      getHistory: builder.query({
+         query: ({ companyId, ...params }) => ({
+            url: `/invoice/${companyId}`,
+            params,
+         }),
+      }),
    }),
 });
 
@@ -90,4 +97,5 @@ export const {
    useViewCVByCompanyQuery,
    useChargeCVMutation,
    useUpdatePremiumMutation,
+   useGetHistoryQuery,
 } = UserAPI;

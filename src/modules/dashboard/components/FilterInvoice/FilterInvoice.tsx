@@ -5,7 +5,7 @@ import {
    Input,
    SearchIcon,
    Select,
-} from "../../../../../../libs/components";
+} from "../../../../libs/components";
 import { Col, Row, Spin } from "antd";
 import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
@@ -15,38 +15,40 @@ import { useSearchParams } from "react-router-dom";
 
 import { v4 as uuidv4 } from "uuid";
 
-import { useDebounce } from "../../../../../../libs/common";
+import { useDebounce } from "../../../../libs/common";
 import {
-   useGetCompaniesQuery,
    useGetMajorsQuery,
    useGetProvincesQuery,
+   useGetAllSkillsQuery,
    useGetSpecializationsQuery,
 } from "../../services";
 import moment from "moment";
-import { Container, ContainerFilterJob } from "./styles";
+import { Container } from "./styles";
+import { convertEnumToArrayWithoutNumber, convertPrice } from "../../utils";
+import { EServiceType, EServiceTypeTranslate } from "../../pages/Invoice/Invoice";
 
 const formatDate = "DD/MM/YYYY";
 
-const FilterCompany = () => {
+const FilterInvoice = () => {
    const { t } = useTranslation();
 
    const [searchParams, setSearchParams] = useSearchParams();
+   const [options, setOptions] = useState<any>([]);
    const [provinces, setProvinces] = useState<any>([]);
+   const [majors, setMajors] = useState<any>([]);
+   const [skills, setSkills] = useState<any>([]);
+   const [searchLocation, setSearchLocation] = useState<any>("");
+
+   const [checked, setChecked] = useState<boolean>(false);
+
+   const searchProvinceDebounce = useDebounce(searchLocation, 300);
 
    const defaultValues = {
-      keyword: searchParams.get("keyword"),
       dates: searchParams.get("dates"),
-      jobStatus: searchParams.get("jobStatus"),
-      address: searchParams.get("address"),
+      serviceType: searchParams.get("serviceType"),
    };
 
    const form = useForm({ defaultValues });
-
-   useEffect(() => {
-      form.reset(defaultValues);
-   }, [searchParams.toString()]);
-
-   // const { data: dataProvinces } = useGetProvincesQuery({}, { refetchOnMountOrArgChange: true });
 
    const setValueToSearchParams = (name: string, value: string) => {
       if (value) {
@@ -77,51 +79,59 @@ const FilterCompany = () => {
    const statuses = [
       {
          key: uuidv4(),
-         label: "NEW",
-         value: "NEW",
-         render: () => "Đang tuyển",
+         label: EServiceType.COIN_IN,
+         value: EServiceType.COIN_IN,
+         render: () => EServiceTypeTranslate.COIN_IN,
       },
       {
          key: uuidv4(),
-         label: "HIDDEN",
-         value: "HIDDEN",
-         render: () => "Đã đóng",
+         label: EServiceType.JOB_POST,
+         value: EServiceType.JOB_POST,
+         render: () => EServiceTypeTranslate.JOB_POST,
+      },
+
+      {
+         key: uuidv4(),
+         label: EServiceType.REFUND,
+         value: EServiceType.REFUND,
+         render: () => EServiceTypeTranslate.REFUND,
+      },
+
+      {
+         key: uuidv4(),
+         label: EServiceType.UPDATE_JOB,
+         value: EServiceType.UPDATE_JOB,
+         render: () => EServiceTypeTranslate.UPDATE_JOB,
+      },
+
+      {
+         key: uuidv4(),
+         label: EServiceType.UPGRADE_MEMBERSHIP,
+         value: EServiceType.UPGRADE_MEMBERSHIP,
+         render: () => EServiceTypeTranslate.UPGRADE_MEMBERSHIP,
+      },
+
+      {
+         key: uuidv4(),
+         label: EServiceType.VIEW_CV,
+         value: EServiceType.VIEW_CV,
+         render: () => EServiceTypeTranslate.VIEW_CV,
       },
    ];
 
-   // useEffect(() => {
-   //    const options = (dataProvinces ?? []).map((item: any) => ({
-   //       key: item.id,
-   //       label: item.name,
-   //       value: item.name,
-   //       render: () => <span>{item?.name}</span>,
-   //    }));
-
-   //    setProvinces(options);
-   // }, [dataProvinces]);
+   useEffect(() => {
+      form.reset(defaultValues);
+   }, [searchParams.toString()]);
 
    return (
-      <ContainerFilterJob>
+      <Container>
          <FormProvider {...form}>
             <Row gutter={[20, 20]} align="middle">
-               <Col span={24}>
-                  <Input
-                     className="search"
-                     title={t("companyName")}
-                     placeholder="Tên công ty, tiêu đề"
-                     icons={<SearchIcon width={20} />}
-                     name="keyword"
-                     onChange={(e: any) => {
-                        form.setValue("keyword", e.target.value);
-                        handleOnChange("keyword", e.target.value);
-                     }}
-                  />
-               </Col>
-               <Col span={8}>
+               <Col span={12}>
                   <DateRangePicker
                      format={formatDate}
                      name="dates"
-                     label={"Ngày ứng tuyển"}
+                     label={"Ngày giao dịch"}
                      value={
                         form.getValues("dates")
                            ? [
@@ -146,19 +156,19 @@ const FilterCompany = () => {
                <Col span={8}>
                   <Select
                      required
-                     name="jobStatus"
-                     label="Trạng thái"
+                     name="serviceType"
+                     label="Loại dịch vụ"
                      options={statuses || []}
                      onChange={(value) => {
-                        form.setValue("jobStatus", value);
-                        setValueToSearchParams("jobStatus", value);
+                        form.setValue("serviceType", value);
+                        setValueToSearchParams("serviceType", value);
                      }}
                   />
                </Col>
             </Row>
          </FormProvider>
-      </ContainerFilterJob>
+      </Container>
    );
 };
 
-export default FilterCompany;
+export default FilterInvoice;

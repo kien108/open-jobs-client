@@ -15,7 +15,7 @@ import { CVManagement } from "./pages/CVManagement";
 import { CVApplied } from "./pages/CVApplied";
 import { CV } from "../overview/src/lib/components/CV";
 import { CVDetail } from "./components";
-import { CVSearching, Premium, PreviewPayment } from "./pages";
+import { CVSearching, Invoice, Premium, PreviewPayment } from "./pages";
 // import { Filter } from "./components";
 
 export function ModuleDashboard() {
@@ -35,6 +35,7 @@ export function ModuleDashboard() {
                   <Route path="cvs/*" element={<CVSearching />} />
                   <Route path="cvs/:id" element={<CVDetail />} />
                   <Route path="premium" element={<Premium />} />
+                  <Route path="invoice" element={<Invoice />} />
 
                   <Route path="paypal/success" element={<PreviewPayment />} />
 

@@ -29,19 +29,18 @@ const ContactInformation = () => {
 
    const [upload, { isLoading: loadingUpload }] = useUpdateProfileMutation();
 
-   console.log(user);
    const genders = [
       {
          key: 0,
          label: "Male",
          value: "Male",
-         render: () => <span>Male</span>,
+         render: () => <span>Nam</span>,
       },
       {
          key: 0,
          label: "Female",
          value: "Female",
-         render: () => <span>Female</span>,
+         render: () => <span>Nữ</span>,
       },
    ];
    const form = useForm({
@@ -57,7 +56,7 @@ const ContactInformation = () => {
          yup.object({
             firstName: yup.string().trim().required(t("common:form.required")),
             lastName: yup.string().trim().required(t("common:form.required")),
-            phone: yup.string().trim(),
+            phone: yup.string().nullable(),
             gender: yup.string(),
             email: yup.string().email(t("common:form.email")).required(t("common:form.required")),
          })
@@ -74,6 +73,7 @@ const ContactInformation = () => {
    }, [user]);
 
    const onSubmit = (data: any) => {
+      console.log({ data });
       upload({ authProvider: "DATABASE", ...user, ...data })
          .unwrap()
          .then(() => {
@@ -97,17 +97,12 @@ const ContactInformation = () => {
             <BtnFunction onClick={() => navigate(-1)}>
                <BsArrowLeft size={23} />
             </BtnFunction>
-            <span className="title">{t("contact")}</span>
+            <span className="title">Thông tin cá nhân</span>
 
             <FormProvider {...form}>
-               <Input name="firstName" label={t("firstName")} required />
-               <Input name="lastName" label={t("lastName")} required />
-               <Input
-                  type="number"
-                  name="phone"
-                  label={t("phone")}
-                  placeholder="Nhập số điện thoại"
-               />
+               <Input name="firstName" label="Tên" required />
+               <Input name="lastName" label="Họ tên" required />
+               <Input name="phone" label="Số điện thoại" placeholder="Nhập số điện thoại" />
                <Input name="email" label={t("email")} disabled />
                <Row gutter={[15, 15]}>
                   <Col span={12}>
@@ -126,7 +121,7 @@ const ContactInformation = () => {
                      form.handleSubmit(onSubmit)();
                   }}
                >
-                  {t("common:confirm.save")}
+                  Lưu
                </Button>
             </FormProvider>
          </Container>

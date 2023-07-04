@@ -25,11 +25,20 @@ export const StyledRightHeader = styled.div`
    .point {
       display: flex;
       align-items: center;
-      cursor: pointer;
 
       img {
          width: 25px;
          height: 25px;
+      }
+
+      .item {
+         display: flex;
+         align-items: center;
+         margin: 0 4px;
+
+         &.point {
+            cursor: pointer;
+         }
       }
    }
 

@@ -543,8 +543,9 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   type: "success",
                   message: t("Đăng tin tuyển dụng thành công!!!"),
                });
+               searchParams.set("refetch", uuidv4());
+               setSearchParams(searchParams);
                handleClose();
-               localStorage.setItem("refetch", uuidv4());
             })
             .catch((error) => {
                openNotification({

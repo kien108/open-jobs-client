@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography } from "antd";
+import { Tooltip, Typography } from "antd";
 import { Notification } from "../Notification";
 import { NavLink } from "react-router-dom";
 import { AccountType, LanguageType } from "../../types";
@@ -23,6 +23,9 @@ import { Payment } from "../../components";
 import logo from "../../../../assets/vp.png";
 const { Text } = Typography;
 
+import { AiFillEye } from "react-icons/ai";
+import { MdFiberNew } from "react-icons/md";
+
 interface Props {
    languages: LanguageType[];
    accounts: AccountType[];
@@ -41,12 +44,30 @@ const RightHeader = ({ languages, accounts }: Props) => {
 
    const { isOpen, handleOpen, handleClose } = useModal();
 
+   console.log({ user });
    return (
       <StyledRightHeader>
          <div className="dropdown">
-            <div className="point" onClick={handleOpen}>
-               <img src={logo} alt="" />
-               <span>{user?.company?.accountBalance || "0"}</span>
+            <div className="point">
+               <Tooltip title="Tiền tệ quy đổi trong hệ thống. Được sử dụng để chi trả cho các dịch vụ">
+                  <div className="item point" onClick={handleOpen}>
+                     <img src={logo} alt="" />
+                     <span>{parseInt(user?.company?.accountBalance) || "0"}</span>
+                  </div>
+               </Tooltip>
+
+               <Tooltip title="Lượt xem hồ sơ miễn phí">
+                  <div className="item">
+                     <AiFillEye size={20} />
+                     {user?.company?.amountOfFreeCvViews || "0"}
+                  </div>
+               </Tooltip>
+               <Tooltip title="Lượt đăng tin tuyển dụng miễn phí">
+                  <div className="item">
+                     <MdFiberNew size={20} />
+                     {user?.company?.amountOfFreeJobs || "0"}
+                  </div>
+               </Tooltip>
             </div>
             <Popover
                overlayClassName="styled-header-popover"

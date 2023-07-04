@@ -21,12 +21,13 @@ interface IEmailVariables {
    delta?: string;
    editorRef: any;
    message?: string | undefined;
+   disabled?: boolean;
 }
 
 const BlockEmbed = Quill.import("blots/embed");
 
 const EmailVariables: FC<IEmailVariables> = (props) => {
-   const { label, name, required, toolbar, data, delta, editorRef } = props;
+   const { label, name, required, toolbar, data, delta, editorRef, disabled } = props;
 
    const {
       control,
@@ -85,6 +86,7 @@ const EmailVariables: FC<IEmailVariables> = (props) => {
                      setContent(content);
                   }}
                   toolbar={toolbar}
+                  disabled={disabled}
                />
             )}
          />

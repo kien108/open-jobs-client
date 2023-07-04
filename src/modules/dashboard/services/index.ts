@@ -12,6 +12,7 @@ export {
    useViewCVByCompanyQuery,
    useChargeCVMutation,
    useUpdatePremiumMutation,
+   useGetHistoryQuery,
 } from "./UserAPI";
 
 export {

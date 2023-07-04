@@ -25,6 +25,7 @@ export interface IJob {
    expiredAt: string;
    hoursPerWeek: string;
    id: string;
+   price: string;
    jobLevel: string;
    jobSkills: IJobSkill[];
    jobType: string;

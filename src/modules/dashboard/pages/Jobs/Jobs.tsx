@@ -27,7 +27,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 // import { ICompany } from "../types";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { v4 as uuidv4 } from "uuid";
 import * as yup from "yup";
 import { debounce } from "lodash";
 import { GroupButton } from "../../components/modal/styles";
@@ -184,10 +184,10 @@ const Jobs = () => {
                   <Popover
                      overlayClassName="styled-header-popover"
                      trigger="click"
-                     visible={selectedId === record?.id}
-                     onVisibleChange={(value) => {
-                        return selectedId ? setSelectedId(undefined) : setSelectedId(record?.id);
-                     }}
+                     // visible={selectedId === record?.id}
+                     // onVisibleChange={(value) => {
+                     //    return selectedId ? setSelectedId(undefined) : setSelectedId(record?.id);
+                     // }}
                      content={
                         <div className="dropdown-group-btn">
                            <span
@@ -208,20 +208,18 @@ const Jobs = () => {
                            >
                               Xem chi tiết
                            </span>
-                           {record?.jobStatus === "NEW" && (
-                              <span
-                                 className="button-content"
-                                 onClick={() => {
-                                    searchParams.set("id", record?.id);
-                                    setSearchParams(searchParams);
-                                    handleOpenEdit();
-                                 }}
-                              >
-                                 Chỉnh sửa
-                              </span>
-                           )}
+                           <span
+                              className="button-content"
+                              onClick={() => {
+                                 searchParams.set("id", record?.id);
+                                 setSearchParams(searchParams);
+                                 handleOpenEdit();
+                              }}
+                           >
+                              Chỉnh sửa
+                           </span>
 
-                           {record?.jobStatus === "NEW" && (
+                           {record?.jobStatus !== "APPROVED" && (
                               <span
                                  className="button-content"
                                  onClick={() => {
@@ -272,6 +270,7 @@ const Jobs = () => {
       handleOpenRenewalModal();
    };
 
+   console.log({ selectedId });
    const handleOnChange = debounce(setValueToSearchParams, 500);
 
    const handleConfirmDelete = () => {
@@ -282,12 +281,17 @@ const Jobs = () => {
                type: "success",
                message: "Xóa tin tuyển dụng thành công",
             });
+            searchParams.set("refetch", uuidv4());
+            setSearchParams(searchParams);
             handleCloseDelete();
          })
          .catch((error: any) => {
+            console.log({ error });
             openNotification({
                type: "error",
-               message: "Không thể xóa tin tuyển dụng vì tin này đang có hồ sơ của ứng viên",
+               message:
+                  error?.data?.errorMessage ||
+                  "Không thể xóa tin tuyển dụng vì tin này đang có hồ sơ của ứng viên",
             });
             handleCloseDelete();
          });
@@ -382,7 +386,7 @@ const Jobs = () => {
                handleCloseDelete();
             }}
             confirmIcon="?"
-            title={t("Do to want to delete this job?")}
+            title={"Bạn có muốn xóa tin tuyển dụng không ?"}
          >
             <GroupButton>
                <Button

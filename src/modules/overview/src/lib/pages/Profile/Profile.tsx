@@ -18,11 +18,8 @@ import moment from "moment";
 const Profile = () => {
    const { id } = useCommonSelector((state: RootState) => state.user.user);
    const navigate = useNavigate();
-
-   // console.log(id);
    const { data: user, isLoading, isFetching } = useGetProfileQuery(id, { skip: !id });
 
-   console.log({ user });
    return (
       <Container>
          <div className="container">
@@ -69,7 +66,16 @@ const Profile = () => {
             {isFetching ? (
                <Skeleton active />
             ) : (
-               <div className="resume" onClick={() => navigate("cv")}>
+               <div
+                  className="resume"
+                  onClick={() => {
+                     if (user?.cv?.cvType === "1") {
+                        navigate("cv/default");
+                     } else {
+                        navigate("cv/other");
+                     }
+                  }}
+               >
                   <div className="left">
                      <div className="img">
                         <img src={Resume} alt="" />

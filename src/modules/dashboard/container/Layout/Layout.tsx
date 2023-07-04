@@ -8,8 +8,8 @@ import {
    changeSidebar,
 } from "../../../../libs/common";
 import { Layout as AntLayout, Spin } from "antd";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./styles.scss";
 import { decodeToken } from "react-jwt";
 import { saveUser } from "../../../../libs/common";
@@ -27,11 +27,14 @@ interface IToken {
 const Layout = () => {
    const dispatch = useCommonDispatch();
    const { id } = useCommonSelector((state: RootState) => state.user.user);
+   const [searchParams] = useSearchParams();
    const navigate = useNavigate();
    const accessToken = getToken();
    const { isOpen } = useCommonSelector((state: RootState) => state.sidebarSlice);
+   const [refetch, setRefetch] = useState(true);
+
    const { data, isFetching } = useGetProfileQuery(
-      { id, refetch: localStorage.getItem("refetch") },
+      { id, refetch: refetch },
       { skip: !id, refetchOnMountOrArgChange: true }
    );
 
@@ -40,6 +43,12 @@ const Layout = () => {
 
       dispatch(saveUser({ ...data, companyId: data?.company?.id }));
    }, [data]);
+
+   useEffect(() => {
+      if (!searchParams.get("refetch")) return;
+
+      setRefetch((prev) => !prev);
+   }, [searchParams.toString()]);
 
    useEffect(() => {
       document.addEventListener("mousemove", function (e) {
