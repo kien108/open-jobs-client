@@ -39,6 +39,6 @@ export {
    useGetJobPriceMutation,
 } from "./JobAPIDashBoard";
 
-export { PayAPI, useLazyGetPayQuery } from "./PayAPI";
+export { PayAPI, useLazyGetPayQuery, useGetAnalyticCVsQuery } from "./PayAPI";
 
 export { CVAPI, useSearchCVQuery } from "./CVAPI";

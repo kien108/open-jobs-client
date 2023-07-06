@@ -11,7 +11,13 @@ export const PayAPI = createApi({
             params,
          }),
       }),
+      getAnalyticCVs: builder.query({
+         query: ({ companyId, ...params }) => ({
+            url: `/statistics/cv/${companyId}`,
+            params,
+         }),
+      }),
    }),
 });
 
-export const { useLazyGetPayQuery } = PayAPI;
+export const { useLazyGetPayQuery, useGetAnalyticCVsQuery } = PayAPI;
