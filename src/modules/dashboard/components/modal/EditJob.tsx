@@ -531,8 +531,8 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          majorId: dataJob?.major?.id,
          specializationId: dataJob?.specialization?.id,
          hoursPerWeek: dataJob?.hoursPerWeek,
-         maxSalary: dataJob?.salaryInfo?.maxSalary,
-         minSalary: dataJob?.salaryInfo?.minSalary,
+         maxSalary: convertPrice(dataJob?.salaryInfo?.maxSalary),
+         minSalary: convertPrice(dataJob?.salaryInfo?.minSalary),
          jobType: dataJob?.jobType,
          jobLevel: dataJob?.jobLevel,
          salaryType: dataJob?.salaryInfo?.salaryType,
@@ -617,36 +617,6 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       } else {
          handleOpenPayConfirm();
       }
-   };
-
-   const bindingJobLevelToWeight = (jobLevel: string) => {
-      switch (jobLevel) {
-         case "FRESHER":
-            return dataBusiness?.fresherWeight;
-
-         case "INTERNSHIP":
-            return dataBusiness?.internWeight;
-
-         case "JUNIOR":
-            return dataBusiness?.juniorWeight;
-         case "MIDDLE":
-            return dataBusiness?.middleWeight;
-         case "SENIOR":
-            return dataBusiness?.seniorWeight;
-
-         case "HIGH_LEVEL_EXECUTIVE":
-            return dataBusiness?.highPositionWeight;
-         default:
-            return 0;
-      }
-   };
-
-   const checkDiffTime = (time) => {
-      const now = moment();
-      const diffInMs = moment(time).diff(now);
-      const diffInDays = parseInt(moment.duration(diffInMs).asDays());
-
-      return diffInDays;
    };
 
    return (
@@ -961,15 +931,6 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             onCancel={handleClosePay}
             destroyOnClose
          >
-            <span style={{ marginTop: "4px", display: "block" }}>
-               Giá tiền đăng tin được tính theo công thức sau: giá tin 1 ngày x trọng số level x (số
-               ngày tin tồn tại - 1) ={" "}
-               <span style={{ color: "rgb(7, 74, 189)" }} className="price">{`${
-                  dataBusiness?.baseJobPricePerDay
-               } x ${bindingJobLevelToWeight(form.getValues("jobLevel"))} x (${checkDiffTime(
-                  form.getValues("expiredAt")
-               )} - 1)`}</span>
-            </span>
             <GroupButton>
                <Button
                   height={50}

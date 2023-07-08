@@ -2,11 +2,10 @@ import { Pagination } from "../../../../../../libs/components/Table/Pagination";
 import { Table } from "../../../../../../libs/components";
 import { Col, Divider, Row, Spin } from "antd";
 import React, { useEffect, useState } from "react";
-import { Filter } from "../../components";
 import { Job } from "../../components/Job";
 import { JobDetail } from "../../components/JobDetail";
 import { useFilterSearchJob } from "../../hooks";
-import { useGetJobsQuery, useLazyGetJobsQuery } from "../../services";
+import { useGetJobsQuery } from "../../services";
 import { Container, Content, Header } from "./styles";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -24,44 +23,30 @@ const Jobs = () => {
       ...tableInstance.params,
       ...useFilterSearchJob(),
    });
-   const [searchParams] = useSearchParams();
+   const [searchParams, setSearchParams] = useSearchParams();
 
    const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
    useEffect(() => {
-      searchParams.get("job-id")
-         ? setSelectedId(searchParams.get("job-id")!)
+      localStorage.getItem("prevJobId")
+         ? setSelectedId(localStorage.getItem("prevJobId")!)
          : setSelectedId(jobs?.listJob?.[0]?.id);
    }, [jobs]);
 
-   // const handleSearchJobs = (params: any) => {
-   //    searchJobs({ ...tableInstance.params, ...params });
-   // };
-
-   // useEffect(() => {
-   //    searchJobs({ ...tableInstance.params, keyword: "", location: "" });
-   // }, []);
-
-   function paramsToObject(entries: any) {
-      const result: any = {};
-      for (const [key, value] of entries) {
-         result[key] = value;
+   useEffect(() => {
+      if (selectedId) {
+         localStorage.setItem("prevJobId", selectedId);
+         searchParams.set("job-id", selectedId);
+      } else {
+         searchParams.delete("job-id");
       }
-      return result;
-   }
+      setSearchParams(searchParams);
+   }, [selectedId]);
 
-   // useEffect(() => {
-   //    const entries = searchParams.entries();
-   //    const params = paramsToObject(entries);
-   //    searchJobs({ ...tableInstance.params, ...params });
-   // }, [searchParams.get("page")]);
-
-   console.log({ data: jobs });
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>
             <Header>
-               {/* <Filter handleSearchJobs={handleSearchJobs} /> */}
                <div className="title-container">
                   <span
                      className="title"
@@ -109,7 +94,7 @@ const Jobs = () => {
                   </Row>
                </Content>
             ) : (
-               <span className="no-results">{t("noResults")}</span>
+               <span className="no-results">Không có kết quả</span>
             )}
          </Container>
       </Spin>

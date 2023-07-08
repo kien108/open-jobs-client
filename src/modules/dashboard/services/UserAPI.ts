@@ -1,11 +1,12 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "./baseQuery";
 import { IResBusiness, IResCV } from "../types/Responses";
+import { isEmpty } from "lodash";
 
 export const UserAPI = createApi({
    reducerPath: "UserAPI",
    baseQuery,
-   tagTypes: ["USER", "VIEW_CV"],
+   tagTypes: ["USER", "VIEW_CV", "ERROR"],
    endpoints: (builder) => ({
       getProfile: builder.query({
          query: ({ id, ...params }) => ({
@@ -64,7 +65,7 @@ export const UserAPI = createApi({
             body,
             method: "POST",
          }),
-         invalidatesTags: ["VIEW_CV", "USER"],
+         invalidatesTags: (result, err) => (!isEmpty ? ["VIEW_CV", "USER"] : ["ERROR"]),
       }),
 
       updatePremium: builder.mutation({

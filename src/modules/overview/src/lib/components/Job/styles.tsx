@@ -114,16 +114,24 @@ export const Container = styled.div`
    }
 
    .skills {
-      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
       .skill {
-         border-radius: 4px;
-         padding: 2px 8px;
-         font-size: 13px;
-         margin-right: 10px;
+         color: #414042;
+         background-color: #fff;
+         border: 1px solid #dedede;
+         padding: 4px 10px;
+         font-size: 12px;
+         border-radius: 20px;
+         display: block;
+         border: 1px solid ${(props) => props.theme.strongBlue};
+         margin: 10px 0;
 
          &.invalid {
-            color: white;
-            background-color: #6c6b6b;
+            background-color: #ccc;
+            border-color: transparent;
          }
       }
    }

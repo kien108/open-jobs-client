@@ -35,7 +35,7 @@ import {
    StyledHeader,
    Container,
 } from "./styles";
-import { Col, Row } from "antd";
+import { Col, Row, Skeleton } from "antd";
 
 import FileSaver from "file-saver";
 
@@ -44,6 +44,7 @@ import {
    useExportCVsMutation,
    useGetCvAppliedQuery,
    useGetCvMatchedQuery,
+   useGetJobByIdQuery,
    useLazyDownloadExportQuery,
    useRejectCVMutation,
 } from "../../../services";
@@ -51,6 +52,7 @@ import { FilterCV } from "../../../components/FilterCV";
 import { useFilterCV } from "../../../hooks";
 import { EMemberTypes } from "../../../../../types";
 import { MdUpgrade } from "react-icons/md";
+import { convertPrice } from "../../../../dashboard/utils";
 
 const CVApply = () => {
    const { t } = useTranslation();
@@ -101,6 +103,11 @@ const CVApply = () => {
       }
    );
 
+   const { data: dataJob, isFetching: fetchingJob } = useGetJobByIdQuery(id!, {
+      skip: !id,
+      refetchOnMountOrArgChange: true,
+   });
+
    const [rejectCV, { isLoading: loadingReject }] = useRejectCVMutation();
    const [exportCVs, { isLoading: loadingExport, data: dataExport }] = useExportCVsMutation();
    const [download, { isLoading: loadingDownload }] = useLazyDownloadExportQuery();
@@ -141,7 +148,7 @@ const CVApply = () => {
       },
 
       {
-         title: t("Status"),
+         title: "Trạng thái",
          dataIndex: "status",
          key: "status",
          sorter: true,
@@ -150,7 +157,7 @@ const CVApply = () => {
          ),
       },
       {
-         title: t("Actions"),
+         title: "Chức năng",
          dataIndex: "id",
          render: (_: string, record: any) => (
             <StyledFunctions>
@@ -208,7 +215,7 @@ const CVApply = () => {
 
    const handleExport = () => {
       const appliedCVs = dataSource
-         .filter((item: any) => item?.cvStatus === "ACCEPTED")
+         .filter((item: any) => item?.status === "ACCEPTED")
          .map((item: any) => ({
             firstName: item?.firstName,
             lastName: item?.lastName,
@@ -276,16 +283,47 @@ const CVApply = () => {
             </Button>
          </StyledHeader>
 
-         <Button
-            className="btn-export"
-            disabled={dataSource.length === 0}
-            loading={loadingExport}
-            height={44}
-            icon={<DownloadIcon />}
-            onClick={handleExport}
-         >
-            {t("Xuất danh sách hồ sơ")}
-         </Button>
+         <div className="flex">
+            {fetchingJob ? (
+               <Skeleton active />
+            ) : (
+               <div className="job">
+                  <span className="job-title">{dataJob?.title}</span>
+                  <div className="item">
+                     <span className="label">Vị trí:</span>
+                     <span className="value">{dataJob?.jobLevel}</span>
+                  </div>
+                  <div className="item">
+                     <span className="label">Kỹ năng:</span>
+                     <span className="value">
+                        {dataJob?.jobSkills?.map((item) => item?.skill?.name).join(" - ")}
+                     </span>
+                  </div>
+                  <div className="item">
+                     <span className="label">Lương:</span>
+                     <span className="value">
+                        {dataJob?.salaryInfo?.isSalaryNegotiable
+                           ? "Mức lương thỏa thuận"
+                           : `${convertPrice(dataJob?.salaryInfo?.minSalary)} - ${convertPrice(
+                                dataJob?.salaryInfo?.maxSalary
+                             )} (${dataJob?.salaryInfo?.salaryType})`}
+                     </span>
+                  </div>
+               </div>
+            )}
+
+            <Button
+               className="btn-export"
+               disabled={dataSource.length === 0}
+               loading={loadingExport}
+               height={44}
+               icon={<DownloadIcon />}
+               onClick={handleExport}
+            >
+               {loadingDownload ? "Đang xuất ..." : "Xuất danh sách hồ sơ"}
+            </Button>
+         </div>
+
          {company?.memberType === EMemberTypes.DEFAULT ? (
             <div className="pay">
                <span>

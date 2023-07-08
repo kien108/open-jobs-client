@@ -42,7 +42,6 @@ const Layout = () => {
          const id = new URLSearchParams(search).get("id");
          const error = searchParams.get("error");
 
-         console.log({ error });
          const accessToken = new URLSearchParams(search).get("access-token");
 
          accessToken && setToken(accessToken);
@@ -65,7 +64,14 @@ const Layout = () => {
 
          switch (role) {
             case "USER":
+               const prevUrl = localStorage.getItem("prevUrl");
+               console.log({ prevUrl });
+               if (prevUrl) {
+                  navigate(prevUrl);
+                  return;
+               }
                navigate("/");
+
                return;
             case "HR":
                navigate("/dashboard");

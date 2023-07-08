@@ -132,6 +132,7 @@ const Jobs = () => {
          width: "20%",
          render: (item) => <TextEllipsis className="name" data={item} length={50} />,
       },
+
       {
          title: t("Vị trí"),
          dataIndex: "jobLevel",
@@ -190,14 +191,17 @@ const Jobs = () => {
                      // }}
                      content={
                         <div className="dropdown-group-btn">
-                           <span
-                              className="button-content"
-                              onClick={() => {
-                                 navigate(`/dashboard/jobs/${record?.id}/cv-applied`);
-                              }}
-                           >
-                              Danh sách ứng viên
-                           </span>
+                           {record?.jobStatus !== "NEW" && (
+                              <span
+                                 className="button-content"
+                                 onClick={() => {
+                                    navigate(`/dashboard/jobs/${record?.id}/cv-applied`);
+                                 }}
+                              >
+                                 Danh sách ứng viên
+                              </span>
+                           )}
+
                            <span
                               className="button-content"
                               onClick={() => {
@@ -270,7 +274,6 @@ const Jobs = () => {
       handleOpenRenewalModal();
    };
 
-   console.log({ selectedId });
    const handleOnChange = debounce(setValueToSearchParams, 500);
 
    const handleConfirmDelete = () => {
@@ -311,6 +314,11 @@ const Jobs = () => {
       setDataSource(dataSource);
    }, [dataCompany]);
 
+   useEffect(() => {
+      if (!!user?.companyId && !user?.company?.companyType) {
+         navigate("/dashboard/profile");
+      }
+   }, [user]);
    return (
       <>
          <Header handleOpenCreate={handleOpen} title="Quản lý tin tuyển dụng" />
@@ -437,27 +445,6 @@ const Jobs = () => {
             onCancel={handleCloseRenewal}
          >
             <ModalRenewal handleClose={handleCloseRenewal} expiredAt={selectedExpired} />
-         </Modal>
-
-         <Modal
-            visible={!!user?.companyId && !user?.company?.companyType}
-            type="confirm"
-            confirmIcon={<BiHappyHeartEyes size={100} color="green" />}
-            title={
-               <span>
-                  Chào mừng nhà tuyển dụng mới đến với openjobs. Bạn vui lòng cập nhật hồ sơ trước
-                  khi đăng tin tuyển dụng nhé <AiFillHeart color="red" size={17} />
-               </span>
-            }
-            destroyOnClose
-         >
-            <Button
-               style={{ width: "fit-content", margin: "0 auto", marginTop: "30px" }}
-               className="btn-cv"
-               onClick={() => navigate(`/dashboard/profile`)}
-            >
-               Cập nhật ngay
-            </Button>
          </Modal>
       </>
    );

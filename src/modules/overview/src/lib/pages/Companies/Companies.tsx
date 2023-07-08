@@ -40,25 +40,19 @@ const Companies = () => {
          });
    };
 
+   console.log(dataCompanies);
    return (
       <Spin spinning={loadingCompany || fetchingCompany}>
          <Container>
             <div className="header">
-               <span className="title">{t("findGreatPlace")}</span>
+               <span className="title">Tìm kiếm nơi làm việc tuyệt vời</span>
 
-               {/* <span className="sub-title">{t("accessReview")}</span> */}
                <FilterCompany handleSearchCompany={handleSearchCompany} />
             </div>
 
             <div className="companies-content">
-               {searchParams.get("keyword") && (
-                  <span className="search-result">
-                     {`Popular companies for ${searchParams.get("keyword")}`}
-                  </span>
-               )}
-
                {dataCompanies?.companies?.length === 0 ? (
-                  <span className="notFound">No Results</span>
+                  <span className="notFound">Không có kết quả</span>
                ) : (
                   <div className="companies">
                      {companies?.map((item: any) => (
@@ -74,38 +68,35 @@ const Companies = () => {
                                        <Col span={6}>
                                           <div className="item">
                                              <AiOutlineSetting size={17} />
-                                             <span>Product</span>
-                                          </div>
-                                          <div className="item">
-                                             <BsCalendarDay size={17} />
-                                             <span>Thứ 2 - Thứ 6</span>
-                                          </div>
-                                          <div className="item">
-                                             <AiOutlineClockCircle size={17} />
-                                             <span>Không OT</span>
+                                             <span>{item?.companyType || "--/--"}</span>
                                           </div>
                                        </Col>
                                        <Col span={6}>
                                           <div className="item">
                                              <AiOutlinePhone size={17} />
-                                             <span>{item?.phone}</span>
-                                          </div>
-                                          <div className="item">
-                                             <BsPeople size={17} />
-                                             <span>{item?.totalEmployee}</span>
+                                             <span>{item?.phone || "--/--"}</span>
                                           </div>
                                        </Col>
-                                       <Col span={8}>
+                                       <Col span={6}>
+                                          <div className="item">
+                                             <BsPeople size={17} />
+                                             <span>{item?.scope || "--/--"}</span>
+                                          </div>
+                                       </Col>
+                                       <Col span={24}>
                                           <div className="item">
                                              <GrLocation size={17} />
-                                             <span>{item?.address}</span>
+                                             <span>
+                                                {item?.address?.replace(",", "")
+                                                   ? item?.address
+                                                   : "--/--"}
+                                             </span>
                                           </div>
                                        </Col>
                                     </Row>
                                  </div>
                               </div>
                            </div>
-                           <Divider style={{ background: "rgba(0,0,0, 0.1)" }} />
                         </>
                      ))}
                   </div>

@@ -15,6 +15,7 @@ interface Param {
    minSalary?: string;
    maxSalary?: string;
    status?: string;
+   refetch?: string;
 }
 
 const useFilterSearchJob = () => {
@@ -44,7 +45,7 @@ const useFilterSearchJob = () => {
       searchParams.get("skillId")
          ? setParams((prev) => ({
               ...prev,
-              skillId: searchParams.get("skillId")!.trim() ?? "",
+              skillId: searchParams.get("skillId")?.split("_")[1] ?? "",
            }))
          : setParams((prev) => {
               delete prev.skillId;
@@ -125,6 +126,16 @@ const useFilterSearchJob = () => {
            }))
          : setParams((prev) => {
               delete prev.status;
+              return { ...prev };
+           });
+
+      searchParams.get("refetch")
+         ? setParams((prev) => ({
+              ...prev,
+              refetch: searchParams.get("refetch") || "",
+           }))
+         : setParams((prev) => {
+              delete prev.refetch;
               return { ...prev };
            });
    }, [searchParams.toString()]);

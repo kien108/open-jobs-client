@@ -223,7 +223,7 @@ const CVDetail = () => {
    };
 
    return (
-      <Spin spinning={isLoading || isFetching}>
+      <Spin spinning={isLoading || isFetching || loadingChargeCV}>
          <BtnFunction className="btn-back" onClick={() => navigate(-1)}>
             <BsArrowLeft size={23} />
          </BtnFunction>

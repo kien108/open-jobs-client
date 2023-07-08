@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/autoplay";
 
 import { Navigation, Pagination, Autoplay } from "swiper";
-import { useGetCompaniesQuery, useGetSuggestionJobsQuery } from "../../services";
+import { useGetCompaniesQuery, useGetJobsQuery, useGetSuggestionJobsQuery } from "../../services";
 import { Col, Row, Skeleton, Spin } from "antd";
 import { CompanySlide, JobSlide } from "../../components";
 import { getToken } from "../../../../../../libs/common";
@@ -36,6 +36,10 @@ const Slider = () => {
       { refetchOnMountOrArgChange: true }
    );
 
+   const { data: dataJobsHot, isFetching: fetchingJobsHot } = useGetJobsQuery({
+      page: 0,
+      size: 12,
+   });
    function splitArray(array) {
       var result = [];
       for (var i = 0; i < array?.length; i += 3) {
@@ -74,19 +78,13 @@ const Slider = () => {
                </Swiper>
             </Col>
 
-            <Col span={10}>
-               <span className="title">
-                  <span className="main">Công việc</span>
-                  <span className="sub">Phù hợp</span>
-               </span>
+            {isLogin ? (
+               <Col span={10}>
+                  <span className="title">
+                     <span className="main">Công việc</span>
+                     <span className="sub">Phù hợp</span>
+                  </span>
 
-               {!isLogin ? (
-                  <div className="login-to-see">
-                     <Skeleton active />
-                     <Skeleton active />
-                     <span onClick={() => navigate("/auth/login")}>Đăng nhập để xem</span>
-                  </div>
-               ) : (
                   <Swiper
                      modules={[Navigation, Pagination, Autoplay]}
                      spaceBetween={50}
@@ -104,8 +102,34 @@ const Slider = () => {
                         ))
                      )}
                   </Swiper>
-               )}
-            </Col>
+               </Col>
+            ) : (
+               <Col span={10}>
+                  <span className="title">
+                     <span className="main">Công việc</span>
+                     <span className="sub">Hot</span>
+                  </span>
+
+                  <Swiper
+                     modules={[Navigation, Pagination, Autoplay]}
+                     spaceBetween={50}
+                     slidesPerView={1}
+                     pagination={{ clickable: true }}
+                     loop
+                     autoplay
+                  >
+                     {fetchingJobs ? (
+                        <Skeleton active />
+                     ) : (
+                        splitArray(dataJobsHot?.listJob)?.map((item) => (
+                           <SwiperSlide key={item?.id} onClick={() => console.log({ item })}>
+                              <JobSlide jobs={item} />
+                           </SwiperSlide>
+                        ))
+                     )}
+                  </Swiper>
+               </Col>
+            )}
          </Row>
       </Container>
    );

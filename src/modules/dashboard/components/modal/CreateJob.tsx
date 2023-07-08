@@ -123,7 +123,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       defaultValues: {
          title: "",
          quantity: "",
-         workPlace: "",
          majorId: undefined,
          specializationId: undefined,
          hoursPerWeek: 40,
@@ -646,7 +645,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   <Col span={12}>
                      <Radio.Group onChange={(e) => setIsRenew(e.target.value)} value={isRenew}>
                         <Radio value={true}>Tạo mới</Radio>
-                        <Radio value={false}>Sử dụng tin tuyển dụng cũ</Radio>
+                        <Radio value={false}>Sao chép tin tuyển dụng cũ</Radio>
                      </Radio.Group>
                   </Col>
 
@@ -765,17 +764,35 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   </Col>
                   <Col span={12}>
                      <Spin spinning={false}>
-                        <Select name="jobLevel" title="Vị trí" required options={jobLevels} />
+                        <Select
+                           name="jobLevel"
+                           title="Vị trí công việc"
+                           required
+                           options={jobLevels}
+                           placeholder="Vị trí công việc"
+                        />
                      </Spin>
                   </Col>
 
                   <Col span={12}>
                      <Spin spinning={false}>
-                        <Select name="jobType" title="Loaị công việc" required options={jobTypes} />
+                        <Select
+                           name="jobType"
+                           title="Loaị công việc"
+                           required
+                           options={jobTypes}
+                           placeholder="Loại công việc"
+                        />
                      </Spin>
                   </Col>
                   <Col span={12}>
-                     <Select name={"workPlace"} options={workplaces} title="WorkPlace" required />
+                     <Select
+                        name={"workPlace"}
+                        options={workplaces}
+                        title="WorkPlace"
+                        required
+                        placeholder="Nơi làm việc"
+                     />
                   </Col>
 
                   <Col span={12}>
@@ -831,7 +848,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         type="number"
                         label={t("Hours per week")}
                         name="hoursPerWeek"
-                        placeholder={t("Enter hoursPerWeek per week")}
+                        placeholder="Thời gian làm việc mỗi tuần"
                      />
                   </Col>
                   <Col span={12}>
@@ -933,15 +950,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             onCancel={handleClosePay}
             destroyOnClose
          >
-            <span style={{ marginTop: "4px", display: "block" }}>
-               Giá tiền đăng tin được tính theo công thức sau: giá tin 1 ngày x trọng số level x (số
-               ngày tin tồn tại - 1) ={" "}
-               <span style={{ color: "rgb(7, 74, 189)" }} className="price">{`${
-                  dataBusiness?.baseJobPricePerDay
-               } x ${bindingJobLevelToWeight(form.getValues("jobLevel"))} x (${checkDiffTime(
-                  form.getValues("expiredAt")
-               )} - 1)`}</span>
-            </span>
             <GroupButton>
                <Button
                   height={50}

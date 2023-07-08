@@ -3,6 +3,7 @@ import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import {
    Button,
    Input,
+   Modal,
    openNotification,
    OptionType,
    Select,
@@ -10,6 +11,9 @@ import {
    UploadMultiple,
    UploadSingle,
 } from "../../../../libs/components";
+
+import { BiHappyHeartEyes } from "react-icons/bi";
+import { AiFillHeart } from "react-icons/ai";
 
 import { GroupButton, StyledCreateAndEditHr, StyledExtendOption, StyledNotFound } from "./styles";
 
@@ -32,6 +36,7 @@ import {
    useCommonSelector,
    useDebounce,
    useGetAdminByIdQuery,
+   useModal,
 } from "../../../../libs/common";
 import { useSearchParams } from "react-router-dom";
 import Avatar from "react-avatar";
@@ -69,7 +74,7 @@ interface FormType {
 }
 const CreateAndEditHr = () => {
    const { t } = useTranslation();
-   const { id } = useCommonSelector((state: RootState) => state.user.user);
+   const { id, company } = useCommonSelector((state: RootState) => state.user.user);
 
    const [searchParams, setSearchParams] = useSearchParams();
 
@@ -89,6 +94,7 @@ const CreateAndEditHr = () => {
 
    const searchDistrictDebounce = useDebounce(searchDistrict, 300);
 
+   const { isOpen, handleOpen, handleClose } = useModal();
    const form = useForm<FormType>({
       mode: "all",
       defaultValues: {
@@ -251,8 +257,8 @@ const CreateAndEditHr = () => {
       setValue("company_type", company?.companyType);
       setValue("member_type", company?.memberType);
       setValue("accountBalance", company?.accountBalance);
-      province && setValue("province", province);
-      district && setValue("district", district);
+      setValue("province", province || undefined);
+      setValue("district", district || undefined);
       extraAddress && setValue("extraAddress", extraAddress);
 
       setImgs(company?.imageUrlsString?.split(", ")?.filter((item) => item !== ""));
@@ -294,6 +300,13 @@ const CreateAndEditHr = () => {
 
       setDistricts(options);
    }, [dataDistricts]);
+
+   useEffect(() => {
+      if (!!company?.id && !company?.companyType) {
+         handleOpen();
+      }
+   }, [company]);
+
    return (
       <Spin spinning={loadingAccount}>
          <StyledCreateAndEditHr>
@@ -496,6 +509,28 @@ const CreateAndEditHr = () => {
                      {t("common:confirm.save")}
                   </Button>
                </GroupButton>
+
+               <Modal
+                  onCancel={handleClose}
+                  visible={isOpen}
+                  type="confirm"
+                  confirmIcon={<BiHappyHeartEyes size={100} color="green" />}
+                  title={
+                     <span>
+                        Chào mừng nhà tuyển dụng mới đến với openjobs. Bạn vui lòng cập nhật hồ sơ
+                        trước khi đăng tin tuyển dụng nhé <AiFillHeart color="red" size={17} />
+                     </span>
+                  }
+                  destroyOnClose
+               >
+                  <Button
+                     style={{ width: "fit-content", margin: "0 auto", marginTop: "30px" }}
+                     className="btn-cv"
+                     onClick={handleClose}
+                  >
+                     Cập nhật ngay
+                  </Button>
+               </Modal>
             </FormProvider>
          </StyledCreateAndEditHr>
       </Spin>

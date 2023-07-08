@@ -75,8 +75,8 @@ const FilterCompany: FC<IProps> = ({ handleSearchCompany }) => {
                   <Input
                      className="search"
                      height="46px"
-                     label={t("companyName")}
-                     placeholder="company name"
+                     label={"Tên công ty"}
+                     placeholder="Tên công ty"
                      icons={<SearchIcon width={20} />}
                      name="keyword"
                      onKeyDown={(event) => {
@@ -92,7 +92,8 @@ const FilterCompany: FC<IProps> = ({ handleSearchCompany }) => {
                <Col span={6}>
                   <Select
                      name="location"
-                     title={t("location")}
+                     title={"Địa chỉ"}
+                     placeholder="Địa chỉ"
                      required
                      showSearch
                      options={provinces || []}
@@ -112,7 +113,7 @@ const FilterCompany: FC<IProps> = ({ handleSearchCompany }) => {
                         })
                      }
                   >
-                     {t("findCompanies")}
+                     Tìm kiếm công ty
                   </Button>
                </Col>
             </Row>

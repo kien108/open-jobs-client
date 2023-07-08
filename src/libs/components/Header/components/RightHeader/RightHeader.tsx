@@ -56,6 +56,8 @@ const RightHeader = ({ languages, accounts }: Props) => {
                                     if (account?.id === 3) {
                                        localStorage.removeItem("access_token");
                                        localStorage.removeItem("userId");
+                                       localStorage.removeItem("prevUrl");
+                                       localStorage.removeItem("prevJobId");
                                     }
                                  }}
                               >
@@ -71,7 +73,14 @@ const RightHeader = ({ languages, accounts }: Props) => {
                   </button>
                </Popover>
             ) : (
-               <Link className="sign-in" to={"/auth"}>
+               <Link
+                  className="sign-in"
+                  to={"/auth"}
+                  onClick={() => {
+                     localStorage.removeItem("prevUrl");
+                     localStorage.removeItem("prevJobId");
+                  }}
+               >
                   Đăng nhập/Đăng ký
                </Link>
             )}

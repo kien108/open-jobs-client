@@ -5,6 +5,7 @@ export const Container = styled.div`
    max-width: 100vw;
    background-color: white;
    padding: 80px 18vw 40px;
+   margin-top: 30px;
 
    .header {
       .title {
@@ -13,7 +14,7 @@ export const Container = styled.div`
          line-height: 1.25;
          letter-spacing: -0.0625rem;
          color: #2d2d2d;
-         font-weight: 700;
+         font-weight: 500;
          display: block;
       }
 
@@ -46,17 +47,23 @@ export const Container = styled.div`
       }
    }
    .companies {
-      box-shadow: 0 0 3px #595858;
+      background: white;
+      box-shadow: 0px 6px 32px rgba(0, 0, 0, 0.08);
       padding: 10px;
       border-radius: 8px;
       margin-top: 20px;
 
       .company {
+         padding: 16px 12px;
+         background: white;
+         box-shadow: 0px 6px 32px rgba(0, 0, 0, 0.08);
+         border-radius: 8px;
+
          display: flex;
          flex-direction: row;
          align-items: center;
          gap: 20px;
-         margin-bottom: 10px;
+         margin-bottom: 15px;
          cursor: pointer;
          position: relative;
 
@@ -65,8 +72,9 @@ export const Container = styled.div`
             position: absolute;
             inset: 0;
             display: none;
-            background-color: rgba(0, 0, 0, 0.05);
             transition: all 0.2s linear;
+            border: 2px solid ${(props) => props.theme.strongBlue};
+            border-radius: 10px;
          }
 
          &:hover {

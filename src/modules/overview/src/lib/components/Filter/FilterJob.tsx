@@ -68,7 +68,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
 
    const form = useForm({ defaultValues });
 
-   const setValueToSearchParams = (name: string, value: string) => {
+   const setValueToSearchParams = (name: string, value: any) => {
       if (value) {
          searchParams.set(name, value);
          setSearchParams(searchParams);
@@ -96,7 +96,9 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
    const handleChangeDate = (key: string, value: any) => {
       let dateFormat;
       if (value) {
-         dateFormat = value?.map((item: any) => moment(item._d).format(formatDate));
+         dateFormat = value
+            ?.split("%20-%20")
+            ?.map((item: any) => moment(item._d).format(formatDate));
          searchParams.set(key, encodeURI(dateFormat.join(" - ")));
          setSearchParams(searchParams);
       }
@@ -107,11 +109,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
       }
    };
 
-   const {
-      data: dataSkills,
-      isLoading: loadingSkills,
-      isFetching: fetchingSkills,
-   } = useGetAllSkillsQuery(
+   const { data: dataSkills, isFetching: fetchingSkills } = useGetAllSkillsQuery(
       {},
       {
          refetchOnMountOrArgChange: true,
@@ -147,31 +145,27 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
 
    useEffect(() => {
       const options = (dataSkills ?? [])?.map((item: any) => ({
-         key: +item.id,
-         label: item.id,
-         value: item.id,
+         key: `skill_${item?.id}`,
+         label: item?.name,
+         value: `skill_${item?.id}`,
          render: () => <span>{item?.name}</span>,
       }));
 
       setSkills(options || []);
    }, [dataSkills]);
 
+   console.log({ skills });
+
    const handleFilter = () => {
       const values = form.getValues();
-
+      setValueToSearchParams("refetch", uuidv4());
       Object.entries(values)?.forEach((item) => {
-         if (item[1]) {
-            if (item[0] !== "dates") {
-               setValueToSearchParams(item[0], item[1]);
-            } else {
-               handleChangeDate(item[0], item[1]);
-            }
+         if (item[0] !== "dates") {
+            setValueToSearchParams(item[0], item[1]);
+         } else {
+            handleChangeDate(item[0], item[1]);
          }
       });
-
-      // const isHomePage = location.pathname.includes("welcome");
-
-      // if (isHomePage)
 
       navigate("/overview/welcome/jobs" + `?${searchParams.toString()}`);
    };
@@ -271,7 +265,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         options={jobLevels}
                         onChange={(value) => {
                            form.setValue("jobLevel", value);
-                           removeSearchParams("jobLevel", value);
+                           // removeSearchParams("jobLevel", value);
                         }}
                      />
                   </Col>
@@ -284,7 +278,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         options={jobTypes}
                         onChange={(value) => {
                            form.setValue("jobType", value);
-                           removeSearchParams("jobType", value);
+                           // removeSearchParams("jobType", value);
                         }}
                      />
                   </Col>
@@ -297,7 +291,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         options={workPlaces}
                         onChange={(value) => {
                            form.setValue("workplace", value);
-                           removeSearchParams("workplace", value);
+                           // removeSearchParams("workplace", value);
                         }}
                      />
                   </Col>
@@ -311,7 +305,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         loading={fetchingSkills}
                         onChange={(value) => {
                            form.setValue("skillId", value);
-                           removeSearchParams("skillId", value);
+                           // removeSearchParams("skillId", value);
                         }}
                      />
                   </Col>
@@ -324,7 +318,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         name="minSalary"
                         onChange={(e: any) => {
                            form.setValue("minSalary", convertPrice(e.target.value));
-                           removeSearchParams("maxSalary", e.target.value);
+                           // removeSearchParams("maxSalary", e.target.value);
                         }}
                      />
                   </Col>
@@ -336,7 +330,7 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
                         name="maxSalary"
                         onChange={(e: any) => {
                            form.setValue("maxSalary", convertPrice(e.target.value));
-                           removeSearchParams("maxSalary", e.target.value);
+                           // removeSearchParams("maxSalary", e.target.value);
                         }}
                      />
                   </Col>
@@ -347,4 +341,4 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
    );
 };
 
-export default memo(FilterJob);
+export default FilterJob;

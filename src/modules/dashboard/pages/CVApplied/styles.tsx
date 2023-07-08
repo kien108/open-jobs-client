@@ -15,6 +15,39 @@ export const Container = styled.div`
       margin-top: 20px;
    }
 
+   .flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+   }
+
+   .job {
+      padding: 16px 20px;
+      background: white;
+      box-shadow: 0px 6px 32px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      width: fit-content;
+      margin-top: 10px;
+
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+
+      .job-title {
+         color: ${(props) => props.theme.strongBlue};
+         font-weight: 500;
+      }
+      .item {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+
+         .label {
+            min-width: 60px;
+         }
+      }
+   }
+
    .items {
       display: flex;
       align-items: center;
@@ -65,12 +98,13 @@ export const Container = styled.div`
    .badge-status {
       border-radius: 8px;
       text-align: center;
-      padding: 2px 4px;
+      padding: 6px 4px;
       font-size: 13px;
       color: white;
+      min-width: fit-content;
 
       &.NEW {
-         background-color: yellow;
+         background-color: #d8d805;
       }
 
       &.ACCEPTED {

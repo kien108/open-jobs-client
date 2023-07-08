@@ -20,22 +20,6 @@ const Analytics = () => {
 
    const form = useForm({ defaultValues });
 
-   const fakeData = [
-      {
-         acceptedCv: 12,
-         appliedCv: 20,
-         jobCreateAt: "2023-07-03T16:35:01.264Z",
-         jobTitle: "hehehe",
-         rejectedCv: 8,
-      },
-      {
-         acceptedCv: 1,
-         appliedCv: 4,
-         jobCreateAt: "2023-07-04T16:35:01.264Z",
-         jobTitle: "hehe123he",
-         rejectedCv: 3,
-      },
-   ];
    const { companyId } = useCommonSelector((state: RootState) => state.user.user);
    const { data: dataCVs, isFetching } = useGetAnalyticCVsQuery(
       {
@@ -53,15 +37,15 @@ const Analytics = () => {
    const series = [
       {
          name: "Hồ sơ ứng tuyển",
-         data: (fakeData ?? [])?.map((item) => item?.appliedCv),
+         data: (dataCVs ?? [])?.map((item) => item?.appliedCv),
       },
       {
          name: "Đồng ý",
-         data: (fakeData ?? [])?.map((item) => item?.acceptedCv),
+         data: (dataCVs ?? [])?.map((item) => item?.acceptedCv),
       },
       {
          name: "Từ chối",
-         data: (fakeData ?? [])?.map((item) => item?.rejectedCv),
+         data: (dataCVs ?? [])?.map((item) => item?.rejectedCv),
       },
    ];
    const options = {
@@ -85,7 +69,7 @@ const Analytics = () => {
          colors: ["transparent"],
       },
       xaxis: {
-         categories: (fakeData ?? [])?.map(
+         categories: (dataCVs ?? [])?.map(
             (item) =>
                `${item?.jobTitle} (${
                   item?.jobCreateAt ? moment(item?.jobCreateAt).format("DD/MM/YYYY") : "--"
@@ -126,7 +110,7 @@ const Analytics = () => {
    return (
       <Spin spinning={isFetching}>
          <div className="">
-            <Title>Phân tích hồ sơ ứng tuyển</Title>
+            <Title>Thống kê hồ sơ ứng tuyển</Title>
 
             <Content>
                <FormProvider {...form}>
@@ -167,7 +151,7 @@ const Analytics = () => {
                   </Row>
                </FormProvider>
 
-               <Chart options={options} series={series} type="bar" height="90%" width={"100%"} />
+               <Chart options={options} series={series} type="bar" height={"90%"} width={"100%"} />
             </Content>
          </div>
       </Spin>

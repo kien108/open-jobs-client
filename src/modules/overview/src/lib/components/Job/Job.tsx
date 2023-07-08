@@ -53,12 +53,12 @@ const Job: FC<IProps> = ({ item, handleClick, className }) => {
          </div>
 
          <div className="skills">
-            {item?.jobSkills?.map((skill: any) =>
-               skill?.skill?.isVerified ? (
-                  <Tag2 className={`skill`}>{skill?.skill?.name}</Tag2>
+            {item?.jobSkills?.map((item1: any) =>
+               item1?.skill?.isVerified ? (
+                  <div className="skill">{item1?.skill?.name}</div>
                ) : (
-                  <Tooltip title="Invalidate Skill" placement="bottom">
-                     <Tag2 className="skill invalid">{skill?.skill?.name}</Tag2>
+                  <Tooltip title="Chưa kiểm duyệt" placement="bottom">
+                     <div className="skill invalid">{item1?.skill?.name}</div>
                   </Tooltip>
                )
             )}

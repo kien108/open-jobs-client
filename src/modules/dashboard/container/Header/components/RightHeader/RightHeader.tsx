@@ -44,7 +44,6 @@ const RightHeader = ({ languages, accounts }: Props) => {
 
    const { isOpen, handleOpen, handleClose } = useModal();
 
-   console.log({ user });
    return (
       <StyledRightHeader>
          <div className="dropdown">

@@ -57,16 +57,16 @@ export const Container = styled.div`
             border: 0.0625rem solid transparent;
             -webkit-transition: background-color 0.18s ease-out, border-color 0.18s ease-out;
             transition: background-color 0.18s ease-out, border-color 0.18s ease-out;
-            font-size: 17px;
+            font-size: 16px;
             line-height: 24px;
             width: 100%;
-            height: 44px;
+            height: 46px;
             font-weight: 500;
 
             &.applied {
                background-color: #ccc;
                color: #585656;
-               font-weight: 600;
+               font-weight: 500;
             }
          }
 
@@ -77,20 +77,25 @@ export const Container = styled.div`
    }
 
    .content {
-      .skill {
-         border-radius: 4px;
-         padding: 2px 8px;
-         font-size: 13px;
-         margin-right: 10px;
+      .skills {
+         display: flex;
+         align-items: center;
+         gap: 15px;
 
-         :hover {
-            color: #2557a7;
-            border-color: #2557a7;
-         }
+         .skill {
+            color: #414042;
+            background-color: #fff;
+            border: 1px solid #dedede;
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 20px;
+            display: block;
+            border: 1px solid ${(props) => props.theme.strongBlue};
 
-         &.invalid {
-            color: white;
-            background-color: #6c6b6b;
+            &.invalid {
+               background-color: #ccc;
+               border-color: transparent;
+            }
          }
       }
 

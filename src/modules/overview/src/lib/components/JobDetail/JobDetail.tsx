@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Container } from "./styles";
-import { Button, openNotification, Tag, Tag2 } from "../../../../../../libs/components";
+import { Button, Modal, openNotification, Tag, Tag2 } from "../../../../../../libs/components";
 import Parser from "html-react-parser";
 
 import { BsCalendarDay, BsPeople } from "react-icons/bs";
@@ -16,9 +16,9 @@ import logoCompany from "../../assets/company.png";
 import { Col, Divider, Row, Skeleton, Spin, Tooltip } from "antd";
 import { useApplyJobMutation, useGetJobByIdQuery, useGetProfileQuery } from "../../services";
 import moment from "moment";
-import { getToken, RootState, useCommonSelector } from "../../../../../../libs/common";
+import { getToken, RootState, useCommonSelector, useModal } from "../../../../../../libs/common";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { convertPrice } from "../../utils";
 
 interface IProps {
@@ -31,6 +31,7 @@ interface IProps {
 const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
    const navigate = useNavigate();
    const { t } = useTranslation();
+   const location = useLocation();
    const { user } = useCommonSelector((state: RootState) => state.user);
 
    const {
@@ -48,13 +49,18 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
       skip: !user?.id,
    });
 
+   const {
+      isOpen: openLogin,
+      handleOpen: handleOpenLogin,
+      handleClose: handleCloseLogin,
+   } = useModal();
    const [applyJob, { isLoading: loadingApplyJob }] = useApplyJobMutation();
 
    const handelApplyJob = () => {
       const token = getToken();
 
       if (!token) {
-         navigate("/auth");
+         handleOpenLogin();
       } else if (dataUser?.cv?.skills?.length === 0) {
          openNotification({
             type: "warning",
@@ -106,7 +112,6 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                         </span>
                         <span className="company">{jobDetail?.company?.name}</span>
                         <span className="location">{jobDetail?.company?.address}</span>
-                        <span className="notify">{t("createCVFirst")}</span>
                      </div>
                      {!isApplied && (
                         <div className="apply">
@@ -116,9 +121,8 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                               onClick={handelApplyJob}
                               loading={loadingApplyJob}
                            >
-                              {jobDetail?.isApplied ? t("applied") : t("apply")}
+                              {jobDetail?.isApplied ? "Đã ứng tuyển" : "Ứng tuyển ngay"}
                            </Button>
-                           {/* <AiOutlineHeart size={38} color="black" className="save-job" /> */}
                         </div>
                      )}
                   </div>
@@ -127,14 +131,15 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                      <div className="skills">
                         {jobDetail?.jobSkills?.map((item: any) =>
                            item?.skill?.isVerified ? (
-                              <Tag2 className={`skill`}>{item?.skill?.name}</Tag2>
+                              <div className="skill">{item?.skill?.name}</div>
                            ) : (
-                              <Tooltip title="Kỹ năng chưa kiểm duyệt" placement="bottom">
-                                 <Tag2 className="skill invalid">{item?.skill?.name}</Tag2>
+                              <Tooltip title="Chưa kiểm duyệt" placement="bottom">
+                                 <div className="skill invalid">{item?.skill?.name}</div>
                               </Tooltip>
                            )
                         )}
                      </div>
+
                      <div className="job-information">
                         <div className="item">
                            <RiMoneyDollarCircleLine size={17} />
@@ -207,7 +212,7 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                                     border="outline"
                                     style={{ width: "fit-content", padding: "0 10px" }}
                                  >
-                                    {t("viewCompany")}
+                                    Xem công ty
                                  </Button>
                               </Col>
                            </Row>
@@ -229,6 +234,30 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                </>
             )}
          </Container>
+
+         <Modal
+            onCancel={handleCloseLogin}
+            title="Bạn chưa đăng nhập. Đăng nhập ngay để ứng tuyển công việc này nhé"
+            destroyOnClose
+            type="confirm"
+            confirmIcon="!"
+            visible={openLogin}
+         >
+            <Button
+               style={{
+                  margin: "0 auto",
+                  marginTop: "30px",
+               }}
+               onClick={() => {
+                  const prevPath = `${window.location.pathname}${window.location.search}`;
+                  localStorage.setItem("prevUrl", prevPath);
+
+                  navigate("/auth");
+               }}
+            >
+               Đăng nhập ngay
+            </Button>
+         </Modal>
       </Spin>
    );
 };

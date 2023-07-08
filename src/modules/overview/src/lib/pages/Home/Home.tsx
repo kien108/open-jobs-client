@@ -8,14 +8,7 @@ import { Button, Modal, OverviewIcon } from "../../../../../../libs/components";
 
 const Home = () => {
    const [params, setParams] = useState();
-   const { user } = useCommonSelector((state: RootState) => state.user);
-   const navigate = useNavigate();
 
-   const { isOpen, handleOpen, handleClose } = useModal();
-
-   const handleFilter = () => {};
-
-   console.log({ user });
    return (
       <Container>
          <Header>

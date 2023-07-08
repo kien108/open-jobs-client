@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
-import { useGetCompanyByIdQuery } from "../../services";
+import { useGetCompanyByIdQuery, useGetJobCompanyQuery } from "../../services";
 import logoCompany from "../../assets/company.png";
-import { Col, Row, Spin, Tabs } from "antd";
+import { Badge, Col, Row, Spin, Tabs } from "antd";
 import { AiOutlineClockCircle, AiOutlinePhone, AiOutlineSetting } from "react-icons/ai";
 import { BsCalendarDay, BsPeople } from "react-icons/bs";
 import { GrLocation } from "react-icons/gr";
@@ -23,9 +23,18 @@ const CompanyDetail = () => {
       isFetching: fetchingCompany,
    } = useGetCompanyByIdQuery(id, { refetchOnMountOrArgChange: true, skip: !id });
 
+   const { data: dataJobs } = useGetJobCompanyQuery(
+      { id, page: 0, size: 999 },
+      {
+         refetchOnMountOrArgChange: true,
+         skip: !id,
+      }
+   );
+
+   console.log({ dataJobs });
    const items = [
       {
-         label: t("aboutCompany"),
+         label: "Thông tin công ty",
          key: "item-1",
          children: (
             <div>
@@ -35,7 +44,15 @@ const CompanyDetail = () => {
             </div>
          ),
       },
-      { label: t("jobs"), key: "item-2", children: <CompanyJobs id={dataCompany?.id} /> },
+      {
+         label: (
+            <Badge count={dataJobs?.totalElements || 0} size="small">
+               Tin tuyển dụng
+            </Badge>
+         ),
+         key: "item-2",
+         children: <CompanyJobs id={dataCompany?.id} />,
+      },
    ];
 
    return (

@@ -66,7 +66,7 @@ const CompanyJobs: FC<IProps> = ({ id }) => {
                   </Row>
                </Content>
             ) : (
-               <span className="no-results">{t("noJobs")}</span>
+               <span className="no-results">{"Không có tin tuyển dụng nào"}</span>
             )}
          </Container>
       </Spin>

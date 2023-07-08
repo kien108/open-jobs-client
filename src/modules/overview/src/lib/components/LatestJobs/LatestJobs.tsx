@@ -2,8 +2,7 @@ import React, { FC } from "react";
 import { Container } from "./styles";
 import { useGetJobsQuery } from "../../services";
 import { Col, Row, Skeleton } from "antd";
-import JobItem from "./JobItem";
-import { IResSuggesJob } from "../../types";
+
 import { RelativeJobItem } from "../RelativeJobs";
 
 const LatestJobs = () => {
@@ -15,7 +14,6 @@ const LatestJobs = () => {
       { refetchOnMountOrArgChange: true }
    );
 
-   console.log({ dataJobs });
    return (
       <Container>
          <span className="title">Công Việc Mới Nhất</span>

@@ -34,6 +34,39 @@ export const Container = styled.div`
       }
    }
 
+   .flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+   }
+
+   .job {
+      padding: 16px 20px;
+      background: white;
+      box-shadow: 0px 6px 32px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      width: fit-content;
+      margin-top: 10px;
+
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+
+      .job-title {
+         color: ${(props) => props.theme.strongBlue};
+         font-weight: 500;
+      }
+      .item {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+
+         .label {
+            min-width: 60px;
+         }
+      }
+   }
+
    .btn-export {
       width: fit-content;
       margin-left: auto;
