@@ -8,6 +8,7 @@ export const StyledHeader = styled.header`
    position: fixed;
    left: 0;
    right: 0;
+   background: linear-gradient(269.85deg, #54151c 0%, #121212 54.89%);
 `;
 
 export const HeaderWrapper = styled.div`
@@ -18,5 +19,7 @@ export const HeaderWrapper = styled.div`
    font-weight: 600;
    position: relative;
    padding: 10px 20px;
-   background: linear-gradient(269.85deg, #54151c 0%, #121212 54.89%);
+   width: 100%;
+   max-width: 1600px;
+   margin: 0 auto;
 `;

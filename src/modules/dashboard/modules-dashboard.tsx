@@ -33,7 +33,7 @@ export function ModuleDashboard() {
                   <Route index element={<Navigate to="jobs" />} />
                   <Route path="jobs/*" element={<Jobs />} />
                   <Route path="cvs/*" element={<CVSearching />} />
-                  <Route path="cvs/:id" element={<CVDetail />} />
+                  <Route path="cvs/:cvId" element={<CVDetail />} />
                   <Route path="premium" element={<Premium />} />
                   <Route path="invoice" element={<Invoice />} />
                   <Route path="analytics" element={<Analytics />} />

@@ -91,6 +91,7 @@ const CVDetail = () => {
 
    const { t } = useTranslation();
 
+   console.log({ cvId });
    const {
       data: user,
       isLoading,
@@ -247,7 +248,7 @@ const CVDetail = () => {
                               <span>{user?.user?.cv?.title}</span>
                            </div>
 
-                           <div
+                           {/* <div
                               className={`right ${user?.chargedToView ? "" : "not-charged"}`}
                               onClick={() => {
                                  if (user?.chargedToView) return;
@@ -260,6 +261,21 @@ const CVDetail = () => {
                                  }
                               }}
                            >
+                              <div className="item">
+                                 <BsFillPersonFill size={17} />
+                                 <span>{`${user?.user?.firstName.toUpperCase()} ${user?.user?.lastName.toUpperCase()}`}</span>
+                              </div>
+                              <div className="item">
+                                 <MdEmail size={17} />
+                                 <span>{user?.user?.email}</span>
+                              </div>
+                              <div className="item">
+                                 <AiFillPhone size={17} />
+                                 <span>{user?.user?.phone}</span>
+                              </div>
+                           </div> */}
+
+                           <div className={`right`}>
                               <div className="item">
                                  <BsFillPersonFill size={17} />
                                  <span>{`${user?.user?.firstName.toUpperCase()} ${user?.user?.lastName.toUpperCase()}`}</span>
