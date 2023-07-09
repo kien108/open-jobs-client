@@ -1,7 +1,7 @@
 import { Menu, MenuProps } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import { StyledSidebar, StyledImage, StyledLogo } from "./styles";
-import ImageLogo from "../../../../assets/img/logo.png";
+import ImageLogo from "../../../../assets/img/hehe.png";
 
 import { RiAdminLine } from "react-icons/ri";
 import { MdWorkOutline } from "react-icons/md";
@@ -95,7 +95,9 @@ const SideBar = () => {
       <StyledSidebar>
          <StyledLogo>
             <Link to="/dashboard">
-               <StyledImage src={ImageLogo} />
+               <div className="logo">
+                  <StyledImage src={ImageLogo} />
+               </div>
             </Link>
          </StyledLogo>
          <Menu

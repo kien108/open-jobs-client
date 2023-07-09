@@ -273,13 +273,27 @@ export const StyledLogo = styled.header`
    background-color: ${(props) => props.theme.secondaryText};
    z-index: 100;
    transition: all 0.3s;
+
+   .logo {
+      width: 150px;
+      display: block;
+      vertical-align: middle;
+      margin: 0 auto;
+
+      img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+      }
+   }
 `;
 
 export const StyledImage = styled.img`
-   margin-left: auto;
+   /* margin-left: auto;
    margin-right: auto;
-   width: 160px;
+   width: 100px;
    height: auto;
    display: block;
    vertical-align: middle;
+   margin-bottom: -100px; */
 `;

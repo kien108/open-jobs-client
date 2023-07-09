@@ -11,7 +11,8 @@ import {
    StyledLogo,
 } from "./styles";
 
-import ImageLogo from "../../../../../assets/img/logo.png";
+// import ImageLogo from "../../../../../assets/img/logo.png";
+import ImageLogo from "../../../../../assets/img/logo_black_full.png";
 import { getToken } from "./../../../../common/utils/remember";
 import { openNotification } from "../../../../components";
 import { RootState, useCommonSelector } from "../../../../common";

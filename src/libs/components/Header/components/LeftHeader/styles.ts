@@ -2,16 +2,19 @@ import { Tabs } from "antd";
 import styled from "styled-components";
 
 export const StyledLogo = styled.header`
-   padding: 20px 0;
+   /* padding: 20px 0; */
    z-index: 100;
+   width: 130px;
+   transform: translateY(20px);
+   margin-right: 30px;
 `;
 
 export const StyledImage = styled.img`
    margin: 0 auto;
-   width: 95px;
-   height: auto;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
    display: block;
-   margin-right: 30px;
 `;
 
 export const StyledLeftHeader = styled.div`

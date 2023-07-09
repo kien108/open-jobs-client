@@ -11,6 +11,7 @@ import { Pagination } from "../../../../../../libs/components/Table/Pagination";
 import { Table } from "../../../../../../libs/components";
 import { t } from "i18next";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 interface IProps {
    id: string;
@@ -18,11 +19,13 @@ interface IProps {
 const CompanyJobs: FC<IProps> = ({ id }) => {
    const tableInstance = Table.useTable();
    const { t } = useTranslation();
+   const [searchParams, setSearParams] = useSearchParams();
 
    const {
       data: jobs,
       isLoading: loadingJobs,
       isFetching: fetchingJobs,
+      refetch,
    } = useGetJobCompanyQuery(
       { id, ...tableInstance.params },
       { skip: !id, refetchOnMountOrArgChange: true }
@@ -33,6 +36,15 @@ const CompanyJobs: FC<IProps> = ({ id }) => {
    useEffect(() => {
       jobs && jobs?.listJob[0] && setSelectedId(jobs?.listJob[0]?.id);
    }, [jobs]);
+
+   useEffect(() => {
+      console.log({ he: searchParams.get("applied") });
+      if (searchParams.get("applied") === "true") {
+         refetch();
+         searchParams.delete("applied");
+         setSearParams(searchParams);
+      }
+   }, [searchParams.get("applied")]);
    return (
       <Spin spinning={loadingJobs || fetchingJobs}>
          <Container>

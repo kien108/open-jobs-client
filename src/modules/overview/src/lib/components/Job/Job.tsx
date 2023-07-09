@@ -22,6 +22,7 @@ const Job: FC<IProps> = ({ item, handleClick, className }) => {
 
       return diffInDays <= 5;
    };
+   console.log({ check: item?.isApplied });
    return (
       <Container onClick={() => handleClick(item?.id)} className={className}>
          <div

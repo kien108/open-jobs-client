@@ -39,10 +39,11 @@ export const StyledForm = styled.form`
 export const StyledLogo = styled.img`
    margin-left: auto;
    margin-right: auto;
-   width: 150px;
+   width: 240px;
    height: auto;
    display: block;
    user-select: none;
+   margin-bottom: -80px;
 `;
 export const StyledGroupRemembers = styled.div`
    display: flex;

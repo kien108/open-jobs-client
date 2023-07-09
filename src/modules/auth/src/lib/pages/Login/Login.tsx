@@ -12,7 +12,7 @@ import {
 } from "../../../../../../libs/components";
 import { useLoginMutation } from "../../services";
 import { AuthResponse } from "../../types/Responses";
-import logo from "../../../../../../assets/img/logo.png";
+import logo from "../../../../../../assets/img/logo_white_full.png";
 
 import { saveRemember, saveUserId } from "../../../../../../libs/common";
 import { useCommonDispatch } from "../../../../../../libs/common";

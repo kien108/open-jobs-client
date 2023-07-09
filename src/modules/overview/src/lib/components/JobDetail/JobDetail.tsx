@@ -18,7 +18,7 @@ import { useApplyJobMutation, useGetJobByIdQuery, useGetProfileQuery } from "../
 import moment from "moment";
 import { getToken, RootState, useCommonSelector, useModal } from "../../../../../../libs/common";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { convertPrice } from "../../utils";
 
 interface IProps {
@@ -30,6 +30,7 @@ interface IProps {
 
 const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
    const navigate = useNavigate();
+   const [searchParams, setSearchParams] = useSearchParams();
    const { t } = useTranslation();
    const location = useLocation();
    const { user } = useCommonSelector((state: RootState) => state.user);
@@ -80,6 +81,9 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                   type: "success",
                   message: "Ứng tuyển thành công!!!",
                });
+
+               searchParams.set("applied", "true");
+               setSearchParams(searchParams);
             })
             .catch((error) => {
                openNotification({
