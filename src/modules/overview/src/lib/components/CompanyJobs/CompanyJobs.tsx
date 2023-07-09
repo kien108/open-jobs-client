@@ -27,7 +27,7 @@ const CompanyJobs: FC<IProps> = ({ id }) => {
       isFetching: fetchingJobs,
       refetch,
    } = useGetJobCompanyQuery(
-      { id, ...tableInstance.params },
+      { id, ...tableInstance.params, jobStatus: "APPROVED" },
       { skip: !id, refetchOnMountOrArgChange: true }
    );
 

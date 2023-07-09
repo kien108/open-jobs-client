@@ -222,7 +222,7 @@ const CVApply = () => {
             email: item?.email,
             phone: item?.phone,
             gender: item?.gender,
-            url: `http://localhost:5173/cv-review/${item?.userId}`,
+            url: `http://localhost:5173/cv-review/${item?.id}`,
          }));
       const body = {
          jobId: id,
@@ -258,12 +258,16 @@ const CVApply = () => {
    };
 
    useEffect(() => {
-      const dataSource = (dataCVs?.listCv ?? [])?.map((item: any) => ({
-         ...item,
-         key: item?.id,
-         major: item?.major?.name,
-         specialization: item?.specialization?.name,
-         skill: item?.listSkill?.map((item) => item?.skill?.name)?.join(" - "),
+      const dataSource = (dataCVs?.content ?? [])?.map((item: any) => ({
+         ...item?.user,
+         key: item?.user?.cv?.id,
+         id: item?.user?.cv?.id,
+
+         major: item?.user?.cv?.major?.name,
+         specialization: item?.user?.cv?.specialization?.name,
+         skill: item?.user?.cv?.skills?.map((item) => item?.skill?.name)?.join(" - "),
+         title: item?.user?.cv?.title,
+         status: item?.user?.cv?.status,
       }));
 
       setDataSource(dataSource || []);

@@ -24,14 +24,13 @@ const CompanyDetail = () => {
    } = useGetCompanyByIdQuery(id, { refetchOnMountOrArgChange: true, skip: !id });
 
    const { data: dataJobs } = useGetJobCompanyQuery(
-      { id, page: 0, size: 999 },
+      { id, page: 0, size: 999, jobStatus: "APPROVED" },
       {
          refetchOnMountOrArgChange: true,
          skip: !id,
       }
    );
 
-   console.log({ dataJobs });
    const items = [
       {
          label: "Thông tin công ty",

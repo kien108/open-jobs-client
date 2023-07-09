@@ -81,23 +81,15 @@ const CVDetail = () => {
          dataIndex: "name",
          key: "name",
          width: "45%",
-         render: (item) => <span>{item.replaceAll("_", " ")}</span>,
       },
       {
          title: "Kinh nghiệm",
          dataIndex: "experience",
          key: "experience",
          width: "45%",
-         render: (item) => <span>{item.replaceAll("_", " ")}</span>,
+         render: (value) => (value ? <span>{`${value} năm`}</span> : "-"),
       },
    ];
-
-   useEffect(() => {
-      if (!user) return;
-      const { setValue } = form;
-
-      setValue("listSkill", user?.cv?.listSkill);
-   }, [user]);
 
    const handlePrint = useReactToPrint({
       content: () => cvRef.current,
@@ -108,7 +100,14 @@ const CVDetail = () => {
       if (!user) return;
       const { setValue } = form;
 
-      setValue("listSkill", user?.cv?.listSkill);
+      const listSkill = user?.cv?.skills?.map((item: any) => ({
+         name: item?.skill?.name,
+         experience: item?.yoe,
+      }));
+
+      console.log({ listSkill });
+
+      setValue("listSkill", listSkill);
    }, [user]);
 
    return (
@@ -127,7 +126,7 @@ const CVDetail = () => {
                </Button> */}
                </GroupButton>
             </StyledBtnsHeader>
-            <Container ref={cvRef}>
+            <Container ref={cvRef} className="container-print">
                <FormProvider {...form}>
                   <Row gutter={[40, 40]}>
                      <Col span={11}>
@@ -182,20 +181,20 @@ const CVDetail = () => {
                               <Row gutter={[10, 10]}>
                                  <Col span={12}>
                                     <div className="cv-item">
-                                       <span className="title">Major</span>
-                                       <span>{user?.cv?.major?.name}</span>
+                                       <span className="title">Chuyên ngành</span>
+                                       <span>{user?.user?.cv?.major?.name}</span>
                                     </div>
                                  </Col>
                                  <Col span={12}>
                                     <div className="cv-item">
-                                       <span className="title">Specialization</span>
-                                       <span>{user?.cv?.specialization?.name}</span>
+                                       <span className="title">Chuyên môn</span>
+                                       <span>{user?.user?.cv?.specialization?.name}</span>
                                     </div>
                                  </Col>
                               </Row>
 
                               <div className="cv-item" style={{ marginTop: "20px" }}>
-                                 <span className="title">SKILLS</span>
+                                 <span className="title">Kỹ năng</span>
                               </div>
                               <Col span={24}>
                                  <Table
