@@ -65,7 +65,7 @@ export const UserAPI = createApi({
             body,
             method: "POST",
          }),
-         invalidatesTags: (result, err) => (!isEmpty ? ["VIEW_CV", "USER"] : ["ERROR"]),
+         invalidatesTags: (result, err) => (isEmpty(err) ? ["VIEW_CV", "USER"] : ["ERROR"]),
       }),
 
       updatePremium: builder.mutation({

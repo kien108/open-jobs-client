@@ -14,7 +14,7 @@ import { TabsRequest } from "./components/TabsRequest";
 import { CVManagement } from "./pages/CVManagement";
 import { CVApplied } from "./pages/CVApplied";
 import { CV } from "../overview/src/lib/components/CV";
-import { CVDetail } from "./components";
+import { CVDetail, ViewCVSearching } from "./components";
 import { Analytics, CVSearching, Invoice, Premium, PreviewPayment } from "./pages";
 // import { Filter } from "./components";
 
@@ -33,7 +33,7 @@ export function ModuleDashboard() {
                   <Route index element={<Navigate to="jobs" />} />
                   <Route path="jobs/*" element={<Jobs />} />
                   <Route path="cvs/*" element={<CVSearching />} />
-                  <Route path="cvs/:cvId" element={<CVDetail />} />
+                  <Route path="cvs/:cvId" element={<ViewCVSearching />} />
                   <Route path="premium" element={<Premium />} />
                   <Route path="invoice" element={<Invoice />} />
                   <Route path="analytics" element={<Analytics />} />
