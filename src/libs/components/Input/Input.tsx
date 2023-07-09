@@ -202,7 +202,7 @@ const Input: FC<IInput & TextAreaProps> = ({
                   <Popover
                      placement="bottomRight"
                      overlayClassName="popup-password"
-                     content={!show ? t("hidePassword") : t("showPassword")}
+                     content={!show ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                   >
                      <StyledIconInput className="icon-password" onClick={() => setShow(!show)}>
                         {!show ? <EyePwIcon /> : <EyeIcon />}

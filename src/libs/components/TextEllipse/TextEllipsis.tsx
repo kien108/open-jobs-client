@@ -47,7 +47,7 @@ const TextEllipsis = (props: TextEllipsisProps) => {
                         setIsShowMore(true);
                      }}
                   >
-                     {t("common:buttonAction.showLess")}
+                     Ẩn bớt
                   </button>
                </>
             )}

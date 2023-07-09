@@ -220,7 +220,7 @@ const JobsApplied = () => {
                      handleCloseDelete();
                   }}
                >
-                  {t("common:confirm.cancel")}
+                  Hủy
                </Button>
                <Button
                   height={44}
@@ -228,7 +228,7 @@ const JobsApplied = () => {
                   loading={loadingCancel}
                   onClick={handleConfirmCancel}
                >
-                  {t(t("common:confirm.ok"))}
+                  Đồng ý
                </Button>
             </GroupButton>
          </Modal>

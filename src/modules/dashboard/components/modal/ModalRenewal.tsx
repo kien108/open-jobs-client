@@ -27,7 +27,7 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
       resolver: yupResolver(
          yup.object({
             expiredAt: yup.string(),
-            newExpiredAt: yup.string().required(t("common:form.required")),
+            newExpiredAt: yup.string().required("Trường này không được để trống!"),
          })
       ),
    });
@@ -49,7 +49,7 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
          .catch((err) => {
             openNotification({
                type: "error",
-               message: t("common:ERRORS.SERVER_ERROR"),
+               message: "Lỗi máy chủ!",
             });
          })
          .finally(() => handleClose());
@@ -85,7 +85,7 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
                   form.handleSubmit(onSubmit)();
                }}
             >
-               {t("common:confirm.save")}
+               Lưu
             </Button>
             <Button
                onClick={() => {
@@ -95,7 +95,7 @@ const ModalRenewal: FC<IProps> = ({ handleClose, expiredAt }) => {
                }}
                border="outline"
             >
-               {t("common:confirm.cancel")}
+               Hủy
             </Button>
          </GroupButton>
       </FormProvider>

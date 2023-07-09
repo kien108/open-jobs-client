@@ -126,3 +126,12 @@ export const Container = styled.div`
       }
    }
 `;
+
+export const Btns = styled.div`
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 15px;
+
+   margin-top: 30px;
+`;

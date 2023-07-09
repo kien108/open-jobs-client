@@ -133,9 +133,9 @@ const CV = () => {
             education: yup.string(),
             experience: yup.string(),
             certificate: yup.string(),
-            majorId: yup.string().trim().required(t("common:form.required")),
-            title: yup.string().trim().required(t("common:form.required")),
-            specializationId: yup.string().trim().required(t("common:form.required")),
+            majorId: yup.string().trim().required("Trường này không được để trống!"),
+            title: yup.string().trim().required("Trường này không được để trống!"),
+            specializationId: yup.string().trim().required("Trường này không được để trống!"),
             listSkill: yup.array().of(
                yup
                   .object()
@@ -146,19 +146,21 @@ const CV = () => {
                            .trim()
                            .when("experience", {
                               is: (value: any) => value,
-                              then: (schema: any) => schema.required(t("common:form.required")),
+                              then: (schema: any) =>
+                                 schema.required("Trường này không được để trống!"),
                            }),
                         experience: yup
                            .string()
                            .emptyAsUndefined()
                            .when("name", {
                               is: (value: any) => value,
-                              then: (schema: any) => schema.required(t("common:form.required")),
+                              then: (schema: any) =>
+                                 schema.required("Trường này không được để trống!"),
                            }),
                      },
                      [["name", "experience"]]
                   )
-                  .unique("name", t("Skill duplicate"))
+                  .unique("name", "Kỹ năng trùng!")
             ),
          })
       ),
@@ -194,7 +196,7 @@ const CV = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
+         title: "Tên",
          dataIndex: "name",
          key: "name",
          width: "45%",
@@ -233,7 +235,7 @@ const CV = () => {
          ),
       },
       {
-         title: t("EXP"),
+         title: "Kinh nghiệm",
          dataIndex: "experience",
          key: "experience",
          width: "45%",
@@ -254,7 +256,7 @@ const CV = () => {
       },
 
       {
-         title: t("Action"),
+         title: "Chức năng",
          dataIndex: "id",
          width: "10%",
 
@@ -311,14 +313,14 @@ const CV = () => {
             .then(() => {
                openNotification({
                   type: "success",
-                  message: t("Update CV successfully!!!"),
+                  message: "Cập nhật hồ sơ thành công!",
                });
                navigate(-1);
             })
             .catch((error) => {
                openNotification({
                   type: "error",
-                  message: t("INTERNAL SERVER ERROR!!!"),
+                  message: "Lỗi máy chủ!",
                });
             });
       }
@@ -406,7 +408,7 @@ const CV = () => {
                               maxInitials={2}
                               name={`${user?.firstName} ${user?.lastName}`}
                            />
-                           <Input name="title" label={t("title")} required className="title-cv" />
+                           <Input name="title" label={"Tiêu đề"} required className="title-cv" />
 
                            <div className="right">
                               <div className="item">
@@ -429,7 +431,7 @@ const CV = () => {
                                  data={user?.cv?.objective}
                                  editorRef={objectRef}
                                  name="objective"
-                                 label={t("objective")}
+                                 label={"Giới thiệu bản thân"}
                               />
                               {/* <EmailVariables /> */}
                            </div>
@@ -438,7 +440,7 @@ const CV = () => {
                                  data={user?.cv?.education}
                                  editorRef={educationRef}
                                  name="education"
-                                 label={t("education")}
+                                 label={"Học vấn"}
                               />
 
                               {/* <EmailVariables
@@ -458,7 +460,7 @@ const CV = () => {
                               <Col span={12}>
                                  <Select
                                     name="majorId"
-                                    title={t("major")}
+                                    title={"Chuyên ngành"}
                                     placeholder="Select major"
                                     required
                                     onSelect={() => {
@@ -474,7 +476,7 @@ const CV = () => {
                                        required
                                        disabled={!form.watch("majorId")}
                                        name="specializationId"
-                                       title={t("specialization")}
+                                       title={"Chuyên môn"}
                                        placeholder="Please choose major first!"
                                        options={specializations || []}
                                        loading={false}
@@ -522,7 +524,7 @@ const CV = () => {
                               data={user?.cv?.experience}
                               editorRef={experienceRef}
                               name="experience"
-                              label={t("experience")}
+                              label={"Kinh nghiệm"}
                            />
                            {/* <EmailVariables
                               data={user?.cv?.experience}
@@ -536,7 +538,7 @@ const CV = () => {
                               data={user?.cv?.certificate}
                               editorRef={certificateRef}
                               name="certificate"
-                              label={t("certificate")}
+                              label={"Chứng chỉ"}
                            />
                            {/* <EmailVariables
                               data={user?.cv?.certificate}
@@ -558,7 +560,7 @@ const CV = () => {
                   form.handleSubmit(onSubmit)();
                }}
             >
-               {t("common:confirm.save")}
+               Lưu
             </Button>
             <Modal
                type="confirm"
@@ -567,7 +569,7 @@ const CV = () => {
                   closeMajor();
                }}
                confirmIcon="?"
-               title={t("Change major will be reset specializations and skills. Are you sure?")}
+               title={"Thay đổi chuyên ngành sẽ làm mới tất cả kỹ năng. Bạn có chắc chắn không ?"}
             >
                <GroupButton>
                   <Button
@@ -579,7 +581,7 @@ const CV = () => {
                         closeMajor();
                      }}
                   >
-                     {t("common:confirm.cancel")}
+                     Hủy
                   </Button>
                   <Button
                      height={44}
@@ -590,7 +592,7 @@ const CV = () => {
                         closeMajor();
                      }}
                   >
-                     {t("common:confirm.ok")}
+                     Đồng ý
                   </Button>
                </GroupButton>
             </Modal>

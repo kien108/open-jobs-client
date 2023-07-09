@@ -54,11 +54,14 @@ const ContactInformation = () => {
       },
       resolver: yupResolver(
          yup.object({
-            firstName: yup.string().trim().required(t("common:form.required")),
-            lastName: yup.string().trim().required(t("common:form.required")),
+            firstName: yup.string().trim().required("Trường này không được để trống!"),
+            lastName: yup.string().trim().required("Trường này không được để trống!"),
             phone: yup.string().nullable(),
             gender: yup.string(),
-            email: yup.string().email(t("common:form.email")).required(t("common:form.required")),
+            email: yup
+               .string()
+               .email("Trường này phải là email!")
+               .required("Trường này không được để trống!"),
          })
       ),
    });
@@ -79,7 +82,7 @@ const ContactInformation = () => {
          .then(() => {
             openNotification({
                type: "success",
-               message: t("Update this profile successfully!!!"),
+               message: "Cập nhật hồ sơ thành công!",
             });
             navigate(-1);
          })
@@ -103,7 +106,7 @@ const ContactInformation = () => {
                <Input name="firstName" label="Tên" required />
                <Input name="lastName" label="Họ tên" required />
                <Input name="phone" label="Số điện thoại" placeholder="Nhập số điện thoại" />
-               <Input name="email" label={t("email")} disabled />
+               <Input name="email" label={"Email"} disabled />
                <Row gutter={[15, 15]}>
                   <Col span={12}>
                      <Select name="gender" options={genders} title={t("Giới tính")} />

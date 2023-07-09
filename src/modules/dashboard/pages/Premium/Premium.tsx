@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "./styles";
+import { Btns, Container } from "./styles";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { useGetBusinessQuery, useUpdatePremiumMutation } from "../../services";
-import { useCommonSelector, RootState } from "../../../../libs/common";
+import { useCommonSelector, RootState, useModal } from "../../../../libs/common";
 import { EMemberTypes } from "../../../../types";
-import { Button, openNotification } from "../../../../libs/components";
+import { Button, Modal, openNotification } from "../../../../libs/components";
 
 const Premium = () => {
    const { data: dataBusiness, isFetching: fetchingBusiness } = useGetBusinessQuery();
@@ -13,6 +13,7 @@ const Premium = () => {
 
    const [upgrade, { isLoading: loadingUpgrade }] = useUpdatePremiumMutation();
 
+   const { isOpen, handleOpen, handleClose } = useModal();
    const handleUpgrade = () => {
       const payload = {
          companyId: user?.companyId,
@@ -25,6 +26,7 @@ const Premium = () => {
                type: "success",
                message: "Nâng cấp gói hội viên thành công",
             });
+            handleClose();
          })
          .catch(() => {
             openNotification({
@@ -101,11 +103,30 @@ const Premium = () => {
                </div>
             </div>
             {user?.company?.memberType === EMemberTypes.DEFAULT && (
-               <Button className="upgrade-button" loading={loadingUpgrade} onClick={handleUpgrade}>
+               <Button className="upgrade-button" onClick={handleOpen}>
                   Nâng cấp ngay
                </Button>
             )}
          </div>
+
+         <Modal
+            visible={isOpen}
+            title="Bạn có chắc chắn muốn nâng cấp gói hội viên không?"
+            destroyOnClose
+            onCancel={handleClose}
+            type="confirm"
+            confirmIcon="?"
+         >
+            <Btns>
+               <Button onClick={handleUpgrade} loading={loadingUpgrade}>
+                  Đồng ý
+               </Button>
+
+               <Button border="outline" onClick={handleClose}>
+                  Từ chối
+               </Button>
+            </Btns>
+         </Modal>
       </Container>
    );
 };

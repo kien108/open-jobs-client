@@ -65,11 +65,14 @@ const CreateAndEditHr = () => {
       },
       resolver: yupResolver(
          yup.object({
-            firstName: yup.string().trim().required(t("common:form.required")),
-            companyName: yup.string().trim().required(t("common:form.required")),
-            email: yup.string().email(t("common:form.email")).required(t("common:form.required")),
-            phone: yup.string().required(t("common:form.required")),
-            position: yup.string().required(t("common:form.required")),
+            firstName: yup.string().trim().required("Trường này không được để trống!"),
+            companyName: yup.string().trim().required("Trường này không được để trống!"),
+            email: yup
+               .string()
+               .email("Trường này phải là email!")
+               .required("Trường này không được để trống!"),
+            phone: yup.string().required("Trường này không được để trống!"),
+            position: yup.string().required("Trường này không được để trống!"),
             isActive: yup.boolean(),
          })
       ),

@@ -83,7 +83,10 @@ const Layout = () => {
       }
    }, []);
 
-   const { data, isFetching } = useGetAdminByIdQuery(userId, { skip: !userId });
+   const { data, isFetching } = useGetAdminByIdQuery(
+      { id: userId, confirmNewUser: searchParams.get("new-user") },
+      { skip: !userId, refetchOnMountOrArgChange: true }
+   );
 
    useEffect(() => {
       if (!data) return;
@@ -91,13 +94,12 @@ const Layout = () => {
       dispatch(saveUser(data));
    }, [data]);
 
-   console.log({ data: data?.cv });
-
    const visibleForceModal =
       !isFetching &&
       !!getToken() &&
       !location.pathname.includes("/profile/cv/edit") &&
       !Boolean(data?.cv);
+
    return (
       <Spin spinning={isFetching}>
          <AntLayout hasSider>

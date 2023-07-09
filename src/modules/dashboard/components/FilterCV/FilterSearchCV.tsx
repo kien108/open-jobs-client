@@ -90,8 +90,8 @@ const FilterSearchCV = () => {
                <Col span={14}>
                   <Input
                      className="search"
-                     title={t("companyName")}
-                     placeholder="Tên công ty, tiêu đề"
+                     title="Tên công ty"
+                     placeholder="Tiêu đề hồ sơ ứng viên, kỹ năng"
                      icons={<SearchIcon width={20} />}
                      name="keyword"
                      onChange={(e: any) => {

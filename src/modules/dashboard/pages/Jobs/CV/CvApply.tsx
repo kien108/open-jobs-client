@@ -200,7 +200,7 @@ const CVApply = () => {
             .then(() => {
                openNotification({
                   type: "success",
-                  message: t("Delete CV successful!!!"),
+                  message: "Xóa hồ sơ thành công",
                });
                setSelectedCV(undefined);
                handleCloseDelete();
@@ -362,7 +362,7 @@ const CVApply = () => {
                handleCloseDelete();
             }}
             confirmIcon="?"
-            title={t("Do to want to delete this CV?")}
+            title={"Bạn có chắc chắn muốn xóa hồ sơ này không?"}
          >
             <GroupButton>
                <Button
@@ -375,7 +375,7 @@ const CVApply = () => {
                      handleCloseDelete();
                   }}
                >
-                  {t("common:confirm.cancel")}
+                  Hủy
                </Button>
                <Button
                   height={44}
@@ -383,7 +383,7 @@ const CVApply = () => {
                   loading={loadingReject}
                   onClick={handleConfirmDelete}
                >
-                  {t(t("common:confirm.ok"))}
+                  Đồng ý
                </Button>
             </GroupButton>
          </Modal>

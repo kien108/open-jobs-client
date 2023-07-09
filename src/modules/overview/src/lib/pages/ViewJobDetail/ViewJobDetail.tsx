@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Container } from "./styles";
 import { Col, Divider, Row, Skeleton, Tooltip } from "antd";
-import { Button, Tag2 } from "../../../../../../libs/components";
+import { Button, Tag2, openNotification } from "../../../../../../libs/components";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GrLocation } from "react-icons/gr";
 import { MdOutlineWorkOutline } from "react-icons/md";
@@ -11,13 +11,15 @@ import Parser from "html-react-parser";
 import { AiOutlinePhone, AiOutlineSetting } from "react-icons/ai";
 import { BsCalendarDay, BsPeople } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetJobByIdQuery } from "../../services";
+import { useApplyJobMutation, useGetJobByIdQuery } from "../../services";
 import moment from "moment";
 import { convertPrice } from "../../utils";
 import { RelativeJobItem } from "../../components";
+import { RootState, getToken, useCommonSelector, useModal } from "../../../../../../libs/common";
 
 const ViewJobDetail = () => {
    const navigate = useNavigate();
+   const { user } = useCommonSelector((state: RootState) => state.user);
 
    const { id } = useParams();
 
@@ -25,6 +27,48 @@ const ViewJobDetail = () => {
       skip: !id,
       refetchOnMountOrArgChange: true,
    });
+
+   const {
+      isOpen: openLogin,
+      handleOpen: handleOpenLogin,
+      handleClose: handleCloseLogin,
+   } = useModal();
+
+   const [applyJob, { isLoading: loadingApplyJob }] = useApplyJobMutation();
+
+   const handelApplyJob = () => {
+      const token = getToken();
+
+      if (!token) {
+         handleOpenLogin();
+      } else if (user?.cv?.skills?.length === 0) {
+         openNotification({
+            type: "warning",
+            message: "Vui lòng tạo CV trước khi ứng tuyển!",
+         });
+         navigate("/overview/profile/cv");
+      } else {
+         const body = {
+            cvId: user?.cv?.id,
+            jobId: jobDetail?.id,
+         };
+
+         applyJob(body)
+            .unwrap()
+            .then(() => {
+               openNotification({
+                  type: "success",
+                  message: "Ứng tuyển thành công!!!",
+               });
+            })
+            .catch((error) => {
+               openNotification({
+                  type: "error",
+                  message: "Bạn đã ứng tuyển công việc này rồi!",
+               });
+            });
+      }
+   };
 
    useEffect(() => {
       scrollTo({
@@ -45,14 +89,16 @@ const ViewJobDetail = () => {
                   <>
                      <div className="header">
                         <span className="job-title">{jobDetail?.title}</span>
-                        <Button
-                           disabled={jobDetail?.isApplied}
-                           className={`btn-apply ${jobDetail?.isApplied ? "applied" : ""}`}
-                           // onClick={handelApplyJob}
-                           // loading={loadingApplyJob}
-                        >
-                           {!jobDetail?.isApplied ? "Ứng tuyển" : "Đã ứng tuyển"}
-                        </Button>
+                        <div className="apply">
+                           <Button
+                              disabled={jobDetail?.isApplied}
+                              className={`btn-apply ${jobDetail?.isApplied ? "applied" : ""}`}
+                              onClick={handelApplyJob}
+                              loading={loadingApplyJob}
+                           >
+                              {jobDetail?.isApplied ? "Đã ứng tuyển" : "Ứng tuyển ngay"}
+                           </Button>
+                        </div>
                      </div>
 
                      <Divider />

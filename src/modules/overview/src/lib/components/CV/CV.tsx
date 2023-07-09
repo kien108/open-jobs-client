@@ -43,7 +43,7 @@ import { BsArrowLeft, BsFillPersonFill, BsPlusLg } from "react-icons/bs";
 import { AiFillPhone } from "react-icons/ai";
 import { ExperienceValue } from "../../../../../dashboard/types/JobModel";
 import { ColumnsType } from "antd/es/table";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
@@ -66,6 +66,7 @@ const CV = () => {
    const { id, cv } = useCommonSelector((state: RootState) => state.user.user);
    const tableInstance = Table.useTable();
    const navigate = useNavigate();
+   const [searchParams, setSearchParams] = useSearchParams();
 
    const cvRef = useRef<any>(null);
 
@@ -103,9 +104,9 @@ const CV = () => {
             education: yup.string(),
             experience: yup.string(),
             certificate: yup.string(),
-            majorId: yup.string().trim().required(t("common:form.required")),
-            title: yup.string().trim().required(t("common:form.required")),
-            specializationId: yup.string().trim().required(t("common:form.required")),
+            majorId: yup.string().trim().required("Trường này không được để trống!"),
+            title: yup.string().trim().required("Trường này không được để trống!"),
+            specializationId: yup.string().trim().required("Trường này không được để trống!"),
             listSkill: yup.array().of(
                yup
                   .object()
@@ -116,19 +117,21 @@ const CV = () => {
                            .trim()
                            .when("experience", {
                               is: (value: any) => value,
-                              then: (schema: any) => schema.required(t("common:form.required")),
+                              then: (schema: any) =>
+                                 schema.required("Trường này không được để trống!"),
                            }),
                         experience: yup
                            .string()
                            .emptyAsUndefined()
                            .when("name", {
                               is: (value: any) => value,
-                              then: (schema: any) => schema.required(t("common:form.required")),
+                              then: (schema: any) =>
+                                 schema.required("Trường này không được để trống!"),
                            }),
                      },
                      [["name", "experience"]]
                   )
-                  .unique("name", t("Skill duplicate"))
+                  .unique("name", "Kỹ năng trùng!")
             ),
          })
       ),
@@ -182,6 +185,8 @@ const CV = () => {
                onSearch={(value) => setSearchSkill(value)}
                notFoundContent={
                   <span
+                     style={{ color: "#000", fontWeight: 500, cursor: "pointer", width: "100%" }}
+                     className="new-skill"
                      onClick={() => {
                         form.setValue(`listSkill.[${record.key}].name`, searchSkill, {
                            shouldValidate: true,
@@ -272,6 +277,7 @@ const CV = () => {
          })),
          id: user?.cv?.id,
          userId: id,
+         cvType: user?.cv?.cvType || "1",
       };
       if (
          form.watch("listSkill").filter((item: any) => item?.name && item?.experience).length === 0
@@ -286,9 +292,14 @@ const CV = () => {
             .then(() => {
                openNotification({
                   type: "success",
-                  message: t("Update CV successfully!!!"),
+                  message: "Cập nhật hồ sơ thành công!",
                });
-               navigate(-1);
+
+               if (!user?.cv) {
+                  navigate("/overview/profile/cv/default?new-user=false");
+               } else {
+                  navigate(-1);
+               }
             })
             .catch((error) => {
                openNotification({
@@ -570,7 +581,9 @@ const CV = () => {
                   closeMajor();
                }}
                confirmIcon="?"
-               title={t("Change major will be reset specializations and skills. Are you sure?")}
+               title={
+                  "Chỉnh sửa chuyên ngành sẽ làm mới chuyên môn và kỹ năng. Bạn có chắc chắn không?"
+               }
             >
                <GroupButton>
                   <Button

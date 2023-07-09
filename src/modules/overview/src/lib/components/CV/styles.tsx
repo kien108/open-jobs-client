@@ -9,6 +9,16 @@ export const StyledBtnsHeader = styled.div`
    margin-top: 30px;
 `;
 export const Container = styled.div`
+   .new-skill {
+      cursor: pointer;
+      display: block;
+      background: red;
+
+      &:hover {
+         background: #ccc;
+      }
+   }
+
    background: white;
    max-width: 1200px;
    margin: 0 auto;

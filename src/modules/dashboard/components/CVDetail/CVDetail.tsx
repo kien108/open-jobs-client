@@ -126,13 +126,13 @@ const CVDetail = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
+         title: "Tên",
          dataIndex: "name",
          key: "name",
          width: "45%",
       },
       {
-         title: t("Exp"),
+         title: "Kinh nghiệm",
          dataIndex: "experience",
          key: "experience",
          width: "45%",
@@ -146,7 +146,7 @@ const CVDetail = () => {
          .then(() => {
             openNotification({
                type: "success",
-               message: t("Accept CV successful!!!"),
+               message: "Chấp thuận hồ sơ thành công!",
             });
             navigate(-1);
          })
@@ -160,12 +160,12 @@ const CVDetail = () => {
    };
 
    const handleRejectJobCv = () => {
-      rejectCV({ jobId: id, cvId: id })
+      rejectCV({ jobId: id, cvId: cvId })
          .unwrap()
          .then(() => {
             openNotification({
                type: "success",
-               message: t("Reject CV successful!!!"),
+               message: "Từ chối hồ sơ thành công!",
             });
             navigate(-1);
          })

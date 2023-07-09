@@ -77,14 +77,14 @@ const CVDetail = () => {
 
    const columns: ColumnsType<any> = [
       {
-         title: t("Name"),
+         title: "Tên",
          dataIndex: "name",
          key: "name",
          width: "45%",
          render: (item) => <span>{item.replaceAll("_", " ")}</span>,
       },
       {
-         title: t("Exp"),
+         title: "Kinh nghiệm",
          dataIndex: "experience",
          key: "experience",
          width: "45%",
@@ -120,7 +120,7 @@ const CVDetail = () => {
             </BtnFunction> */}
                <GroupButton>
                   <Button height={44} icon={<DownloadIcon />} onClick={handlePrint}>
-                     {t("Export CV")}
+                     Xuất hồ sơ
                   </Button>
                   {/* <Button height={44} icon={<EditIcon />} onClick={() => navigate("edit")}>
                   {t("Edit CV")}

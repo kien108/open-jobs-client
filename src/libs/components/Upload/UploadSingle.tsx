@@ -98,7 +98,7 @@ const UploadSingle = ({ name, setFile, label, files, required, ...props }: Uploa
                </div>
             )}
          />
-         {error && <div className="error">{t("wrongFileType")}</div>}
+         {error && <div className="error">Sai định dạng tệp</div>}
       </Container>
    );
 };

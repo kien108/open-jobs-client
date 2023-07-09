@@ -31,7 +31,7 @@ const useFilterSearchJob = () => {
               delete prev.skillId;
               return { ...prev };
            });
-   }, [searchParams.toString()]);
+   }, [searchParams.get("skillId"), searchParams.get("keyword")]);
 
    return params;
 };

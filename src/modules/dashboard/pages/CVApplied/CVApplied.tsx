@@ -146,7 +146,7 @@ const CVApply = () => {
       },
 
       {
-         title: t("Status"),
+         title: "Trạng thái",
          dataIndex: "status",
          key: "status",
          sorter: true,
@@ -155,7 +155,7 @@ const CVApply = () => {
          ),
       },
       {
-         title: t("Actions"),
+         title: "Chức năng",
          dataIndex: "id",
          render: (_: string, record: any) => (
             <StyledFunctions>
@@ -199,7 +199,7 @@ const CVApply = () => {
             .then(() => {
                openNotification({
                   type: "success",
-                  message: t("Delete CV successful!!!"),
+                  message: "Xóa hồ sơ thành công!",
                });
                setSelectedCV(undefined);
                handleCloseDelete();
@@ -345,7 +345,7 @@ const CVApply = () => {
                handleCloseDelete();
             }}
             confirmIcon="?"
-            title={t("Do to want to delete this CV?")}
+            title="Bạn có chắn chắn muốn xóa hồ sơ này không?"
          >
             <GroupButton>
                <Button
@@ -358,7 +358,7 @@ const CVApply = () => {
                      handleCloseDelete();
                   }}
                >
-                  {t("common:confirm.cancel")}
+                  Hủy
                </Button>
                <Button
                   height={44}
@@ -366,7 +366,7 @@ const CVApply = () => {
                   loading={loadingReject}
                   onClick={handleConfirmDelete}
                >
-                  {t(t("common:confirm.ok"))}
+                  Lưu
                </Button>
             </GroupButton>
          </Modal>

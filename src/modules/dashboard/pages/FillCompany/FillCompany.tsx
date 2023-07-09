@@ -120,18 +120,21 @@ const CreateAndEditHr = () => {
          yup.object({
             firstName: isEdit
                ? yup.string()
-               : yup.string().trim().required(t("common:form.required")),
+               : yup.string().trim().required("Trường này không được để trống!"),
             companyName: isEdit
                ? yup.string()
-               : yup.string().trim().required(t("common:form.required")),
+               : yup.string().trim().required("Trường này không được để trống!"),
             email: isEdit
                ? yup.string()
-               : yup.string().email(t("common:form.email")).required(t("common:form.required")),
+               : yup
+                    .string()
+                    .email("Trường này phải là email!")
+                    .required("Trường này không được để trống!"),
 
-            company_type: yup.string().required(t("common:form.required")).nullable(),
-            province: yup.string().required(t("common:form.required")).nullable(),
-            companyPhone: yup.string().required(t("common:form.required")).nullable(),
-            district: yup.string().required(t("common:form.required")).nullable(),
+            company_type: yup.string().required("Trường này không được để trống!").nullable(),
+            province: yup.string().required("Trường này không được để trống!").nullable(),
+            companyPhone: yup.string().required("Trường này không được để trống!").nullable(),
+            district: yup.string().required("Trường này không được để trống!").nullable(),
             isActive: yup.boolean(),
          })
       ),
@@ -506,7 +509,7 @@ const CreateAndEditHr = () => {
                         form.handleSubmit(onSubmit)();
                      }}
                   >
-                     {t("common:confirm.save")}
+                     Lưu
                   </Button>
                </GroupButton>
 

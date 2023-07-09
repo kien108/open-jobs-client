@@ -14,9 +14,7 @@ const Status: FC<IStatus> = ({ isActive, activeMsg, inactiveMsg }) => {
    return (
       <StyledStatus isActive={isActive}>
          <StyledText>
-            {isActive
-               ? activeMsg || t("common:status.active")
-               : inactiveMsg || t("common:status.inactive")}
+            {isActive ? activeMsg || "Kích hoạt" : inactiveMsg || "Vô hiệu hóa"}
          </StyledText>
       </StyledStatus>
    );

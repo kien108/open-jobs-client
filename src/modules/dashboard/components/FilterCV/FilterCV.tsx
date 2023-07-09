@@ -88,7 +88,7 @@ const FilterCompany = () => {
                <Col span={14}>
                   <Input
                      className="search"
-                     title={t("companyName")}
+                     title="Tên công ty"
                      placeholder="Tên công ty, tiêu đề"
                      icons={<SearchIcon width={20} />}
                      name="keyword"

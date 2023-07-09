@@ -109,7 +109,7 @@ const Filter: FC<IProps> = ({ handleSearchJobs }) => {
                <Col span={10}>
                   <Select
                      name="location"
-                     label={t("where")}
+                     label={"Địa chỉ"}
                      required
                      showSearch
                      options={provinces || []}
@@ -135,7 +135,7 @@ const Filter: FC<IProps> = ({ handleSearchJobs }) => {
                         });
                      }}
                   >
-                     {t("findJobs")}
+                     Tìm kiếm công việc
                   </Button>
                </Col>
             </Row>

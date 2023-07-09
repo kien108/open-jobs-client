@@ -153,7 +153,7 @@ const Select = ({
                            }
                            onFocus={handleOnFocusSelect}
                            onBlur={handleOnBlurSelect}
-                           notFoundContent={<p>{t("common:notification.nothingFound")}</p>}
+                           notFoundContent={<p>Không tìm thấy</p>}
                            allowClear
                            // getPopupContainer={() => document.querySelector(`#demo-select-${name}`)}
                            item={props.label ? "false" : "true"}
@@ -205,7 +205,7 @@ const Select = ({
                            suffixIcon={<DownArrowSvgComponent />}
                            onFocus={handleOnFocusSelect}
                            onBlur={handleOnBlurSelect}
-                           notFoundContent={<p>{t("common:notification.nothingFound")}</p>}
+                           notFoundContent={<p>{"Không tìm thấy"}</p>}
                            allowClear
                            showArrow
                            getPopupContainer={() => document.querySelector(`#demo-select-${name}`)}

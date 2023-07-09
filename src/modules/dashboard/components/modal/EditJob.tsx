@@ -118,24 +118,24 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       },
       resolver: yupResolver(
          yup.object({
-            title: yup.string().trim().required(t("common:form.required")),
-            majorId: yup.string().trim().required(t("common:form.required")),
-            specializationId: yup.string().trim().required(t("common:form.required")),
+            title: yup.string().trim().required("Trường này không được để trống!"),
+            majorId: yup.string().trim().required("Trường này không được để trống!"),
+            specializationId: yup.string().trim().required("Trường này không được để trống!"),
             quantity: yup.number().emptyAsUndefined(),
             hoursPerWeek: yup.number().emptyAsUndefined(),
-            workPlace: yup.string().required(t("common:form.required")).nullable(),
-            expiredAt: yup.string().required(t("common:form.required")).nullable(),
-            jobType: yup.string().required(t("common:form.required")).nullable(),
-            jobLevel: yup.string().required(t("common:form.required")).nullable(),
+            workPlace: yup.string().required("Trường này không được để trống!").nullable(),
+            expiredAt: yup.string().required("Trường này không được để trống!").nullable(),
+            jobType: yup.string().required("Trường này không được để trống!").nullable(),
+            jobLevel: yup.string().required("Trường này không được để trống!").nullable(),
             salaryType: isNego
                ? yup.string().nullable()
-               : yup.string().required(t("common:form.required")).nullable(),
+               : yup.string().required("Trường này không được để trống!").nullable(),
             minSalary: isNego
                ? yup.string().nullable()
-               : yup.string().required(t("common:form.required")).nullable(),
+               : yup.string().required("Trường này không được để trống!").nullable(),
             maxSalary: isNego
                ? yup.string().nullable()
-               : yup.string().required(t("common:form.required")).nullable(),
+               : yup.string().required("Trường này không được để trống!").nullable(),
             skills: yup.array().of(
                yup
                   .object()
@@ -146,14 +146,16 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                            .trim()
                            .when("yoe", {
                               is: (value: any) => value,
-                              then: (schema: any) => schema.required(t("common:form.required")),
+                              then: (schema: any) =>
+                                 schema.required("Trường này không được để trống!"),
                            }),
                         yoe: yup
                            .string()
                            .emptyAsUndefined()
                            .when("required", {
                               is: (value: any) => value === "true",
-                              then: (schema: any) => schema.required(t("common:form.required")),
+                              then: (schema: any) =>
+                                 schema.required("Trường này không được để trống!"),
                            }),
 
                         required: yup.string(),
@@ -481,7 +483,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                .catch((error) => {
                   openNotification({
                      type: "error",
-                     message: t("common:ERRORS.SERVER_ERROR"),
+                     message: "Lỗi máy chủ",
                   });
                });
          }
@@ -611,7 +613,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
             .catch((error) => {
                openNotification({
                   type: "error",
-                  message: t("common:ERRORS.SERVER_ERROR"),
+                  message: "Lỗi máy chủ!",
                });
             });
       } else {
@@ -629,7 +631,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         required
                         label="Tiêu đề công việc"
                         name="title"
-                        placeholder={t("Enter job title")}
+                        placeholder={"Nhập tiêu đề công việc"}
                         disabled={isReadonly}
                      />
                   </Col>
@@ -714,7 +716,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         type="number"
                         label="Số lượng"
                         name="quantity"
-                        placeholder={t("Enter quantity")}
+                        placeholder={"Nhập số lượng"}
                         disabled={isReadonly}
                      />
                   </Col>
@@ -812,7 +814,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         type="number"
                         label="Giờ làm việc"
                         name="hoursPerWeek"
-                        placeholder={t("Enter hoursPerWeek per week")}
+                        placeholder={"Nhập thời gian làm việc mỗi tuần"}
                         disabled={isReadonly}
                      />
                   </Col>
@@ -870,7 +872,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                      }}
                      border="outline"
                   >
-                     {t("common:confirm.cancel")}
+                     Hủy
                   </Button>
                </GroupButton>
             </FormProvider>
@@ -884,7 +886,9 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                closeMajor();
             }}
             confirmIcon="?"
-            title={t("Change major will be reset specializations and skills. Are you sure?")}
+            title={
+               "Cập nhật chuyên ngành sẽ làm mới chuyên môn và kỹ năng. Bạn có chắc chắn không?"
+            }
          >
             <GroupButton>
                <Button
@@ -896,7 +900,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                      closeMajor();
                   }}
                >
-                  {t("common:confirm.cancel")}
+                  Hủy
                </Button>
                <Button
                   loading={false}
@@ -908,7 +912,7 @@ const EditJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                      closeMajor();
                   }}
                >
-                  {t(t("common:confirm.ok"))}
+                  Đồng ý
                </Button>
             </GroupButton>
          </Modal>

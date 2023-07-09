@@ -25,7 +25,7 @@ const CVSearching = () => {
          ...useFilterCV(),
       },
       {
-         skip: !searchParams.get("keyword"),
+         skip: !searchParams.get("keyword") && !searchParams.get("skillId"),
          refetchOnMountOrArgChange: true,
       }
    );

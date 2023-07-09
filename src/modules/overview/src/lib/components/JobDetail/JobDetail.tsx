@@ -228,7 +228,7 @@ const JobDetail: FC<IProps> = ({ id, isCompany, isApplied, handleClose }) => {
                            handleClose && handleClose();
                         }}
                      >
-                        {t("common:confirm.cancel")}
+                        Hủy
                      </Button>
                   )}
                </>

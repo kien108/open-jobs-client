@@ -53,8 +53,8 @@ const Login = () => {
       },
       resolver: yupResolver(
          yup.object({
-            email: yup.string().required(t("common:form.required")),
-            password: yup.string().required(t("common:form.required")),
+            email: yup.string().required("Trường này không được để trống!"),
+            password: yup.string().required("Trường này không được để trống!"),
          })
       ),
    });

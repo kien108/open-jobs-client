@@ -5,9 +5,10 @@ export const AdminAPI = createApi({
    reducerPath: "AdminAPI",
    baseQuery: baseQueryWithReAuth,
    endpoints: (builder) => ({
-      getAdminById: builder.query<any, string>({
-         query: (id) => ({
+      getAdminById: builder.query<any, any>({
+         query: ({ id, ...params }) => ({
             url: `/userprofile/${id}`,
+            params,
          }),
       }),
    }),
