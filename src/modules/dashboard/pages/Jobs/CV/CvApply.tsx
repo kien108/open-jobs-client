@@ -262,12 +262,11 @@ const CVApply = () => {
          ...item?.user,
          key: item?.user?.cv?.id,
          id: item?.user?.cv?.id,
-
          major: item?.user?.cv?.major?.name,
          specialization: item?.user?.cv?.specialization?.name,
          skill: item?.user?.cv?.skills?.map((item) => item?.skill?.name)?.join(" - "),
          title: item?.user?.cv?.title,
-         status: item?.user?.cv?.status,
+         status: item?.cvStatus,
       }));
 
       setDataSource(dataSource || []);

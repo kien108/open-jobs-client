@@ -15,16 +15,16 @@ import "./styles.scss";
 import { decodeToken } from "react-jwt";
 import { saveUser } from "../../../common";
 import { Header } from "../../Header";
-import { access } from "fs";
 
 const { Content, Sider } = AntLayout;
 import { BackTop } from "antd";
-import { Button, Modal } from "../../../components";
+import { Button, FooterMain, Modal } from "../../../components";
 interface IToken {
    id: string;
 }
 import { BiHappyHeartEyes } from "react-icons/bi";
 import { AiFillHeart } from "react-icons/ai";
+import { Footer } from "antd/lib/layout/layout";
 
 const Layout = () => {
    const dispatch = useCommonDispatch();
@@ -108,6 +108,9 @@ const Layout = () => {
                <Content className="site-layout-content">
                   <Outlet />
                   <BackTop />
+                  <Footer className="footer">
+                     <FooterMain />
+                  </Footer>
                </Content>
             </AntLayout>
             <Modal

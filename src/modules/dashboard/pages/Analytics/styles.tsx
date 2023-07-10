@@ -10,6 +10,7 @@ export const Content = styled.div`
    box-shadow: 0 0 #000, 0 0 #000, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 0 10px -6px rgb(0 0 0 / 0.1);
    background: ${(props) => props.theme.secondaryText};
    border-radius: 10px;
+   height: 78vh;
 
    .name {
       font-weight: 600;

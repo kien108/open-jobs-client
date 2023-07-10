@@ -265,7 +265,7 @@ const CVApply = () => {
          specialization: item?.user?.cv?.specialization?.name,
          skill: item?.user?.cv?.skills?.map((item) => item?.skill?.name)?.join(" - "),
          title: item?.user?.cv?.title,
-         status: item?.user?.cv?.status,
+         status: item?.cvStatus,
       }));
 
       setDataSource(dataSource || []);

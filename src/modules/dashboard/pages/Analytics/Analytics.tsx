@@ -114,7 +114,7 @@ const Analytics = () => {
 
             <Content>
                <FormProvider {...form}>
-                  <Row className="filter" gutter={[10, 10]}>
+                  <Row className="container-row" gutter={[10, 10]}>
                      <Col span={12}>
                         <DateRangePicker
                            format={formatDate}

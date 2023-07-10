@@ -154,8 +154,6 @@ const FilterJob: FC<IProps> = ({ handleSearchJobs, setParams }) => {
       setSkills(options || []);
    }, [dataSkills]);
 
-   console.log({ skills });
-
    const handleFilter = () => {
       const values = form.getValues();
       setValueToSearchParams("refetch", uuidv4());
