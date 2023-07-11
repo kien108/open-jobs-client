@@ -214,7 +214,7 @@ const CVApply = () => {
    };
 
    const handleExport = () => {
-      const appliedCVs = dataSource
+      const matchedCVs = dataSource
          .filter((item: any) => item?.status === "ACCEPTED")
          .map((item: any) => ({
             firstName: item?.firstName,
@@ -226,9 +226,9 @@ const CVApply = () => {
          }));
       const body = {
          jobId: id,
-         appliedCVs,
+         matchedCVs,
       };
-      if (appliedCVs.length === 0) {
+      if (matchedCVs.length === 0) {
          openNotification({
             type: "error",
             message: "Không có bất kỳ hồ sơ được chấp thuận nào!",
