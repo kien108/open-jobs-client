@@ -212,16 +212,18 @@ const Jobs = () => {
                            >
                               Xem chi tiết
                            </span>
-                           <span
-                              className="button-content"
-                              onClick={() => {
-                                 searchParams.set("id", record?.id);
-                                 setSearchParams(searchParams);
-                                 handleOpenEdit();
-                              }}
-                           >
-                              Chỉnh sửa
-                           </span>
+                           {record?.jobStatus !== "REJECTED" && (
+                              <span
+                                 className="button-content"
+                                 onClick={() => {
+                                    searchParams.set("id", record?.id);
+                                    setSearchParams(searchParams);
+                                    handleOpenEdit();
+                                 }}
+                              >
+                                 Chỉnh sửa
+                              </span>
+                           )}
 
                            {record?.jobStatus !== "APPROVED" && (
                               <span

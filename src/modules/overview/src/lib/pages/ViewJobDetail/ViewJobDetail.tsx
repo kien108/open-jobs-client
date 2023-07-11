@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Container } from "./styles";
 import { Col, Divider, Row, Skeleton, Tooltip } from "antd";
-import { Button, Tag2, openNotification } from "../../../../../../libs/components";
+import { Button, Modal, Tag2, openNotification } from "../../../../../../libs/components";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { GrLocation } from "react-icons/gr";
 import { MdOutlineWorkOutline } from "react-icons/md";
@@ -220,6 +220,30 @@ const ViewJobDetail = () => {
                ))}
             </Row>
          )}
+
+         <Modal
+            onCancel={handleCloseLogin}
+            title="Bạn chưa đăng nhập. Đăng nhập ngay để ứng tuyển công việc này nhé"
+            destroyOnClose
+            type="confirm"
+            confirmIcon="!"
+            visible={openLogin}
+         >
+            <Button
+               style={{
+                  margin: "0 auto",
+                  marginTop: "30px",
+               }}
+               onClick={() => {
+                  const prevPath = `${window.location.pathname}${window.location.search}`;
+                  localStorage.setItem("prevUrl", prevPath);
+
+                  navigate("/auth");
+               }}
+            >
+               Đăng nhập ngay
+            </Button>
+         </Modal>
       </Container>
    );
 };
