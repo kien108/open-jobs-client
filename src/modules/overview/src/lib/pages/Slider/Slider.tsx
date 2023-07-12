@@ -61,9 +61,7 @@ const Slider = () => {
                   spaceBetween={50}
                   slidesPerView={1}
                   navigation
-                  autoplay={{
-                     delay: 5000,
-                  }}
+                  autoplay={true}
                   loop
                >
                   {fetchingCompanies ? (

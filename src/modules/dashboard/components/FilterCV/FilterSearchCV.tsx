@@ -91,7 +91,7 @@ const FilterSearchCV = () => {
                   <Input
                      className="search"
                      title="Tên công ty"
-                     placeholder="Tiêu đề hồ sơ ứng viên, kỹ năng"
+                     placeholder="Học vấn, kinh nghiệm, bằng cấp"
                      icons={<SearchIcon width={20} />}
                      name="keyword"
                      onChange={(e: any) => {

@@ -79,7 +79,7 @@ const Jobs = () => {
       isLoading,
       isFetching,
    } = useGetJobCompanyQuery(
-      { id: user?.companyId, ...tableInstance.params, ...useFilter() },
+      { id: user?.companyId, ...tableInstance.params, ...useFilter(), sort: "createdAt,desc" },
       {
          refetchOnMountOrArgChange: true,
          skip: !user?.companyId,

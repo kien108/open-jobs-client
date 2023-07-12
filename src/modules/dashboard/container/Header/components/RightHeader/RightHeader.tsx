@@ -6,6 +6,7 @@ import { AccountType, LanguageType } from "../../types";
 import { useTranslation } from "react-i18next";
 import { StyledRightHeader } from "./styles";
 import "../Popover/style.scss";
+import premium from "../../../../../../assets/img/crown.png";
 
 import { Popover } from "../Popover";
 import {
@@ -44,10 +45,16 @@ const RightHeader = ({ languages, accounts }: Props) => {
 
    const { isOpen, handleOpen, handleClose } = useModal();
 
+   console.log({ user });
    return (
       <StyledRightHeader>
          <div className="dropdown">
             <div className="point">
+               {user?.company?.memberType === "PREMIUM" && (
+                  <Tooltip title="Hội viên cấp cao">
+                     <img src={premium} alt="" className="premium" />
+                  </Tooltip>
+               )}
                <Tooltip title="Tiền tệ quy đổi trong hệ thống. Được sử dụng để chi trả cho các dịch vụ">
                   <div className="item point" onClick={handleOpen}>
                      <img src={logo} alt="" />

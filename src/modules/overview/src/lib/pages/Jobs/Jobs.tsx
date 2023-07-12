@@ -22,6 +22,7 @@ const Jobs = () => {
    } = useGetJobsQuery({
       ...tableInstance.params,
       ...useFilterSearchJob(),
+      sort: "createdAt,desc",
    });
    const [searchParams, setSearchParams] = useSearchParams();
 

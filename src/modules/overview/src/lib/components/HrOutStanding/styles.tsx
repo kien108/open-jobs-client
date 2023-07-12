@@ -27,10 +27,11 @@ export const Container = styled.div`
          background: white;
 
          padding: 25px;
-         height: 100px;
+         height: 150px;
          display: flex;
          align-items: center;
          justify-content: center;
+         aspect-ratio: 1/1;
 
          img {
             width: 100%;

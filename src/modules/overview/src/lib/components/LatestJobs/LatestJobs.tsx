@@ -10,6 +10,7 @@ const LatestJobs = () => {
       {
          page: 0,
          size: 10,
+         sort: "createdAt,desc",
       },
       { refetchOnMountOrArgChange: true }
    );

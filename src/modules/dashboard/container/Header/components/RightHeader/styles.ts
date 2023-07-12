@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 export const StyledRightHeader = styled.div`
+   .premium {
+      width: 40px !important;
+      height: 40px !important;
+      transform: translateY(-3px);
+   }
    position: absolute;
    right: 0;
    top: 0;

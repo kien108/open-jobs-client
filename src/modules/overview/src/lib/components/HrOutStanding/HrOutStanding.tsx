@@ -28,12 +28,9 @@ const HrOutStanding = () => {
             <Swiper
                modules={[Pagination, Autoplay]}
                spaceBetween={20}
-               slidesPerView={6}
+               slidesPerView={7}
                navigation
-               autoplay={{
-                  delay: 5000,
-               }}
-               loop
+               autoplay
             >
                {fetchingCompanies ? (
                   <Skeleton active />

@@ -350,8 +350,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       },
    ];
 
-   console.log(form.formState.errors);
-
    const handleEnterWeight = (idx: any, value: any) => {
       const name = `skills.${idx}.weight` as any;
 
@@ -477,7 +475,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
          getPrice(payload)
             .unwrap()
             .then((res) => {
-               console.log({ res });
                handleOpenPay();
             })
             .catch((error) => {
@@ -685,7 +682,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                            <Col span={12}>
                               <Select
                                  name="majorId"
-                                 title="Major"
+                                 title="Chuyên ngành"
                                  placeholder="Select major"
                                  required
                                  onSelect={() => {
@@ -703,7 +700,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                                     required
                                     disabled={!form.watch("majorId")}
                                     name="specializationId"
-                                    title="Specialization"
+                                    title="Chuyên môn"
                                     placeholder="Please choose major first!"
                                     options={specializations || []}
                                     loading={false}
@@ -791,7 +788,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                      <Select
                         name={"workPlace"}
                         options={workplaces}
-                        title="WorkPlace"
+                        title="Nơi làm việc"
                         required
                         placeholder="Nơi làm việc"
                      />
@@ -867,7 +864,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         data={des}
                         editorRef={contentRef}
                         name="description"
-                        label="Description"
+                        label="Mô tả công việc"
                      />
                   </Col>
                </Row>
