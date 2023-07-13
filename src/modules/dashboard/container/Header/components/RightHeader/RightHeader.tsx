@@ -58,7 +58,7 @@ const RightHeader = ({ languages, accounts }: Props) => {
                <Tooltip title="Tiền tệ quy đổi trong hệ thống. Được sử dụng để chi trả cho các dịch vụ">
                   <div className="item point" onClick={handleOpen}>
                      <img src={logo} alt="" />
-                     <span>{parseInt(user?.company?.accountBalance) || "0"}</span>
+                     <span>{parseFloat(user?.company?.accountBalance).toFixed(1) || "0"}</span>
                   </div>
                </Tooltip>
 
