@@ -61,6 +61,13 @@ type FormType = {
    title: string;
 };
 
+enum EJobState {
+   NEW = "Mới",
+   REJECTED = "Từ chối",
+   APPROVED = "Đồng ý",
+   HIDDEN = "Ẩn",
+}
+
 const Jobs = () => {
    const { t } = useTranslation();
    const tableInstance = Table.useTable();
@@ -172,7 +179,9 @@ const Jobs = () => {
          title: t("Trạng thái"),
          dataIndex: "jobStatus",
          key: "jobStatus",
-         render: (value) => <div className={`badge-status ${value ? value : ""}`}>{value}</div>,
+         render: (value) => (
+            <div className={`badge-status ${value ? value : ""}`}>{EJobState[value]}</div>
+         ),
       },
 
       {

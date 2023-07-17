@@ -54,6 +54,13 @@ import { EMemberTypes } from "../../../../../types";
 import { MdUpgrade } from "react-icons/md";
 import { convertPrice } from "../../../../dashboard/utils";
 
+enum EJobState {
+   NEW = "Mới",
+   REJECTED = "Từ chối",
+   ACCEPTED = "Đồng ý",
+   HIDDEN = "Ẩn",
+}
+
 const CVApply = () => {
    const { t } = useTranslation();
    const [selectedCV, setSelectedCV] = useState<any>(undefined);
@@ -153,7 +160,7 @@ const CVApply = () => {
          key: "status",
          sorter: true,
          render: (value: string) => (
-            <div className={`badge-status ${value ? value : ""}`}>{value}</div>
+            <div className={`badge-status ${value ? value : ""}`}>{EJobState[value]}</div>
          ),
       },
       {

@@ -29,6 +29,13 @@ import { convertEnumToArrayWithoutNumber, convertPrice } from "../../utils";
 
 const formatDate = "DD/MM/YYYY";
 
+enum EJobState {
+   NEW = "Mới",
+   REJECTED = "Từ chối",
+   APPROVED = "Đồng ý",
+   HIDDEN = "Ẩn",
+}
+
 const FilterCompany = () => {
    const { t } = useTranslation();
 
@@ -160,7 +167,7 @@ const FilterCompany = () => {
          key: item.id,
          label: item.value,
          value: item.key,
-         render: () => item.value,
+         render: () => EJobState[item.value],
       }));
    }, []);
 

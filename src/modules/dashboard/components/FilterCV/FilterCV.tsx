@@ -96,6 +96,7 @@ const FilterCompany = () => {
                         form.setValue("keyword", e.target.value);
                         handleOnChange("keyword", e.target.value);
                      }}
+                     height="47px"
                   />
                </Col>
 

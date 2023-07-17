@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tooltip, Typography } from "antd";
 import { Notification } from "../Notification";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { AccountType, LanguageType } from "../../types";
 import { useTranslation } from "react-i18next";
 import { StyledRightHeader } from "./styles";
@@ -35,6 +35,7 @@ interface Props {
 const RightHeader = ({ languages, accounts }: Props) => {
    const { t, i18n } = useTranslation();
    const dispatch = useCommonDispatch();
+   const navigate = useNavigate();
    const { user } = useCommonSelector((state: RootState) => state.user);
 
    const [visiblePopover, setVisiblePopover] = useState(false);
@@ -45,33 +46,47 @@ const RightHeader = ({ languages, accounts }: Props) => {
 
    const { isOpen, handleOpen, handleClose } = useModal();
 
-   console.log({ user });
+   const getValue = (value: any) => {
+      if (Number(value) > 0) return value;
+
+      return 0;
+   };
    return (
       <StyledRightHeader>
          <div className="dropdown">
             <div className="point">
                {user?.company?.memberType === "PREMIUM" && (
                   <Tooltip title="Hội viên cấp cao">
-                     <img src={premium} alt="" className="premium" />
+                     <img
+                        style={{ cursor: "pointer" }}
+                        src={premium}
+                        alt=""
+                        className="premium"
+                        onClick={() => navigate("/dashboard/premium")}
+                     />
                   </Tooltip>
                )}
                <Tooltip title="Tiền tệ quy đổi trong hệ thống. Được sử dụng để chi trả cho các dịch vụ">
                   <div className="item point" onClick={handleOpen}>
                      <img src={logo} alt="" />
-                     <span>{parseFloat(user?.company?.accountBalance).toFixed(1) || "0"}</span>
+                     <span>
+                        {Number(user?.company?.accountBalance) > 0
+                           ? parseFloat(user?.company?.accountBalance).toFixed(1)
+                           : "0"}
+                     </span>
                   </div>
                </Tooltip>
 
                <Tooltip title="Lượt xem hồ sơ miễn phí">
                   <div className="item">
                      <AiFillEye size={20} />
-                     {user?.company?.amountOfFreeCvViews || "0"}
+                     {getValue(user?.company?.amountOfFreeCvViews)}
                   </div>
                </Tooltip>
                <Tooltip title="Lượt đăng tin tuyển dụng miễn phí">
                   <div className="item">
                      <MdFiberNew size={20} />
-                     {user?.company?.amountOfFreeJobs || "0"}
+                     {getValue(user?.company?.amountOfFreeJobs)}
                   </div>
                </Tooltip>
             </div>

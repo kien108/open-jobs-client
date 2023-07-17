@@ -411,30 +411,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       }));
    }, []);
 
-   const bindingJobLevelToWeight = (jobLevel: string) => {
-      console.log({ jobLevel, dataBusiness: dataBusiness?.seniorWeight });
-
-      switch (jobLevel) {
-         case "FRESHER":
-            return dataBusiness?.fresherWeight;
-
-         case "INTERNSHIP":
-            return dataBusiness?.internWeight;
-
-         case "JUNIOR":
-            return dataBusiness?.juniorWeight;
-         case "MIDDLE":
-            return dataBusiness?.middleWeight;
-         case "SENIOR":
-            return dataBusiness?.seniorWeight;
-
-         case "HIGH_LEVEL_EXECUTIVE":
-            return dataBusiness?.highPositionWeight;
-         default:
-            return 0;
-      }
-   };
-
    const onSubmit = (data: FormType) => {
       // createJob
       const payload = {
@@ -483,21 +459,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                   message: "Tính toán giá tiền thất bại",
                });
             });
-         // createJob(payload)
-         //    .unwrap()
-         //    .then(() => {
-         //       openNotification({
-         //          type: "success",
-         //          message: t("Đăng tin tuyển dụng thành công!!!"),
-         //       });
-         //       handleClose();
-         //    })
-         //    .catch((error) => {
-         //       openNotification({
-         //          type: "error",
-         //          message: t("common:ERRORS.SERVER_ERROR"),
-         //       });
-         //    });
       }
    };
 
@@ -628,14 +589,6 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
       });
    }, [form.watch("renewJobId")]);
 
-   const checkDiffTime = (time) => {
-      const now = moment();
-      const diffInMs = moment(time).diff(now);
-      const diffInDays = parseInt(moment.duration(diffInMs).asDays());
-
-      return diffInDays;
-   };
-
    return (
       <Spin spinning={false}>
          <StyledCreateAndEditHr>
@@ -683,7 +636,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                               <Select
                                  name="majorId"
                                  title="Chuyên ngành"
-                                 placeholder="Select major"
+                                 placeholder="Chọn chuyên ngành"
                                  required
                                  onSelect={() => {
                                     if (form.watch("specializationId")) {
@@ -701,7 +654,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                                     disabled={!form.watch("majorId")}
                                     name="specializationId"
                                     title="Chuyên môn"
-                                    placeholder="Please choose major first!"
+                                    placeholder="Vui lòng chọn chuyên ngành trước!"
                                     options={specializations || []}
                                     loading={false}
                                  />
@@ -714,7 +667,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                               <Col span={24}>
                                  <GroupButton>
                                     <div className="cv-item" style={{ marginTop: "20px" }}>
-                                       <span className="title">SKILLS</span>
+                                       <span className="title">Kỹ năng</span>
                                        <Tooltip title="Các kỹ năng bắt buộc sẽ phải nhập số năm kinh nghiệm">
                                           <AiFillQuestionCircle className="question" size={23} />
                                        </Tooltip>
@@ -838,6 +791,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                               title="Loại lương"
                               required
                               options={salaryTypes}
+                              placeholder="Loại lương"
                            />
                         </Col>
                      </>
@@ -857,6 +811,7 @@ const CreateJob: FC<ICreateAndEditAdmin> = ({ handleClose }) => {
                         required
                         format={"DD/MM/YYYY"}
                         disabledDate={(value) => moment(value).isBefore(moment())}
+                        placeholder="Chọn ngày hết hạn"
                      />
                   </Col>
                   <Col span={24}>

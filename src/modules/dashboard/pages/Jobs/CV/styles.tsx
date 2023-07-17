@@ -123,15 +123,16 @@ export const Container = styled.div`
    .badge-status {
       border-radius: 8px;
       text-align: center;
-      padding: 2px 4px;
+      padding: 6px 4px;
       font-size: 13px;
 
       &.NEW {
          background-color: yellow;
       }
 
-      &.APPROVED {
+      &.ACCEPTED {
          background: ${(props) => props.theme.strongBlue};
+         color: white;
       }
 
       &.REJECTED {
